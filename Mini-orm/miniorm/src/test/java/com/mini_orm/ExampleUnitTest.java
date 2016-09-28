@@ -1,4 +1,4 @@
-package com.mini_orm;
+package com.test;
 
 import org.junit.Test;
 

@@ -1,0 +1,107 @@
+package com.miniorm.android.impl;
+
+
+import com.miniorm.android.TableUtils;
+import com.miniorm.annotation.Table;
+import com.miniorm.annotation.TableID;
+import com.miniorm.dao.database.TableInterface;
+import com.miniorm.dao.utils.EntityParse;
+import com.miniorm.dao.utils.ReflexEntity;
+import com.miniorm.dao.utils.StringUtils;
+import com.miniorm.enumtype.Parmary;
+import com.miniorm.android.ColumnType;
+import com.miniorm.entity.TableColumnEntity;
+import com.miniorm.entity.TableIdEntity;
+
+import java.util.HashMap;
+
+public class TableImpl implements TableInterface {
+
+	public String drop(ReflexEntity reflexEntity) {
+		// TODO Auto-generated method stub
+
+		return "DROP TABLE IF EXISTS   " + reflexEntity.getTableName() + ";";
+  	}
+
+	public String create(ReflexEntity reflexEntity) {
+		// TODO Auto-generated method stub
+
+ 		StringBuffer sb = new StringBuffer();
+		sb.append("CREATE TABLE if not exists ");
+		sb.append(" "+reflexEntity.getTableEntity().getTableName());
+		sb.append(" (");
+		TableIdEntity tableID = reflexEntity.getTableIdEntity();
+
+		if (tableID!=null&&tableID.isPrimaryKey()) {
+			
+			sb.append(" "+tableID.getName());
+			
+			sb.append(tableID.getColumnType());
+			
+			sb.append(ColumnType.PRIMARYKEY);
+			
+			if (tableID.getKeytype() == Parmary.AutoIncrement) {
+				
+				sb.append(ColumnType.AUTOINCREMENT);
+
+			}
+			sb.append(",");
+		}
+		StringBuilder  foreig=new StringBuilder();
+		HashMap<String, TableColumnEntity>  kv =reflexEntity.getTableColumnMap();
+		for(TableColumnEntity entity:  kv.values()){
+			if(StringUtils.isNull(entity.getColumnName()))continue;
+			sb.append("  "+entity.getColumnName());
+			
+			sb.append(entity.getColumnType());
+			
+			sb.append(" ,");
+			
+			if(entity.isForeignkey()){
+				Object object=null;
+				try {
+					if(entity.getFieldObject()==null){
+						object=entity.getField().getType().newInstance();
+					}
+
+					else
+						object=entity.getFieldObject();
+
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+
+				TableUtils.tableInit(object);
+
+				foreig.append("  FOREIGN KEY(  ");
+
+				foreig.append("  "+entity.getColumnName() );
+
+				EntityParse entityParse=new EntityParse(object);
+
+				TableID tableIdEntity=entityParse.getTableID();
+
+				Table table=entityParse.getTable();
+
+				foreig.append("  ) REFERENCES  ");
+				foreig.append(table.name());
+				foreig.append("(");
+				foreig.append(tableIdEntity.name());
+				foreig.append(")");
+				foreig.append(",");
+			}
+  		}
+		if(foreig.length()!=0){
+			foreig.deleteCharAt(foreig.length()-1);
+			sb.append(foreig);
+		}
+		else
+			sb.deleteCharAt(sb.length()-1);
+		sb.append(");");
+		
+  		return sb.toString();
+	}
+
+}
