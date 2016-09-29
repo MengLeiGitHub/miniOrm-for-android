@@ -9,8 +9,6 @@ public class TeacherDao  extends androidBaseDao<Teacher> {
 	public Teacher getQueryEntity() {
 		// TODO Auto-generated method stub
 		Teacher teacher=new Teacher();
-		teacher.setStudent(new Student());
-
 		return teacher;
 	}
 

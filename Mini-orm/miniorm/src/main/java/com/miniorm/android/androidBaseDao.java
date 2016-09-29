@@ -18,6 +18,7 @@ public abstract class androidBaseDao<T>  extends BaseDao<T> {
 		setTableInterface(new TableImpl());
 		setDeleteInterface(new DeleteImpl());
 		setResultParse(new ResultParseimpl());
+		setDatabaseexcute(new DatabaseExcute());
 	}
 	
 }

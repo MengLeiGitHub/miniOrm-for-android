@@ -1,8 +1,10 @@
-package com.miniorm.android.parseType;
+package com.miniorm.android.parseType.parser;
 
 import android.database.Cursor;
 
-public class FloatParser implements ParseTypeInterface<Float>{
+import com.miniorm.android.parseType.ParseTypeInterface;
+
+public class FloatParser implements ParseTypeInterface<Float> {
 
 	public Float getValFromCursor(Cursor corCursor, int index) {
 		// TODO Auto-generated method stub

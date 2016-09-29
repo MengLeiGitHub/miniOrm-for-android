@@ -1,8 +1,10 @@
-package com.miniorm.android.parseType;
+package com.miniorm.android.parseType.parser;
 
 import android.database.Cursor;
 
-public class IntegerParser implements ParseTypeInterface<Integer>{
+import com.miniorm.android.parseType.ParseTypeInterface;
+
+public class IntegerParser implements ParseTypeInterface<Integer> {
 
 	public Integer getValFromCursor(Cursor corCursor, int index) {
 		// TODO Auto-generated method stub

@@ -9,7 +9,7 @@ public interface QueryInterface {
 	
 	public    String  queryById(String id, ReflexEntity reflexEntity);
 	
-	public  <N>  String  queryByEntity(N t, ReflexEntity reflexEntity);
+	public  <N>  String  queryByEntity(N t, ReflexEntity reflexEntity) throws IllegalAccessException;
 
 	public    String queryAll(ReflexEntity reflexEntity);
 

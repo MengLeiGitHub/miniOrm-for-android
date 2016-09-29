@@ -84,25 +84,40 @@ public class EntityParse<T> {
 			
   			
 			Field[] fields = c.getDeclaredFields();
-
+			try {
 			for (Field field : fields) {
 				
 				TableColumn column = field.getAnnotation(TableColumn.class);
 				if (column != null) {
-
 					reflexEntity.addKey(column.name());
 					TableColumnEntity tableColumnEntity=new TableColumnEntity();
 					tableColumnEntity.setColumnName(column.name());
 					tableColumnEntity.setColumnType(column.columnType());
-					//tableColumnEntity.setFieldObject(fieldObject);
 					tableColumnEntity.setForeignkey(column.isForeignkey());
-					//tableColumnEntity.setVal(val);
-					
+					tableColumnEntity.setField(field);
+					tableColumnEntity.setIsHierarchicalQueries(column.HierarchicalQueries());
+
+					/*//判断是否为对象
+
+					Class<?> clas=field.getType();
+					*//*field.setAccessible(true);
+  					Object  fieldVal=field.get(t);*//*
+					Table  table1= clas.getAnnotation(Table.class);
+					//Table table1=	fieldVal.getClass().getAnnotation(Table.class);
+					if(table1!=null){
+
+						tableColumnEntity.setForeignkey(true);
+
+					}*/
+
 					reflexEntity.getTableColumnMap().put(field.getName(), tableColumnEntity);
-					
-					
-					
- 
+
+
+
+
+
+
+
 				} else {
 
 					TableID id = field.getAnnotation(TableID.class);
@@ -117,6 +132,7 @@ public class EntityParse<T> {
  						tableIdEntity.setColumnName(id.name());
  						tableIdEntity.setColumnVal(getObjFromField(field,t));
  						tableIdEntity.setColumnType(id.columnType());
+						tableIdEntity.setField(field);
    						reflexEntity.setTableIdEntity(tableIdEntity);
   						
  					} else  {
@@ -126,10 +142,12 @@ public class EntityParse<T> {
  						
 				}
 				 	
- 	    		String firstLetter = field.getName().substring(0,1).toUpperCase();
+ 	    		/*String firstLetter = field.getName().substring(0,1).toUpperCase();
 
 
-	    	    String getMethodName = "get"+firstLetter+field.getName().substring(1); 
+	    	    String getMethodName = "get"+firstLetter+field.getName().substring(1); */
+
+/*
 	    	    
 	    	    try {
 					Method m=c.getMethod(getMethodName);
@@ -145,12 +163,9 @@ public class EntityParse<T> {
  						}else
 							tableColumnEntity=new TableColumnEntity();
  						
- 						tableColumnEntity.setFieldObject(obj);
 						tableColumnEntity.setField(field);
  						Class<? extends Object> cla= obj.getClass();
- 						tableColumnEntity.setMethod(m);
- 						//tableColumnEntity.setColumnType(columnType);
- 						
+
  						if(cla!=null){
  							
   							Table table2=obj.getClass().getAnnotation(Table.class);
@@ -180,7 +195,10 @@ public class EntityParse<T> {
    				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
+		   	 }
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		
@@ -191,7 +209,12 @@ public class EntityParse<T> {
 		
 	}
 	
-	
+	public  static  Object getFieldObjectVal(Object object,Field  field) throws IllegalAccessException {
+			field.setAccessible(true);
+		    return field.get(object);
+	}
+
+
 	public  String  getTableColumn(Field field){
 		
 		TableColumn column = field.getAnnotation(TableColumn.class);

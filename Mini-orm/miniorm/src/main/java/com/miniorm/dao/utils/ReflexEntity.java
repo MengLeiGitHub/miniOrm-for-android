@@ -11,25 +11,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ReflexEntity {
+
+	private TableEntity tableEntity;
+
+	private TableIdEntity tableIdEntity;
+
+	private HashMap<String, TableColumnEntity>    tableColumnMap;
+
+
 	private String tableName;
-	
-	/**
+
+ 	/**
  	 */
 	private Set<String> keyset;
 	
 	/**
  	 */
 	private HashMap<String, Object >   keyValue;
-	
-	
-	 
-	
- 	private HashMap<String, TableColumnEntity>    tableColumnMap;
-	
-	private TableEntity tableEntity;
-	
-	private TableIdEntity tableIdEntity;
-	
 	
 	private String[]  condition;
 	

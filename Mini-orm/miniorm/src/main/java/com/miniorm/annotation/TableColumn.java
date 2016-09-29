@@ -11,13 +11,14 @@ import java.lang.annotation.Target;
 @Documented
 public @interface TableColumn {
 
-	public  String   name();
-	
-	public  String   columnType();
-	
-	public  boolean  isPrimaryKey() default false;
-	
-	public  boolean  isForeignkey() default false;
-	
-	
+    public String name();
+
+    public String columnType();
+
+    public boolean isPrimaryKey() default false;
+
+    public boolean isForeignkey() default false;
+
+    public boolean HierarchicalQueries() default true;
+
 }

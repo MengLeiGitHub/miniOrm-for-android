@@ -3,6 +3,7 @@ package com.miniorm.android.impl;
 
 import com.miniorm.android.KeyWork;
 import com.miniorm.dao.database.DeleteInterface;
+import com.miniorm.dao.utils.EntityParse;
 import com.miniorm.dao.utils.ReflexEntity;
 import com.miniorm.entity.TableColumnEntity;
 import com.miniorm.entity.TableIdEntity;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class DeleteImpl implements DeleteInterface {
 
-	public <T> String delete(T t, ReflexEntity rexEntity) {
+	public <T> String delete(T t, ReflexEntity rexEntity) throws IllegalAccessException {
 		// TODO Auto-generated method stub
 
 		StringBuilder sb = new StringBuilder();
@@ -23,7 +24,15 @@ public class DeleteImpl implements DeleteInterface {
 		if (tableIdEntity != null) {
 			sb.append(tableIdEntity.getColumnName());
 			sb.append("=");
-			sb.append(tableIdEntity.getColumnVal());
+			Object obj = EntityParse.getFieldObjectVal(t, tableIdEntity.getField());
+			if (obj instanceof String){
+				sb.append("'");
+				sb.append(obj);
+				sb.append("'");
+			}
+			else
+				sb.append(obj);
+
 		} else {
 			boolean isdeleteAnd = false;
 			for (TableColumnEntity tableColumn : rexEntity.getTableColumnMap()
@@ -35,7 +44,7 @@ public class DeleteImpl implements DeleteInterface {
 				sb.append(tableColumn.getColumnName());
 				sb.append(" = ");
 
-				Object obj = tableColumn.getColumnVal();
+				Object obj = EntityParse.getFieldObjectVal(t, tableColumn.getField());
 				if (obj instanceof String) {
 					sb.append("'");
 					sb.append(obj.toString());

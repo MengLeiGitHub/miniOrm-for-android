@@ -1,11 +1,15 @@
 package com.miniorm.android.impl;
 
 
+import com.miniorm.android.ColumnType;
 import com.miniorm.android.KeyWork;
 import com.miniorm.dao.database.QueryInterface;
+import com.miniorm.dao.utils.EntityParse;
 import com.miniorm.dao.utils.ReflexEntity;
 import com.miniorm.entity.TableColumnEntity;
 import com.miniorm.entity.TableIdEntity;
+
+import java.lang.reflect.Field;
 
 public class QueryImpl implements QueryInterface {
 
@@ -32,17 +36,26 @@ public class QueryImpl implements QueryInterface {
 		sb.append("select  * from   ");
 		sb.append(tableName);
 		sb.append("  where  ");
-		String tableid = reflexEntity.getTableIdEntity().getColumnName();
+		TableIdEntity tableIdEntity= reflexEntity.getTableIdEntity();
+		String tableid =tableIdEntity.getColumnName();
 		sb.append(tableid);
+
+	if(ColumnType.INTEGER.equals(tableIdEntity.getColumnType())){
+		sb.append(" = ");
+		sb.append(id);
+		sb.append(";");
+	}else{
 		sb.append(" = '");
 		sb.append(id);
 		sb.append("';");
+	}
+
 
 		return sb.toString();
 
 	}
 
-	public <N> String queryByEntity(N t, ReflexEntity reflexEntity) {
+	public <N> String queryByEntity(N t, ReflexEntity reflexEntity) throws IllegalAccessException {
 		// TODO Auto-generated method stub
 
 		StringBuilder sb = new StringBuilder();
@@ -76,8 +89,8 @@ public class QueryImpl implements QueryInterface {
 					for (TableColumnEntity tableColumnEntity : reflexEntity.getTableColumnMap().values()) {
 						
 						String key= tableColumnEntity.getColumnName();
-						
-						Object obj = tableColumnEntity.getColumnVal();
+
+						Object obj = EntityParse.getFieldObjectVal(t, tableColumnEntity.getField());
 		 				
 						String s=keyVal(key,obj);
 						sb.append(s==null?"":s);

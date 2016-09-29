@@ -5,8 +5,14 @@ import com.miniorm.dao.utils.ReflexEntity;
 
 public interface DatabaseExeInterface<N> {
 		
- 	public <N> N excuteQuery(String sql, ReflexEntity t);
+ 	public <N> N  excuteQuery(String sql, ReflexEntity t);
 	
- 	public  int excuteUpdate(String sql);
+ 	public  int   excuteUpdate(String sql);
+
+
+	public  void  beginTransaction();
+	public  void  endTransaction();
+	public  void  setTransactionSuccessful();
+
 
 }

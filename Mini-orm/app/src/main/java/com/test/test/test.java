@@ -42,7 +42,7 @@ public class test extends AndroidTestCase {
             TeacherDao baseDao = new TeacherDao();
             baseDao.setTableInterface(new TableImpl());
             baseDao.setResultParse(new ResultParseimpl());
-            baseDao.setDatabaseexcute(new DatabaseExcute(getContext(), 1));
+            baseDao.setDatabaseexcute(new DatabaseExcute());
             baseDao.setQueryInterface(new QueryImpl());
             baseDao.createTable();
 
@@ -57,7 +57,7 @@ public class test extends AndroidTestCase {
             baseDao.queryByEntity(user);
 
 
-            QueryBuilder<Teacher> queryBuilder = new QueryBuilder<Teacher>(new TeacherDao());
+            QueryBuilder<Teacher> queryBuilder = new QueryBuilder<Teacher>(Teacher.class);
             //	queryBuilder.CallQueryWorker().select("pwd","username").where().eq("pwd","123sd").and().eq("username", "1232213").excute();
 
         }

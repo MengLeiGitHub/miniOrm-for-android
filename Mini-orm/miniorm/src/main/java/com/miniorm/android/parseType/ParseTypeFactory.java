@@ -2,6 +2,11 @@ package com.miniorm.android.parseType;
 
 import android.util.Log;
 
+import com.miniorm.android.parseType.parser.BooleanParser;
+import com.miniorm.android.parseType.parser.DoubleParser;
+import com.miniorm.android.parseType.parser.FloatParser;
+import com.miniorm.android.parseType.parser.IntegerParser;
+import com.miniorm.android.parseType.parser.StringParser;
 import com.miniorm.dao.BaseDao;
 
 import java.util.HashMap;
@@ -17,7 +22,7 @@ public class ParseTypeFactory {
 		StringParser stringParser=new StringParser();
 		parserMap.put(String.class.getName(),stringParser );
 		
-		IntegerParser  integerParser=new IntegerParser();
+		IntegerParser integerParser=new IntegerParser();
 		parserMap.put(IntegerParser.class.getName(), integerParser );
 		parserMap.put(int.class.getName(), integerParser );
 
@@ -29,7 +34,7 @@ public class ParseTypeFactory {
 		parserMap.put(Double.class.getName(), doubleParser );
 		parserMap.put(double.class.getName(), doubleParser );
 
-		FloatParser  floatParser=new FloatParser();
+		FloatParser floatParser=new FloatParser();
 		
 		parserMap.put(Float.class.getName(), floatParser );
 		parserMap.put(float.class.getName(), floatParser );

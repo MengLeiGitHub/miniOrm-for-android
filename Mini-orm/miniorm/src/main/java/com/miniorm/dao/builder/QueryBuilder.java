@@ -2,10 +2,12 @@ package com.miniorm.dao.builder;
 
 
 
+import com.miniorm.android.parseType.ParseTypeFactory;
 import com.miniorm.annotation.TableID;
 import com.miniorm.dao.utils.EntityParse;
 import com.miniorm.annotation.Table;
 import com.miniorm.dao.BaseDao;
+import com.miniorm.dao.utils.ReflexEntity;
 
 import java.util.List;
 
@@ -22,11 +24,13 @@ public class QueryBuilder<T> {
 
 	
 	private Query query;
+
+	T    t;
 	
-	
-	public  QueryBuilder(BaseDao<T> baseDao){
-		this.baseDao=baseDao;
-		entityParse=new EntityParse<T>(baseDao.getQueryEntity());
+	public  QueryBuilder(Class clas){
+		this.baseDao= ParseTypeFactory.getEntityParse(clas.getSimpleName());
+		t=baseDao.getQueryEntity();
+		entityParse=new EntityParse<T>(t);
 	}
 	
 	
@@ -61,8 +65,7 @@ public class QueryBuilder<T> {
 			    sql.append(" ,");
  			}
 			
-		 
-			if(sql.toString().endsWith(",")){
+ 			if(sql.toString().endsWith(",")){
 				sql.deleteCharAt(sql.length()-1);
 			}
 			
@@ -91,8 +94,7 @@ public class QueryBuilder<T> {
 			sql.append(" and ");
 			return this;
 		}
-		
-		
+
 		public	Query  eq(String key,String val){
 			if(sql.indexOf(where)<0){
 				where();
@@ -134,10 +136,10 @@ public class QueryBuilder<T> {
 			sql.append("=");
 			sql.append(val);
  			
-			
-			return this;
+ 			return this;
 			
 		}
+
 		public  Query  or(){
 			
 			sql.append("  or  ");
@@ -147,7 +149,10 @@ public class QueryBuilder<T> {
 		
 		
 		
-		
+		public  T    queryOne(String sql){
+
+			return  excute(sql);
+		}
 		
 		public List<T>  list(){
 			System.out.println(sql.toString());
@@ -155,8 +160,8 @@ public class QueryBuilder<T> {
 		}
 		public  T      excute(){
 			String sqls=sql.toString().replaceAll(Placeholder, "")+";";
-			
-			System.out.println(sqls);
+			ReflexEntity f=new ReflexEntity();
+		    baseDao.executeQuery(sqls,t,f);
 			
 			return null;
 		}
@@ -165,7 +170,7 @@ public class QueryBuilder<T> {
  			
 			System.out.println(sql);
 			
-			return baseDao.executeQuery(sql, baseDao.getQueryEntity(),null);
+			return baseDao.executeQuery(sql, t,entityParse.getFieldValueFromT(t));
 		}
 		
 		

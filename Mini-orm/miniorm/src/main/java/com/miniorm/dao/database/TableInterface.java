@@ -5,7 +5,7 @@ import com.miniorm.dao.utils.ReflexEntity;
 
 public interface TableInterface   {
 
-	public  String  create(ReflexEntity reflexEntity);
+	public  String  create(Object obj,ReflexEntity reflexEntity) throws IllegalAccessException, InstantiationException;
 	
 	public  String  drop(ReflexEntity reflexEntity);
 	

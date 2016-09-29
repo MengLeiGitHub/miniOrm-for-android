@@ -1,8 +1,10 @@
-package com.miniorm.android.parseType;
+package com.miniorm.android.parseType.parser;
 
 import android.database.Cursor;
 
-public class BooleanParser implements ParseTypeInterface<Boolean>{
+import com.miniorm.android.parseType.ParseTypeInterface;
+
+public class BooleanParser implements ParseTypeInterface<Boolean> {
 
 	public Boolean getValFromCursor(Cursor corCursor, int index) {
 		// TODO Auto-generated method stub

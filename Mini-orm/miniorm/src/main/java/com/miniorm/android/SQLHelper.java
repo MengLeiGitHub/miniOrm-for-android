@@ -9,21 +9,18 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Log;
 
+import com.miniorm.MiniOrm;
+import com.miniorm.dao.utils.ResultType;
+
 import java.io.File;
 
 public class SQLHelper extends SQLiteOpenHelper {
-	
-	
- 	static String files=Environment.getExternalStorageDirectory().getPath()+File.separator;
-	
-	private static  String databaseName="test.db";
-	
-	
-	
+
+
 	SQLiteDatabase db;
-	
-	public SQLHelper(Context context,int version) {
-		super(context, databaseName, null, version);
+	public SQLHelper(Context context,int version,String dbname) {
+
+		super(context, dbname, null, version);
 		db = getReadableDatabase();
 	}
 
@@ -32,14 +29,19 @@ public class SQLHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) { 
 		 
 	}
-	
+	public  void beginTransaction(){
+		db.beginTransaction();
+	}
+	public void  endTransaction(){
+		db.endTransaction();
+	}
 	
 	public  int  execSQL(String sql){
 		try {
 			db.execSQL(sql);
-			return 1;
+			return ResultType.SUCCESS;
  		}catch (Exception e){
-			return 0;
+			return ResultType.FAIL;
 		}
  	}
 	
@@ -59,14 +61,13 @@ public class SQLHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put("name", str[0]);
 		//db.execSQL(sql);
-		db.insert("stu", nullColumnHack , values);
+		db.insert("stu", nullColumnHack, values);
 	}
 
 	public Cursor query(String string, Object object, Object object2,
 			Object object3, Object object4, Object object5, Object object6) {
 		// TODO Auto-generated method stub
-		
- 		
+
 		
 		return db.query("stu", null, null, null, null, null, null);
 	}
@@ -83,6 +84,9 @@ public class SQLHelper extends SQLiteOpenHelper {
  		
 		
 	}
-	
-	 
+
+
+	public void setTransactionSuccessful() {
+		db.setTransactionSuccessful();
+	}
 }

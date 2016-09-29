@@ -6,6 +6,7 @@ import com.miniorm.annotation.Table;
 import com.miniorm.annotation.TableID;
 import com.miniorm.dao.database.TableInterface;
 import com.miniorm.dao.utils.EntityParse;
+import com.miniorm.dao.utils.ReflexCache;
 import com.miniorm.dao.utils.ReflexEntity;
 import com.miniorm.dao.utils.StringUtils;
 import com.miniorm.enumtype.Parmary;
@@ -23,7 +24,7 @@ public class TableImpl implements TableInterface {
 		return "DROP TABLE IF EXISTS   " + reflexEntity.getTableName() + ";";
   	}
 
-	public String create(ReflexEntity reflexEntity) {
+	public String create(Object obj,ReflexEntity reflexEntity) throws IllegalAccessException, InstantiationException {
 		// TODO Auto-generated method stub
 
  		StringBuffer sb = new StringBuffer();
@@ -58,20 +59,7 @@ public class TableImpl implements TableInterface {
 			sb.append(" ,");
 			
 			if(entity.isForeignkey()){
-				Object object=null;
-				try {
-					if(entity.getFieldObject()==null){
-						object=entity.getField().getType().newInstance();
-					}
-
-					else
-						object=entity.getFieldObject();
-
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
+				Object object=entity.getField().getType().newInstance();
 
 				TableUtils.tableInit(object);
 
@@ -79,16 +67,14 @@ public class TableImpl implements TableInterface {
 
 				foreig.append("  "+entity.getColumnName() );
 
-				EntityParse entityParse=new EntityParse(object);
+				ReflexEntity reflexEntity1= ReflexCache.getReflexEntity(obj.getClass().getName());
 
-				TableID tableIdEntity=entityParse.getTableID();
 
-				Table table=entityParse.getTable();
 
 				foreig.append("  ) REFERENCES  ");
-				foreig.append(table.name());
+				foreig.append(reflexEntity1.getTableEntity().getTableName());
 				foreig.append("(");
-				foreig.append(tableIdEntity.name());
+				foreig.append(reflexEntity1.getTableIdEntity().getColumnName());
 				foreig.append(")");
 				foreig.append(",");
 			}

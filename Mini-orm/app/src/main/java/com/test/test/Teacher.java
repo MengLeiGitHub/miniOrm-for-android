@@ -19,7 +19,7 @@ public class Teacher {
 	@TableID(isPrimaryKey=true,name="userid",defaultVal=0,type= Parmary.AutoIncrement,columnType=ColumnType.INTEGER)
 	private int id;
 	
-	@TableColumn(name="sid",isForeignkey=true,columnType=ColumnType.TEXT)
+	@TableColumn(name="sid",isForeignkey=true,columnType=ColumnType.INTEGER,HierarchicalQueries = true)
 	private Student student;
 
 

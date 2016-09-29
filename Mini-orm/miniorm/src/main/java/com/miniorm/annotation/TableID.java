@@ -17,14 +17,14 @@ public @interface TableID {
 	 
 	public Parmary type();
 	
-	public  String  columnType();
+	public  String  columnType() ;
 	
 	
 	public  String  name();
 	
 	public  int  defaultVal();
 	
-	public  boolean  isPrimaryKey() default false;
+	public  boolean  isPrimaryKey() default true;
 	
 	
 	

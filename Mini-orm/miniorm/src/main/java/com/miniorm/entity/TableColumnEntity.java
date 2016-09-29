@@ -11,15 +11,11 @@ public class TableColumnEntity {
 
 	private boolean isForeignkey;
 
-	private Method method;
-	
-	private Object columnVal;
-	
-	private Object fieldObject;//
-	
 	private String  columnType;
 
 	private Field  field;
+
+	private  boolean isHierarchicalQueries;
 
 	public String getColumnName() {
 		return columnName;
@@ -45,31 +41,7 @@ public class TableColumnEntity {
 		this.isForeignkey = isForeignkey;
 	}
 
-	public Method getMethod() {
-		return method;
-	}
 
-	public void setMethod(Method method) {
-		this.method = method;
-	}
-
-	 
-
-	public Object getColumnVal() {
-		return columnVal;
-	}
-
-	public void setColumnVal(Object columnVal) {
-		this.columnVal = columnVal;
-	}
-
-	public Object getFieldObject() {
-		return fieldObject;
-	}
-
-	public void setFieldObject(Object fieldObject) {
-		this.fieldObject = fieldObject;
-	}
 
 	public String getColumnType() {
 		return columnType;
@@ -85,6 +57,14 @@ public class TableColumnEntity {
 
 	public Field getField() {
 		return field;
+	}
+
+	public void setIsHierarchicalQueries(boolean isHierarchicalQueries) {
+		this.isHierarchicalQueries = isHierarchicalQueries;
+	}
+
+	public boolean isHierarchicalQueries() {
+		return isHierarchicalQueries;
 	}
 
 }

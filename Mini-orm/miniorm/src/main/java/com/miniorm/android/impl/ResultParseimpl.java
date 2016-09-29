@@ -4,12 +4,12 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.miniorm.android.parseType.ParseTypeInterface;
-import com.miniorm.annotation.Table;
 import com.miniorm.annotation.TableColumn;
 import com.miniorm.annotation.TableID;
 import com.miniorm.dao.BaseDao;
 import com.miniorm.dao.database.BaseResultParseInterface;
 import com.miniorm.dao.utils.EntityParse;
+import com.miniorm.dao.utils.ReflexCache;
 import com.miniorm.dao.utils.ReflexEntity;
 import com.miniorm.android.parseType.ParseTypeFactory;
 import com.miniorm.entity.TableIdEntity;
@@ -23,42 +23,47 @@ public class ResultParseimpl implements BaseResultParseInterface<Cursor> {
 
     public <T> T parse(Cursor cursor, T t, ReflexEntity reflexEntity) throws IllegalAccessException, InstantiationException {
         // TODO Auto-generated method stub
+        if (cursor != null && cursor.moveToFirst()) {
+            EntityParse entityParse = new EntityParse<T>(t);
+            HashMap<String, Field> hashmap = entityParse
+                    .getColumnAndField(t);
+            T  t1= (T) t.getClass().newInstance();
+            for (String column : hashmap.keySet()) {
+                int index = cursor.getColumnIndex(column);
+                Field field = hashmap.get(column);
 
-        EntityParse entityParse = new EntityParse<T>(t);
-        HashMap<String, Field> hashmap = entityParse
-                .getColumnAndField(t);
+                TableColumn tableColumn = field.getAnnotation(TableColumn.class);
+                TableID tableID = field.getAnnotation(TableID.class);
+                if (tableColumn != null && !tableColumn.isForeignkey() || tableID != null) {
+                    ParseTypeInterface parseTypeInterface = ParseTypeFactory
+                            .getFieldParser(field.getType());
 
-        for (String column : hashmap.keySet()) {
-            int index = cursor.getColumnIndex(column);
-            Field field = hashmap.get(column);
+                    Object obj = parseTypeInterface.getValFromCursor(cursor, index);
+                    t1 = (T) entityParse.setEntityValue(t1, obj, field);
+                } else {
+                    BaseDao baseDao = ParseTypeFactory.getEntityParse(field.getType().getName());
+                    field.setAccessible(true);
+                    Object fieldObj = field.getType().newInstance();
+                    TableIdEntity tableId = entityParse.getTableIDEntity(fieldObj);
 
-            TableColumn table = field.getAnnotation(TableColumn.class);
-            TableID tableID = field.getAnnotation(TableID.class);
-            if (table != null && !table.isForeignkey() || tableID != null) {
-                ParseTypeInterface parseTypeInterface = ParseTypeFactory
-                        .getFieldParser(field.getType());
+                    ParseTypeInterface parseTypeInterface = ParseTypeFactory.getFieldParser(tableId.getField().getType());
 
-                Object obj = parseTypeInterface.getValFromCursor(cursor, index);
-                t = (T) entityParse.setEntityValue(t, obj, field);
-            } else {
-                BaseDao baseDao = ParseTypeFactory.getEntityParse(field.getType().getName());
-                field.setAccessible(true);
-                TableIdEntity tableId = entityParse.getTableIDEntity(field.get(t));
+                    Object obj = parseTypeInterface.getValFromCursor(cursor, index);
 
-                ParseTypeInterface parseTypeInterface = ParseTypeFactory.getFieldParser(tableId.getField().getType());
+                    Object obj1 = baseDao.queryById(obj.toString());
 
-                Object obj = parseTypeInterface.getValFromCursor(cursor, index);
-
-                Object obj1 = baseDao.queryById(obj.toString());
-
-                t = (T) entityParse.setEntityValue(t, obj1, field);
+                    t1 = (T) entityParse.setEntityValue(t1, obj1, field);
+                }
             }
+            if (cursor != null)
+                cursor.close();
+              return  t1;
+        }else {
+            if (cursor != null)
+                cursor.close();
+             return t;
         }
 
-
-        if (cursor != null)
-            cursor.close();
-        return t;
     }
 
     public <T> List<T> parseList(Cursor cursor, T t, ReflexEntity reflexEntity) throws IllegalAccessException, InstantiationException {
@@ -86,19 +91,42 @@ public class ResultParseimpl implements BaseResultParseInterface<Cursor> {
                         Object obj = parseTypeInterface.getValFromCursor(cursor, index);
                         t1 = (T) entityParse.setEntityValue(t1, obj, field);
                     } else {
-                        BaseDao baseDao = ParseTypeFactory.getEntityParse(field.getType().getName());
-                        field.setAccessible(true);
-                        TableIdEntity tableId = entityParse.getTableIDEntity(field.get(t));
+                        //外键部分
 
-                        Log.e("tag", field.getType().getName() + "   " + (tableId == null));
+                        //外键实例对象
+                        Object fieldObj = field.getType().newInstance();
 
+                        //获取外键表的主键
+                        TableIdEntity tableId = entityParse.getTableIDEntity(fieldObj);
+
+                        //获取外键主键的 类型  转换
                         ParseTypeInterface parseTypeInterface = ParseTypeFactory.getFieldParser(tableId.getField().getType());
-
+                        //获取外键主键值
                         Object obj = parseTypeInterface.getValFromCursor(cursor, index);
 
-                        Object obj1 = baseDao.queryById(obj.toString());
 
-                        t1 = (T) entityParse.setEntityValue(t1, obj1, field);
+                        if(!table.HierarchicalQueries()) //不级联查询外键全部信息
+                        {
+
+                            //获取到外键
+                            ReflexEntity reflexEntity1= ReflexCache.getReflexEntity(fieldObj.getClass().getName());
+                            Field Idfield = reflexEntity1.getTableIdEntity().getField();
+                            fieldObj= entityParse.setEntityValue(fieldObj, obj, Idfield);
+
+
+                            t1 = (T) entityParse.setEntityValue(t1, fieldObj, field);
+                        }
+                        else   //级联查询
+                        {
+                            // 查询外键的全部数据
+                            BaseDao baseDao = ParseTypeFactory.getEntityParse(field.getType().getName());
+                            Object obj1 = baseDao.queryById(obj.toString());
+                            t1 = (T) entityParse.setEntityValue(t1, obj1, field);
+
+                        }
+
+
+
                     }
                 }
                 list.add(t1);
