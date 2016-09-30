@@ -4,10 +4,10 @@ package com.miniorm.dao.builder;
 
 import com.miniorm.android.parseType.ParseTypeFactory;
 import com.miniorm.annotation.TableID;
-import com.miniorm.dao.utils.EntityParse;
+import com.miniorm.dao.reflex.EntityParse;
 import com.miniorm.annotation.Table;
 import com.miniorm.dao.BaseDao;
-import com.miniorm.dao.utils.ReflexEntity;
+import com.miniorm.dao.reflex.ReflexEntity;
 
 import java.util.List;
 

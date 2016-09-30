@@ -4,12 +4,10 @@ package com.miniorm.android.impl;
 import com.miniorm.android.ColumnType;
 import com.miniorm.android.KeyWork;
 import com.miniorm.dao.database.QueryInterface;
-import com.miniorm.dao.utils.EntityParse;
-import com.miniorm.dao.utils.ReflexEntity;
+import com.miniorm.dao.reflex.EntityParse;
+import com.miniorm.dao.reflex.ReflexEntity;
 import com.miniorm.entity.TableColumnEntity;
 import com.miniorm.entity.TableIdEntity;
-
-import java.lang.reflect.Field;
 
 public class QueryImpl implements QueryInterface {
 

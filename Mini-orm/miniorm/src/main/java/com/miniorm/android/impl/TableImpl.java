@@ -2,12 +2,9 @@ package com.miniorm.android.impl;
 
 
 import com.miniorm.android.TableUtils;
-import com.miniorm.annotation.Table;
-import com.miniorm.annotation.TableID;
 import com.miniorm.dao.database.TableInterface;
-import com.miniorm.dao.utils.EntityParse;
-import com.miniorm.dao.utils.ReflexCache;
-import com.miniorm.dao.utils.ReflexEntity;
+import com.miniorm.dao.reflex.ReflexCache;
+import com.miniorm.dao.reflex.ReflexEntity;
 import com.miniorm.dao.utils.StringUtils;
 import com.miniorm.enumtype.Parmary;
 import com.miniorm.android.ColumnType;

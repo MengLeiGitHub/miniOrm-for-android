@@ -1,16 +1,15 @@
 package com.miniorm.android.impl;
 
 import android.database.Cursor;
-import android.util.Log;
 
 import com.miniorm.android.parseType.ParseTypeInterface;
 import com.miniorm.annotation.TableColumn;
 import com.miniorm.annotation.TableID;
 import com.miniorm.dao.BaseDao;
 import com.miniorm.dao.database.BaseResultParseInterface;
-import com.miniorm.dao.utils.EntityParse;
-import com.miniorm.dao.utils.ReflexCache;
-import com.miniorm.dao.utils.ReflexEntity;
+import com.miniorm.dao.reflex.EntityParse;
+import com.miniorm.dao.reflex.ReflexCache;
+import com.miniorm.dao.reflex.ReflexEntity;
 import com.miniorm.android.parseType.ParseTypeFactory;
 import com.miniorm.entity.TableIdEntity;
 

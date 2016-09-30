@@ -1,10 +1,9 @@
 package com.miniorm.android;
 
-import android.content.Context;
 import android.database.Cursor;
 
 import com.miniorm.MiniOrm;
-import com.miniorm.dao.utils.ReflexEntity;
+import com.miniorm.dao.reflex.ReflexEntity;
 import com.miniorm.dao.database.DatabaseExeInterface;
 
 

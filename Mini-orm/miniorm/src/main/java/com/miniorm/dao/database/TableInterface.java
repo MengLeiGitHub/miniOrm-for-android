@@ -1,7 +1,7 @@
 package com.miniorm.dao.database;
 
 
-import com.miniorm.dao.utils.ReflexEntity;
+import com.miniorm.dao.reflex.ReflexEntity;
 
 public interface TableInterface   {
 

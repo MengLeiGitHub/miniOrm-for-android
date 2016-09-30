@@ -2,13 +2,10 @@ package com.miniorm.android.impl;
 
 
 
-import android.widget.Toast;
-
 import com.miniorm.annotation.Table;
 import com.miniorm.dao.database.SaveInterface;
-import com.miniorm.dao.utils.EntityParse;
-import com.miniorm.dao.utils.ReflexCache;
-import com.miniorm.dao.utils.ReflexEntity;
+import com.miniorm.dao.reflex.ReflexCache;
+import com.miniorm.dao.reflex.ReflexEntity;
 import com.miniorm.entity.TableColumnEntity;
 import com.miniorm.entity.TableIdEntity;
 
