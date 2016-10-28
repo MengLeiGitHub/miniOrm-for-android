@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.miniorm.android.DatabaseExcute;
+import com.miniorm.dao.builder.Where;
+import com.miniorm.dao.utils.ResultType;
 import com.test.test.Card;
 import com.test.test.StuDao;
 import com.test.test.Student;
@@ -57,7 +59,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	 	this.findViewById(R.id.update).setOnClickListener(this);
 
-		
+		this.findViewById(R.id.queryBuilder).setOnClickListener(this);
+
 	}
 	int id=1;
 
@@ -71,9 +74,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		teacher.setUserName("老师 一一");
 		teacher.setPwd("123");
   		//student.setId(1);
-
+		teacher.setShengao(140);
  		teacher.setStudent(student);
-
 
 		switch (v.getId()) {
 		case R.id.save:
@@ -99,16 +101,21 @@ public class MainActivity extends Activity implements OnClickListener {
 
 			if(i!=0)
 		    teacher.getStudent().setId(i);
-
+			teacher.setSex("女");
 			//Student student1=	stuDao.queryById(i);
 		//	Log.e("tag", JSON.toJSONString(student1));
 		 	teacherDao.save(teacher);
+
+
+
+
 
 			break;
 		case R.id.delete:
 			student.setId(2);
 			student.setStuName("kkkk");
  			stuDao.delete(student);
+			teacherDao.deleteAll();
 			myBaseAdapter.setList(new ArrayList());
 			break;
 		case R.id.update:
@@ -127,6 +134,10 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		//List<Student> list=stuDao.queryAll();
 			myBaseAdapter.setList(list);
+			int id=teacherDao.queryLastInsertId();
+			Log.e("tag","id="+id);
+
+
 
 			break;
 			case R.id.drop:
@@ -141,8 +152,20 @@ public class MainActivity extends Activity implements OnClickListener {
 				if (i!=0) Toast.makeText(this,"表已经创建",Toast.LENGTH_SHORT).show();
 				break;
 
+			case R.id.queryBuilder:
+				int lastid=teacherDao.queryLastInsertId();
+ 			 //  List list1= teacherDao.getQueryBuilder().callQuery().queryAll().where(Where.handle().orderBy("username").limit(10, lastid-10)).executeQueryList();
+			//	List list1=teacherDao.executeQueryList("select * from  userTable where ");
+				String table=teacherDao.getReflexEntity().getTableEntity().getTableName();
+				String  column=teacherDao.getReflexEntity().getTableIdEntity().getColumnName();
+				List	  list1= 	teacherDao.getQueryBuilder().callQuery().queryAll().where(Where.handle().and(column,"<=",lastid).and(column,">",lastid-10)).executeQueryList();
+				myBaseAdapter.setList(list1);
 
+				break;
 			default:
+
+
+
 			break;
 		}
 		

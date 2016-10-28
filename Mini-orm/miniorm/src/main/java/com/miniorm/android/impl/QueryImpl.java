@@ -149,7 +149,12 @@ public class QueryImpl implements QueryInterface {
 
  		String tableName = reflexEntity.getTableEntity().getTableName();
 		StringBuilder sb = new StringBuilder();
-		sb.append("select   last_insert_rowid()   from   ");
+		reflexEntity.getTableIdEntity().getColumnName();
+		sb.append(" select   ");
+		sb.append(" max(");
+				sb.append(reflexEntity.getTableIdEntity().getColumnName());
+		sb.append(")");
+		sb.append("    from  ");
 		sb.append(tableName);
 		sb.append(";");
 		return sb.toString();

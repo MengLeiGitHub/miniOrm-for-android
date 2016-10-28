@@ -22,8 +22,12 @@ public class Teacher {
 	@TableColumn(name="sid",isForeignkey=true,columnType=ColumnType.INTEGER,HierarchicalQueries = true)
 	private Student student;
 
+	@TableColumn(name="sex",columnType=ColumnType.VARCHAR)
+	private  String sex;
+	@TableColumn(name="shengao",columnType=ColumnType.INTEGER)
+	private  int shengao;
 
- 	
+
 	public String getUserName() {
 		return userName;
 	}
@@ -49,5 +53,20 @@ public class Teacher {
 		this.student = student;
 	}
 
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public int getShengao() {
+		return shengao;
+	}
+
+	public void setShengao(int shengao) {
+		this.shengao = shengao;
+	}
 
 }

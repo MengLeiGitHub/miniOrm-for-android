@@ -11,6 +11,6 @@ public interface UpdateInterface {
 	public  <T>  String  update(T t, ReflexEntity reflexEntity) throws IllegalAccessException;
 	
 	public  <T>  String  update(List<T> t, ReflexEntity reflexEntity);
-		
- 
+
+
 }

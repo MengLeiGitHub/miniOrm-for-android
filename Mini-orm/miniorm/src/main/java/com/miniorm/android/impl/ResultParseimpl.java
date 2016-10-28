@@ -87,8 +87,10 @@ public class ResultParseimpl implements BaseResultParseInterface<Cursor> {
                         ParseTypeInterface parseTypeInterface = ParseTypeFactory
                                 .getFieldParser(field.getType());
 
-                        Object obj = parseTypeInterface.getValFromCursor(cursor, index);
-                        t1 = (T) entityParse.setEntityValue(t1, obj, field);
+                           if(parseTypeInterface!=null){
+                               Object obj = parseTypeInterface.getValFromCursor(cursor, index);
+                               t1 = (T) entityParse.setEntityValue(t1, obj, field);
+                           }
                     } else {
                         //外键部分
 
@@ -100,31 +102,34 @@ public class ResultParseimpl implements BaseResultParseInterface<Cursor> {
 
                         //获取外键主键的 类型  转换
                         ParseTypeInterface parseTypeInterface = ParseTypeFactory.getFieldParser(tableId.getField().getType());
-                        //获取外键主键值
-                        Object obj = parseTypeInterface.getValFromCursor(cursor, index);
+
+                        if(parseTypeInterface!=null){
 
 
-                        if(!table.HierarchicalQueries()) //不级联查询外键全部信息
-                        {
+                                //获取外键主键值
+                                Object obj = parseTypeInterface.getValFromCursor(cursor, index);
 
-                            //获取到外键
-                            ReflexEntity reflexEntity1= ReflexCache.getReflexEntity(fieldObj.getClass().getName());
-                            Field Idfield = reflexEntity1.getTableIdEntity().getField();
-                            fieldObj= entityParse.setEntityValue(fieldObj, obj, Idfield);
+                                if(!table.HierarchicalQueries()) //不级联查询外键全部信息
+                                {
+
+                                    //获取到外键
+                                    ReflexEntity reflexEntity1= ReflexCache.getReflexEntity(fieldObj.getClass().getName());
+                                    Field Idfield = reflexEntity1.getTableIdEntity().getField();
+                                    fieldObj= entityParse.setEntityValue(fieldObj, obj, Idfield);
 
 
-                            t1 = (T) entityParse.setEntityValue(t1, fieldObj, field);
+                                    t1 = (T) entityParse.setEntityValue(t1, fieldObj, field);
+                                }
+                                else   //级联查询
+                                {
+                                    // 查询外键的全部数据
+                                    BaseDao baseDao = ParseTypeFactory.getEntityParse(field.getType().getName());
+                                    Object obj1 = baseDao.queryById(obj.toString());
+                                    t1 = (T) entityParse.setEntityValue(t1, obj1, field);
+
+                                }
+
                         }
-                        else   //级联查询
-                        {
-                            // 查询外键的全部数据
-                            BaseDao baseDao = ParseTypeFactory.getEntityParse(field.getType().getName());
-                            Object obj1 = baseDao.queryById(obj.toString());
-                            t1 = (T) entityParse.setEntityValue(t1, obj1, field);
-
-                        }
-
-
 
                     }
                 }

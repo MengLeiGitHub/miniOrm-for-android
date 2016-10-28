@@ -14,7 +14,8 @@ public class TableUtils {
 
     public  static    void  tableInit(final Object clas){
          BaseDao  baseDao= ParseTypeFactory.getEntityParse(clas.getClass().getName());
-        baseDao.createTable();
+         baseDao.createTable();
+
     }
 
 

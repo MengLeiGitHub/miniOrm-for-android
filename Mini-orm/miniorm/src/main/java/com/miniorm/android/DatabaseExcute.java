@@ -12,8 +12,7 @@ public class DatabaseExcute  implements DatabaseExeInterface<Cursor> {
 	private SQLHelper  sqlHelper;
        
 	public DatabaseExcute(){
-
-		sqlHelper=new SQLHelper(MiniOrm.application, MiniOrm.version,MiniOrm.dbName);
+		  sqlHelper=SQLHelper.getInstance();
 	}
        
 	public Cursor excuteQuery(String sql, ReflexEntity t) {

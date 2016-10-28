@@ -55,12 +55,11 @@ public class ParseTypeFactory {
 	}
 
 	public  static  void  addEntityParse(String name,BaseDao dao){
-		Log.e("tag","addEntityParse      "+name);
+
 		  entityParse.put(name,dao);
 	}
 
 	public static  BaseDao   getEntityParse(String name){
-		Log.e("tag","getEntityParse   "+name);
 
 		return entityParse.get(name);
 	}

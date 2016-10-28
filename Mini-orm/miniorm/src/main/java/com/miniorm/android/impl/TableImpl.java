@@ -64,7 +64,7 @@ public class TableImpl implements TableInterface {
 
 				foreig.append("  "+entity.getColumnName() );
 
-				ReflexEntity reflexEntity1= ReflexCache.getReflexEntity(obj.getClass().getName());
+				ReflexEntity reflexEntity1= ReflexCache.getReflexEntity(object.getClass().getName());
 
 
 

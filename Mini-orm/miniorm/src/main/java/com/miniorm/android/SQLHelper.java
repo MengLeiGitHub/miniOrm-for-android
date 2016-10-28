@@ -10,25 +10,39 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.miniorm.MiniOrm;
+import com.miniorm.android.impl.TableImpl;
+import com.miniorm.dao.BaseDao;
+import com.miniorm.dao.reflex.ReflexCache;
+import com.miniorm.dao.reflex.ReflexEntity;
 import com.miniorm.dao.utils.ResultType;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 public class SQLHelper extends SQLiteOpenHelper {
 
+	private static SQLHelper  sqlHelper;
 
 	SQLiteDatabase db;
-	public SQLHelper(Context context,int version,String dbname) {
-
-		super(context, dbname, null, version);
+	protected SQLHelper(Context context,int version,String dbname) {
+ 		super(context, dbname, null, version);
 		db = getReadableDatabase();
 	}
 
+	public  static  synchronized   SQLHelper  getInstance(){
+			if(sqlHelper==null)		sqlHelper=new SQLHelper(MiniOrm.application, MiniOrm.version,MiniOrm.dbName);
+
+		return sqlHelper;
+	}
 	
 	@Override
-	public void onCreate(SQLiteDatabase db) { 
-		 
+	public void onCreate(SQLiteDatabase db) {
+
 	}
+
 	public  void beginTransaction(){
 		db.beginTransaction();
 	}
@@ -49,13 +63,26 @@ public class SQLHelper extends SQLiteOpenHelper {
 	 
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
-		Log.i("====", "================onUpdate");
-		
-		 
-		 
-		 
-		onCreate(db);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+ 				new TableUpgrade().update();
+			}
+		}).start();
+
 	}
+
+	@Override
+	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				new TableUpgrade().update();
+			}
+		}).start();
+
+	}
+
 	public void insert(String table,String nullColumnHack,String ...  str){
 		
 		ContentValues values = new ContentValues();

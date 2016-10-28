@@ -2,7 +2,9 @@ package com.test.test;
 
 
 import android.test.AndroidTestCase;
+import android.util.Log;
 
+import com.miniorm.MiniOrm;
 import com.miniorm.android.DatabaseExcute;
 import com.miniorm.android.impl.QueryImpl;
 import com.miniorm.android.impl.ResultParseimpl;
@@ -18,6 +20,10 @@ public class test extends AndroidTestCase {
      */
     public void main() {
         // TODO Auto-generated method stub
+
+     //   MiniOrm.init(getContext(), 1, "test.db");
+
+
         long timestart = System.currentTimeMillis();
 
 
@@ -57,9 +63,10 @@ public class test extends AndroidTestCase {
             baseDao.queryByEntity(user);
 
 
-            QueryBuilder<Teacher> queryBuilder = new QueryBuilder<Teacher>(Teacher.class);
+            QueryBuilder<Teacher> queryBuilder = new QueryBuilder<Teacher>(baseDao);
             //	queryBuilder.CallQueryWorker().select("pwd","username").where().eq("pwd","123sd").and().eq("username", "1232213").excute();
-
+            queryBuilder.callQuery().queryAll().executeQueryList();
+            Log.e("tag","--------------");
         }
         System.out.println(System.currentTimeMillis() - timestart);
     }

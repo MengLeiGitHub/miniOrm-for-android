@@ -23,7 +23,15 @@ public class demotest extends AndroidTestCase {
         student.setStuName("adasdas");
 
         Student sss=hashMap.get("s");
-        Log.e("tag",sss.getStuName());
+        Log.e("tag", sss.getStuName());
+        StringBuilder  stringBuilder=new StringBuilder("limit  0 offset 10");
+       char s= stringBuilder.charAt(stringBuilder.length()-1);
+        stringBuilder.delete(0,stringBuilder.length());
+
+        System.out.println(stringBuilder.toString()+"=====" +s);
+
+
+
     }
 
 }

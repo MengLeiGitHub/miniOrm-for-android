@@ -19,6 +19,13 @@
         android:text="save" />
 
     <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="queryBuilder"
+        android:id="@+id/queryBuilder"
+        android:layout_gravity="right" />
+
+    <Button
         android:id="@+id/select"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

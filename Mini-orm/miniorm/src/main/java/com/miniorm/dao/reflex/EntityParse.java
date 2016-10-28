@@ -43,7 +43,7 @@ public class EntityParse<T> {
 	public TableID getTableID() {
 		Field[] fields = c.getDeclaredFields();
 		for (Field filed : fields) {
-			 
+			filed.setAccessible(true);
 			TableID id = filed.getAnnotation(TableID.class);
 			if (id != null)
 				return id;
@@ -54,6 +54,7 @@ public class EntityParse<T> {
 		ArrayList<TableID> list=new ArrayList<TableID>();
 		Field[] fields = c.getFields();
 		for (Field filed : fields) {
+			filed.setAccessible(true);
 			TableID id = filed.getAnnotation(TableID.class);
 			if (id != null)
 				  list.add(id);
@@ -72,7 +73,6 @@ public class EntityParse<T> {
 		
 		
 		Class<? extends Object> c = t.getClass();
-
 		boolean flag = c.isAnnotationPresent(Table.class);
 		if(flag){
 
@@ -216,7 +216,7 @@ public class EntityParse<T> {
 
 
 	public  String  getTableColumn(Field field){
-		
+		field.setAccessible(true);
 		TableColumn column = field.getAnnotation(TableColumn.class);
 		if (column != null) {
 			
@@ -258,7 +258,7 @@ public class EntityParse<T> {
 		Field[] fields = c.getDeclaredFields();
 		for (Field filed : fields) {
 			TableID id = filed.getAnnotation(TableID.class);
-			Log.e("tag",c.getName()+"==="+(filed.getName()));
+
 			if (id != null){
 					TableIdEntity tableIdEntity=new TableIdEntity();
 				tableIdEntity.setColumnName(id.name());
@@ -280,6 +280,7 @@ public class EntityParse<T> {
 		Class<? extends Object> c = classs.getClass();
 		Field[] fields = c.getFields();
 		for (Field filed : fields) {
+			filed.setAccessible(true);
 			TableID id = filed.getAnnotation(TableID.class);
 			if (id != null)
 				return id;
@@ -290,19 +291,19 @@ public class EntityParse<T> {
 	
 	
 	public Object getObjFromField(Field field,Object t){
-		String firstLetter = field.getName().substring(0,1).toUpperCase(); 
+		String firstLetter = field.getName().substring(0, 1).toUpperCase();
 
 	    String getMethodName = "get"+firstLetter+field.getName().substring(1); 
 	    
 	    try {
 			Method m=c.getMethod(getMethodName);
-			
+			m.setAccessible(true);
    			Object obj=m.invoke(t);
    			
    			return obj;
    			
 	    }catch(Exception e){
-	    	
+			e.printStackTrace();
 	    }
 			return null;
 
@@ -331,6 +332,7 @@ public class EntityParse<T> {
   					Object obj = null;
 					try {
 			    	    Method m=obj1.getClass().getMethod(getMethodName);
+						m.setAccessible(true);
 						obj = m.invoke(obj1);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -354,9 +356,9 @@ public class EntityParse<T> {
 			Field[] fields=t.getClass().getDeclaredFields();
 			for(Field field:fields){
 				String columnName=getColumnNameFormField(field);
+				if(columnName!=null)
 				hashMap.put(columnName, field);
-
-			}
+ 			}
 		
 		
 		return hashMap;
@@ -387,7 +389,7 @@ public class EntityParse<T> {
 	
 	
 	public String  getColumnNameFormField(Field field){
-		
+		    field.setAccessible(true);
 		TableColumn column = field.getAnnotation(TableColumn.class);
 
 		if (column != null) {
@@ -395,11 +397,16 @@ public class EntityParse<T> {
 			return column.name();
 			
 		} else {
-
 			TableID id = field.getAnnotation(TableID.class);
-			
-			return id.name();
+ 			if(id!=null){
+
+				return id.name();
+
+			}else {
+
+			}
 		}
+		return null;
 		
 	}
 	
