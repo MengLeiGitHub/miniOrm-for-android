@@ -6,6 +6,7 @@ import com.miniorm.android.parseType.parser.BooleanParser;
 import com.miniorm.android.parseType.parser.DoubleParser;
 import com.miniorm.android.parseType.parser.FloatParser;
 import com.miniorm.android.parseType.parser.IntegerParser;
+import com.miniorm.android.parseType.parser.LongParser;
 import com.miniorm.android.parseType.parser.StringParser;
 import com.miniorm.dao.BaseDao;
 
@@ -38,6 +39,13 @@ public class ParseTypeFactory {
 		
 		parserMap.put(Float.class.getName(), floatParser );
 		parserMap.put(float.class.getName(), floatParser );
+
+
+		LongParser  longParser=new LongParser();
+
+		parserMap.put(Long.class.getName(), longParser );
+		parserMap.put(long.class.getName(), longParser );
+
 
 	}
 	

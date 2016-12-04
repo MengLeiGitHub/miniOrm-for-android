@@ -30,5 +30,4 @@ public class TableEntity {
 		this.clas = clas;
 	}
 	
-
 }

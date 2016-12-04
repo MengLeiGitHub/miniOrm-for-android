@@ -32,10 +32,12 @@ public class ColumnType {
 	public static final String VARCHAR=" VARCHAR ";
 	
 	public static final String NVARCHAR=" NVARCHAR ";
-	
+
+	public static final String BOOLEAN=INTEGER;
 
 	public static final String AUTOINCREMENT="  AUTOINCREMENT ";
-	
+
+
 	public static final String PRIMARYKEY="  PRIMARY KEY   ";
 
 	public static final String FOREIGNKEY="  FOREIGN KEY  ";

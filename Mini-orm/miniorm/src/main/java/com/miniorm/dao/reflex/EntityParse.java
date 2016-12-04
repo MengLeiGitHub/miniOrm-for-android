@@ -1,10 +1,8 @@
 package com.miniorm.dao.reflex;
 
-import android.util.Log;
-
-import com.miniorm.annotation.TableID;
 import com.miniorm.annotation.Table;
 import com.miniorm.annotation.TableColumn;
+import com.miniorm.annotation.TableID;
 import com.miniorm.entity.TableColumnEntity;
 import com.miniorm.entity.TableEntity;
 import com.miniorm.entity.TableIdEntity;
@@ -96,7 +94,7 @@ public class EntityParse<T> {
 					tableColumnEntity.setForeignkey(column.isForeignkey());
 					tableColumnEntity.setField(field);
 					tableColumnEntity.setIsHierarchicalQueries(column.HierarchicalQueries());
-
+					tableColumnEntity.setIgnoreBooleanParam(column.IgnoreBooleanParam());
 					/*//判断是否为对象
 
 					Class<?> clas=field.getType();
@@ -111,10 +109,6 @@ public class EntityParse<T> {
 					}*/
 
 					reflexEntity.getTableColumnMap().put(field.getName(), tableColumnEntity);
-
-
-
-
 
 
 
@@ -209,11 +203,29 @@ public class EntityParse<T> {
 		
 	}
 	
-	public  static  Object getFieldObjectVal(Object object,Field  field) throws IllegalAccessException {
+	public  static  Object getFieldObjectVal(Object object,Field  field,TableColumn tableColumn) throws IllegalAccessException {
 			field.setAccessible(true);
-		    return field.get(object);
+		    Object val=field.get(object);
+			if(val==null){
+				return tableColumn.defaultVal();
+			}
+		    return  val;
 	}
 
+	public  static  Object getFieldObjectVal(Object object,Field  field,TableID  tableID) throws IllegalAccessException {
+		field.setAccessible(true);
+		Object val=field.get(object);
+
+		return  val;
+	}
+
+
+	public  static  Object getFieldObjectVal(Object object,Field  field) throws IllegalAccessException {
+		field.setAccessible(true);
+		Object val=field.get(object);
+
+		return  val;
+	}
 
 	public  String  getTableColumn(Field field){
 		field.setAccessible(true);

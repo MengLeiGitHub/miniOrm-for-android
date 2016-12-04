@@ -24,6 +24,11 @@ public class MiniOrm {
         }
 
 
+    /**
+     * 在版本升级的时候，调用传入需要升级的表的 dao文件  class类型
+     * @param dao
+     */
+
         public static  void  addUpdateTable(Class dao){
             if(daos==null)daos=new ArrayList<Class<BaseDao>>();
             daos.add(dao);

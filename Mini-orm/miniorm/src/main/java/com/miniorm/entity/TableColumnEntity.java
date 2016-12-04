@@ -1,7 +1,6 @@
 package com.miniorm.entity;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 public class TableColumnEntity {
 
@@ -12,8 +11,11 @@ public class TableColumnEntity {
 	private boolean isForeignkey;
 
 	private String  columnType;
-
+	private boolean IgnoreBooleanParam;
 	private Field  field;
+
+	private String  defaultVal;
+
 
 	private  boolean isHierarchicalQueries;
 
@@ -67,4 +69,19 @@ public class TableColumnEntity {
 		return isHierarchicalQueries;
 	}
 
+	public boolean isIgnoreBooleanParam() {
+		return IgnoreBooleanParam;
+	}
+
+	public void setIgnoreBooleanParam(boolean ignoreBooleanParam) {
+		IgnoreBooleanParam = ignoreBooleanParam;
+	}
+
+	public String getDefaultVal() {
+		return defaultVal;
+	}
+
+	public void setDefaultVal(String defaultVal) {
+		this.defaultVal = defaultVal;
+	}
 }

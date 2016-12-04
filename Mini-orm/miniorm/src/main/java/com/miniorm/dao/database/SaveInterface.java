@@ -11,6 +11,8 @@ public interface SaveInterface {
 	public <T>  String  save(T t, ReflexEntity reflexEntity) throws IllegalAccessException;
 	
 	public  <T>  String  save(List<T> list, ReflexEntity reflexEntity);
-	
-	
+
+	public <T>  String  saveOrUpdate(T t, ReflexEntity reflexEntity) throws IllegalAccessException;
+
+
 }

@@ -1,19 +1,17 @@
 package com.miniorm.dao;
 
-import android.util.Log;
-
 import com.miniorm.android.parseType.ParseTypeFactory;
 import com.miniorm.dao.builder.QueryBuilder;
 import com.miniorm.dao.database.BaseResultParseInterface;
+import com.miniorm.dao.database.DatabaseExeInterface;
 import com.miniorm.dao.database.DeleteInterface;
 import com.miniorm.dao.database.QueryInterface;
+import com.miniorm.dao.database.SaveInterface;
 import com.miniorm.dao.database.TableInterface;
 import com.miniorm.dao.database.UpdateInterface;
 import com.miniorm.dao.reflex.EntityParse;
 import com.miniorm.dao.reflex.ReflexCache;
 import com.miniorm.dao.reflex.ReflexEntity;
-import com.miniorm.dao.database.DatabaseExeInterface;
-import com.miniorm.dao.database.SaveInterface;
 import com.miniorm.dao.utils.ResultType;
 import com.miniorm.debug.DebugLog;
 
@@ -38,14 +36,14 @@ public abstract class BaseDao<T> {
     String tag = this.getClass().getName();
     T t;
 
-    private QueryBuilder<T>  queryBuilder;
+    private QueryBuilder<T> queryBuilder;
 
 
     public BaseDao() {
         if (t == null) t = getQueryEntity();
         ParseTypeFactory.addEntityParse(t.getClass().getName(), this);
-        EntityParse entityParse=new EntityParse(t);
-        ReflexCache.addReflexEntity(t.getClass().getName(),entityParse.getFieldValueFromT(t));
+        EntityParse entityParse = new EntityParse(t);
+        ReflexCache.addReflexEntity(t.getClass().getName(), entityParse.getFieldValueFromT(t));
     }
 
     public void setTableInterface(TableInterface tableInterface) {
@@ -66,10 +64,10 @@ public abstract class BaseDao<T> {
 
     public int createTable() {
         // TODO Auto-generated method stub
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.getClass().getName());
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
         String sql = null;
         try {
-            sql = tableInterface.create(t,reflexEntity);
+            sql = tableInterface.create(t, reflexEntity);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return ResultType.FAIL;
@@ -104,13 +102,13 @@ public abstract class BaseDao<T> {
 
 
     public QueryBuilder<T> getQueryBuilder() {
-        if(queryBuilder==null)queryBuilder=new QueryBuilder<T>(this);
+        if (queryBuilder == null) queryBuilder = new QueryBuilder<T>(this);
         return queryBuilder;
     }
 
 
-    public  ReflexEntity  getReflexEntity(){
-        return  ReflexCache.getReflexEntity(t.getClass().getName());
+    public ReflexEntity getReflexEntity() {
+        return ReflexCache.getReflexEntity(t.getClass().getName());
     }
 
 
@@ -119,7 +117,7 @@ public abstract class BaseDao<T> {
     }
 
     public int save(T t) {
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.getClass().getName());
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
 
         String saveString = null;
         try {
@@ -131,11 +129,12 @@ public abstract class BaseDao<T> {
         if (flag == ResultType.FAIL) return flag;
 
         flag = queryLastInsertId();
+
         return flag;
     }
 
     public int saveNoReturnId(T t) {
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.getClass().getName());
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
         String saveString = null;
         try {
             saveString = saveInterface.save(t, reflexEntity);
@@ -146,39 +145,102 @@ public abstract class BaseDao<T> {
         return flag;
     }
 
+
+    public int saveOrUpdate(T t){
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
+
+        String saveString = null;
+        try {
+            saveString = saveInterface.saveOrUpdate(t, reflexEntity);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        int flag = executeUpadate(saveString);
+        if (flag == ResultType.FAIL) return flag;
+
+        flag = queryLastInsertId();
+
+        return flag;
+    }
+
+
+
+
     public int save(List<T> t) {
 
-        databaseexcute.beginTransaction();
         int result = 0;
-        if(t==null||t.size()==0){
+        if (t == null || t.size() == 0) {
 
             return ResultType.FAIL;
         }
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.get(0).getClass().getName());
-        for (T tt : t) {
-            String saveString = null;
-            try {
-                saveString = saveInterface.save(tt, reflexEntity);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            result = executeUpadateList(saveString);
-            if (result == ResultType.FAIL) {
-                break;
-            }
-        }
-        if (result == ResultType.SUCCESS) {
-            databaseexcute.setTransactionSuccessful();
-        } else if (result == ResultType.FAIL) {
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.get(0).getClass().getName());
+        try {
+            databaseexcute.beginTransaction();
+            for (T tt : t) {
+                String saveString = null;
 
+                saveString = saveInterface.save(tt, reflexEntity);
+
+                result = executeUpadateList(saveString);
+                if (result == ResultType.FAIL) {
+                    break;
+                }
+            }
+            if (result == ResultType.SUCCESS) {
+                databaseexcute.setTransactionSuccessful();
+            } else if (result == ResultType.FAIL) {
+
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } finally {
+            databaseexcute.endTransaction();
         }
-        databaseexcute.endTransaction();
 
         return result;
     }
 
+    public int saveOrUpdate(List<T> t) {
+
+        int result = 0;
+        if (t == null || t.size() == 0) {
+
+            return ResultType.FAIL;
+        }
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.get(0).getClass().getName());
+        try {
+            databaseexcute.beginTransaction();
+            int resultInner;
+            for (T tt : t) {
+                String saveString = null;
+                saveString = saveInterface.saveOrUpdate(tt, reflexEntity);
+                resultInner = executeUpadateList(saveString);
+                if (resultInner == ResultType.SUCCESS) {
+                    result=resultInner;
+                }
+            }
+            if (result == ResultType.SUCCESS) {
+                databaseexcute.setTransactionSuccessful();
+            } else if (result == ResultType.FAIL) {
+
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } finally {
+            databaseexcute.endTransaction();
+        }
+
+        return result;
+    }
+
+
+
+
+
+
     public int update(T t) {
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.getClass().getName());
+
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
         String updatesql = null;
         try {
             updatesql = updateInterface.update(t, reflexEntity);
@@ -192,7 +254,7 @@ public abstract class BaseDao<T> {
     }
 
     public int delete(T t) {
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.getClass().getName());
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
         String deleteSql = null;
         try {
             deleteSql = deleteInterface.delete(t, reflexEntity);
@@ -204,7 +266,7 @@ public abstract class BaseDao<T> {
     }
 
     public int delete(T t, String... condition) {
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.getClass().getName());
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
 
         //condition  添加的一些条件
         //reflexEntity.setCondition(condition);
@@ -214,7 +276,7 @@ public abstract class BaseDao<T> {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        DebugLog.e( deleteSql);
+        DebugLog.e(deleteSql);
         return executeUpadate(deleteSql);
     }
 
@@ -226,7 +288,7 @@ public abstract class BaseDao<T> {
     }
 
     public int queryLastInsertId() {
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.getClass().getName());
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
         String queryString = queryInterface.queryLastInsertRowId(t, reflexEntity);
 
         return resultParse.ParseLastInsertRowId(
@@ -234,7 +296,7 @@ public abstract class BaseDao<T> {
     }
 
     public List<T> queryAll() {
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.getClass().getName());
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
 
         String querysql = queryInterface.queryAll(reflexEntity);
 
@@ -243,7 +305,7 @@ public abstract class BaseDao<T> {
     }
 
     public List<T> queryAll(String... condition) {
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.getClass().getName());
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
         //condition  需要重新设计一个类用来存储 这些 条件
 
         String querysql = queryInterface.queryAll(reflexEntity);
@@ -252,8 +314,8 @@ public abstract class BaseDao<T> {
         return executeQueryList(querysql);
     }
 
-    public List<T> queryList(int start,int end) {
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.getClass().getName());
+    public List<T> queryList(int start, int end) {
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
         //condition  需要重新设计一个类用来存储 这些 条件
 
         String querysql = queryInterface.queryAll(reflexEntity);
@@ -261,14 +323,10 @@ public abstract class BaseDao<T> {
 
         return executeQueryList(querysql);
     }
-
-
-
-
 
 
     public T queryByEntity(T t) {
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.getClass().getName());
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
 
         String sql = null;
         try {
@@ -277,13 +335,26 @@ public abstract class BaseDao<T> {
             e.printStackTrace();
         }
 
-        DebugLog.e( sql);
+        DebugLog.e(sql);
         return executeQuery(sql, t, reflexEntity);
+    }
+    public List<T> queryListByEntity(T t) {
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
+
+        String sql = null;
+        try {
+            sql = queryInterface.queryByEntity(t, reflexEntity);
+
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        DebugLog.e(sql);
+        return executeQueryList(sql);
     }
 
     public T queryById(int id) {
 
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.getClass().getName());
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
 
         String querySql = queryInterface.queryById(id, reflexEntity);
 
@@ -291,7 +362,7 @@ public abstract class BaseDao<T> {
     }
 
     public T queryById(String id) {
-        ReflexEntity reflexEntity =ReflexCache.getReflexEntity(t.getClass().getName());
+        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
 
         String querySql = queryInterface.queryById(id, reflexEntity);
 
@@ -304,7 +375,7 @@ public abstract class BaseDao<T> {
 
     public T executeQuery(String sql, T t, ReflexEntity reflexEntity) {
 
-        DebugLog.e( sql);
+        DebugLog.e(sql);
 
         try {
 
@@ -321,7 +392,7 @@ public abstract class BaseDao<T> {
 
         ReflexEntity reflexEntity = new EntityParse<T>(t).getFieldValueFromT(t);
 
-        DebugLog.e( sql);
+        DebugLog.e(sql);
 
         try {
             return (List<T>) resultParse.parseList(
@@ -337,32 +408,42 @@ public abstract class BaseDao<T> {
     public int executeUpadate(String sql) {
         // TODO Auto-generated method stub
 
-        DebugLog.e( sql);
-        databaseexcute.beginTransaction();
-        int result = databaseexcute.excuteUpdate(sql);
-        if (result == ResultType.SUCCESS) {
-            databaseexcute.setTransactionSuccessful();
-        } else if (result == ResultType.FAIL) {
 
+        try {
+            databaseexcute.beginTransaction();
+            int result = databaseexcute.excuteUpdate(sql);
+            if (result == ResultType.SUCCESS) {
+                databaseexcute.setTransactionSuccessful();
+            } else if (result == ResultType.FAIL) {
+
+            }
+            DebugLog.e(sql );
+            DebugLog.e("result="+result +"     success="+ResultType.SUCCESS+"  fail="+ResultType.FAIL);
+
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            databaseexcute.endTransaction();
         }
-        databaseexcute.endTransaction();
 
-        return result;
+
+        return ResultType.FAIL;
+
     }
 
 
-    public int executeUpadateList(String sql) {
+    private int executeUpadateList(String sql) {
         // TODO Auto-generated method stub
 
-        DebugLog.e( sql);
         int result = databaseexcute.excuteUpdate(sql);
-
-
+        DebugLog.e(sql );
+        DebugLog.e("result="+result +"     success="+ResultType.SUCCESS+"  fail="+ResultType.FAIL);
         return result;
     }
 
 
     public int drop() {
-        return databaseexcute.excuteUpdate(tableInterface.drop(new EntityParse<T>(t).getFieldValueFromT(t)));
+        return executeUpadate(tableInterface.drop(new EntityParse<T>(t).getFieldValueFromT(t)));
     }
 }

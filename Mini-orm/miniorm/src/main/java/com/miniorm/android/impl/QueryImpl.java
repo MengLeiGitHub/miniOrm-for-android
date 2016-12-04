@@ -3,6 +3,7 @@ package com.miniorm.android.impl;
 
 import com.miniorm.android.ColumnType;
 import com.miniorm.android.KeyWork;
+import com.miniorm.constant.ParamConstant;
 import com.miniorm.dao.database.QueryInterface;
 import com.miniorm.dao.reflex.EntityParse;
 import com.miniorm.dao.reflex.ReflexEntity;
@@ -89,8 +90,9 @@ public class QueryImpl implements QueryInterface {
 						String key= tableColumnEntity.getColumnName();
 
 						Object obj = EntityParse.getFieldObjectVal(t, tableColumnEntity.getField());
-		 				
-						String s=keyVal(key,obj);
+
+						String s=keyVal(key,obj,tableColumnEntity);
+
 						sb.append(s==null?"":s);
 					}
 					if (size != 0) {
@@ -104,12 +106,27 @@ public class QueryImpl implements QueryInterface {
 		return sb.toString();
 	}
 	
-	private String keyVal(String key,Object val){
+	private String keyVal(String key,Object val,TableColumnEntity tableColumnEntity){
 		StringBuilder  sb=new StringBuilder();
 		if (val == null)
 			   return null;
 		if (val instanceof String)
 			sb.append(key + "=" + "'" + val + "'  " + KeyWork.AND);
+		else if(val instanceof Boolean ){
+					if(!tableColumnEntity.isIgnoreBooleanParam()){
+						if(((Boolean) val).booleanValue())
+							sb.append(key + "=  "+ ParamConstant.BOOLEAN_TRUE + KeyWork.AND);
+						else
+							sb.append(key + "="+ParamConstant.BOOLEAN_FALSE+ KeyWork.AND);
+					}
+		}else  if(val instanceof Integer ){
+			if(((Integer) val).intValue()==0)
+			{
+
+			}
+			else
+				sb.append(key + "=   "+((Integer) val).intValue() + KeyWork.AND);
+		}
 		else
 			sb.append(key + "=" + val + KeyWork.AND);
 		

@@ -29,6 +29,8 @@ public class DeleteImpl implements DeleteInterface {
 				sb.append("'");
 				sb.append(obj);
 				sb.append("'");
+			}else  if(obj instanceof  Boolean){
+				sb.append((((Boolean)obj)?1:0) + ",");
 			}
 			else
 				sb.append(obj);

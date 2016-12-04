@@ -42,7 +42,11 @@ public class TableImpl implements TableInterface {
 				
 				sb.append(ColumnType.AUTOINCREMENT);
 
+			}else if(tableID.getKeytype()==Parmary.CUSTOM){
+
 			}
+
+
 			sb.append(",");
 		}
 		StringBuilder  foreig=new StringBuilder();

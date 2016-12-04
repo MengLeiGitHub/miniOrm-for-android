@@ -37,8 +37,10 @@ public class ResultParseimpl implements BaseResultParseInterface<Cursor> {
                     ParseTypeInterface parseTypeInterface = ParseTypeFactory
                             .getFieldParser(field.getType());
 
-                    Object obj = parseTypeInterface.getValFromCursor(cursor, index);
-                    t1 = (T) entityParse.setEntityValue(t1, obj, field);
+                    if(parseTypeInterface!=null) {
+                        Object obj = parseTypeInterface.getValFromCursor(cursor, index);
+                        t1 = (T) entityParse.setEntityValue(t1, obj, field);
+                    }
                 } else {
                     BaseDao baseDao = ParseTypeFactory.getEntityParse(field.getType().getName());
                     field.setAccessible(true);

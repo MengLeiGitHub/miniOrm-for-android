@@ -27,7 +27,7 @@ MiniOrm-for-android  是一款简单，只能，灵活的android   ORM框架，�
   
 dependencies {
   
-    compile 'com.ml.miniorm:miniorm:1.0.0'
+    compile 'com.ml.miniorm:miniorm:1.1.8'
 }
 
  
@@ -40,15 +40,19 @@ dependencies {
 
  <pre><code>
  
- 
+//框架初始化，也可放在activity中
  public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-    	//test.db数据库名称
+        //test.db数据库名称
         //1数据库版本号	
         MiniOrm.init(this,1,"test.db");
-
+        //如果表中新增字段，需要升级数据库，需要指定那个该表对应的Dao
+        MiniOrm.addUpdateTable(TeacherDao.class);
+        //注：如果数据库版本需要升降级别，并且表未做任何改变，最好不要指定该Dao类，否则会做一些不必要的工作，浪费手机性能
+        
+        
     }
 }
  
@@ -63,63 +67,62 @@ dependencies {
  <pre><code>
  
  
-      import com.miniorm.android.ColumnType;
-import com.miniorm.annotation.Table;
-import com.miniorm.annotation.TableColumn;
-import com.miniorm.annotation.TableID;
-import com.miniorm.enumtype.Parmary;
+    import com.miniorm.android.ColumnType;
+    import com.miniorm.annotation.Table;
+    import com.miniorm.annotation.TableColumn;
+    import com.miniorm.annotation.TableID;
+    import com.miniorm.enumtype.Parmary;
 
-@Table(name="student")
-public class Student {
-   
-   @TableID(name="sid",isPrimaryKey=true,defaultVal=0,type=   Parmary.AutoIncrement,columnType= ColumnType.INTEGER)
-   private int id ;
-   
-   @TableColumn(name="stuname",columnType=ColumnType.TEXT)
-   private String stuName;
-   
-   
-   @TableColumn(name="age",columnType=ColumnType.INTEGER)
-   private int age;
-
-
-   public int getId() {
-      return id;
-   }
-
-
-   public void setId(int id) {
-      this.id = id;
-   }
-
-
-   public String getStuName() {
-      return stuName;
-   }
-
-
-   public void setStuName(String stuName) {
-      this.stuName = stuName;
-   }
-
-
-   public int getAge() {
-      return age;
-   }
-
-
-   public void setAge(int age) {
-      this.age = age;
-   }
-
-
-   @Override
-   public String toString() {
-      return "age="+age+"  stuname="+stuName+" id="+id;
-   }
-}
- 
- 
+    @Table(name="student")
+    public class Student {
+       
+       @TableID(name="sid",isPrimaryKey=true,defaultVal=0,type=   Parmary.AutoIncrement,columnType= ColumnType.INTEGER)
+       private int id ;
+       
+       @TableColumn(name="stuname",columnType=ColumnType.TEXT)
+       private String stuName;
+       
+       
+       @TableColumn(name="age",columnType=ColumnType.INTEGER)
+       private int age;
+     
+       public int getId() {
+          return id;
+       }
+    
+    
+       public void setId(int id) {
+          this.id = id;
+       }
+    
+    
+       public String getStuName() {
+          return stuName;
+       }
+    
+    
+       public void setStuName(String stuName) {
+          this.stuName = stuName;
+       }
+    
+    
+       public int getAge() {
+          return age;
+       }
+    
+    
+       public void setAge(int age) {
+          this.age = age;
+       }
+    
+    
+       @Override
+       public String toString() {
+          return "age="+age+"  stuname="+stuName+" id="+id;
+       }
+    }
+     
+     
  </code></pre>
 
 ####注解说明：
@@ -127,70 +130,107 @@ public class Student {
 * @TableID(name="sid",isPrimaryKey=true,defaultVal=0,type= Parmary.AutoIncrement,columnType= ColumnType.INTEGER)
  依次顺序表示 ： 字段名= sid ，字段为表 主键 ，默认数字为   0   ,主键为自动增长，字段类型是
     Integer类型
-
+ 注意：如果主键为自增长的话，那么columnType= ColumnType.INTEGER必须设置为INTEGER类型
+       如果主键是自设置的话，无限制，但只能为 整型（INTEGER）或字符型
 
 
 ####含有外键对象实体的创建：
 
  <pre><code>
  
- import com.miniorm.android.ColumnType;
-import com.miniorm.annotation.Table;
-import com.miniorm.annotation.TableColumn;
-import com.miniorm.annotation.TableID;
-import com.miniorm.enumtype.Parmary;
+    package com.test.test;
+    
+    import com.miniorm.android.ColumnType;
+    import com.miniorm.annotation.Table;
+    import com.miniorm.annotation.TableColumn;
+    import com.miniorm.annotation.TableID;
+    import com.miniorm.enumtype.Parmary;
+    
+    @Table(name="userTable")
+    public class Teacher {
+    
+        @TableColumn(name="username",columnType= ColumnType.TEXT)
+    	private  String userName;
+    
+    	@TableColumn(name="pwd",columnType=ColumnType.TEXT)
+    	private  String pwd;
+    	
+    
+    	@TableID(isPrimaryKey=true,name="userid",defaultVal=0,type= Parmary.CUSTOM,columnType=ColumnType.INTEGER)
+    	private int id;
+    	
+    	@TableColumn(name="sid",isForeignkey=true,columnType=ColumnType.INTEGER,HierarchicalQueries = true)
+    	private Student student;
+    
+    	@TableColumn(name="sex",columnType=ColumnType.VARCHAR)
+    	private  String sex;
+    	@TableColumn(name="shengao",columnType=ColumnType.INTEGER)
+    	private  int shengao;
+    
+    	@TableColumn(name="isGril",columnType= ColumnType.BOOLEAN,IgnoreBooleanParam = false)
+    	private  boolean isGril;
+    
+    
+    
+    	public String getUserName() {
+    		return userName;
+    	}
+    	public void setUserName(String userName) {
+    		this.userName = userName;
+    	}
+    	public String getPwd() {
+    		return pwd;
+    	}
+    	public void setPwd(String pwd) {
+    		this.pwd = pwd;
+    	}
+    	public int getId() {
+    		return id;
+    	}
+    	public void setId(int id) {
+    		this.id = id;
+    	}
+    	public Student getStudent() {
+    		return student;
+    	}
+    	public void setStudent(Student student) {
+    		this.student = student;
+    	}
+    
+    	public String getSex() {
+    		return sex;
+    	}
+    
+    	public void setSex(String sex) {
+    		this.sex = sex;
+    	}
+    
+    	public int getShengao() {
+    		return shengao;
+    	}
+    
+    	public void setShengao(int shengao) {
+    		this.shengao = shengao;
+    	}
+    
+    	public boolean isGril() {
+    		return isGril;
+    	}
+    
+    	public void setIsGril(boolean isGril) {
+    		this.isGril = isGril;
+    	}
+    }
 
-@Table(name="userTable")
-public class Teacher {
-
-   @TableColumn(name="username",columnType= ColumnType.TEXT)
-   private  String userName;
-
-   @TableColumn(name="pwd",columnType=ColumnType.TEXT)
-   private  String pwd;
-   
-
-   @TableID(isPrimaryKey=true,name="userid",defaultVal=0,type= Parmary.AutoIncrement,columnType=ColumnType.INTEGER)
-   private int id;
-   
-   @TableColumn(name="sid",isForeignkey=true,columnType=ColumnType.INTEGER,HierarchicalQueries = true)
-   private Student student;
-
-
-   
-   public String getUserName() {
-      return userName;
-   }
-   public void setUserName(String userName) {
-      this.userName = userName;
-   }
-   public String getPwd() {
-      return pwd;
-   }
-   public void setPwd(String pwd) {
-      this.pwd = pwd;
-   }
-   public int getId() {
-      return id;
-   }
-   public void setId(int id) {
-      this.id = id;
-   }
-   public Student getStudent() {
-      return student;
-   }
-   public void setStudent(Student student) {
-      this.student = student;
-   }
-
-
-}
 
  </code></pre>
 
    ####和普通实体创建唯一不同的地方就是含有外键的对象
 *  TableColumn(isForeignkey=true)设置注解的属性为外键
 *  HierarchicalQueries = true 表示为外键和主键级联查询，默认此属性为 true 
+*  IgnoreBooleanParam=false   如果在实体类中含有布尔变量，并且该变量保存在了数据库，那么该值就是在按照 
+*  teacherDao.queryListByEntity(teacher)或者  teacherDao.queryByEntity(teacher);  查询的时候，
+*      忽视属性  isGril该值的变量
 
 
 
@@ -265,7 +305,16 @@ for (int i2=0;i2<10000;i2++){
  
 stuDao.save(lis2t);
 
+stuDao.saveOrUpdate(lis2t);
 </code></pre>
+
+*  stuDao.save(lis2t); 该方法执行的时候，两种情况
+*     1.该表主键设置为自增长（type = Parmary.AutoIncrement）  该方法执行会在表中新增一条数据
+*     2.设置为自定义主键  （type= Parmary.CUSTOM） 的话，指定的主键的值如果在表中含有相同的话，则不会执行成功
+*  stuDao.saveOrUpdate(lis2t);  同样的和save的方法对比
+*     1.如果相同的数据，就算 不指定主键，如果其他的属性值和表中某条数据都相同，该方法也不会在数据库新增。相反 如果没有和该数据都相同的，就会新增
+*     2.如果指定了主键 就会更新原来的数据
+
 
 ####删除：
 <code><pre>
@@ -274,7 +323,7 @@ Student student1=new Student();
 student.setId(2);
 stuDao.delete(student);
  
-stuDao.save(lis2t);
+
 
 ######根据其他属性删除
 Student student=new Student();
@@ -317,14 +366,36 @@ List<Student> list=stuDao.queryAll();
 #####按照ID查询
 stuDao.queryById(1)||stuDao.queryById(“1”)
 </code></pre>
+####精确条件查询
+#####可以写sql语句 然后直接调用方法
+<code><pre>
+teacherDao.executeQuery("select * from usertable",teacherDao.getQueryEntity(),teacherDao.getReflexEntity() );
+</code></pre>
+#####调用QueryBuilder          
+<code><pre>
+    //查询 全部 性别为 女  
+    List<Teacher> listaaa=teacherDao.getQueryBuilder().callQuery().queryAll().where(Where.handle().eq("sex","女")).executeQueryList();
+    
+    List<Teacher> listaaa=teacherDao.getQueryBuilder().callQuery().queryAll().where(Where.handle().and("sex","=","女")).executeQueryList();
+
+    
+    //模糊查询
+    List<CustomerBean> list = customerBeanDao.getQueryBuilder().callQuery().queryAll().where(Where.handle().and("userName", "    like  ", "%"+tiaojian+"%").or().and("company", "  like  ", "%"+tiaojian+"%").or().and("nickname", "  like  ", "%"+tiaojian+"%")).executeQueryList();
+    //对应的 sql  select  * from   CustomerBean  where   userName    like  '%你曾%'   or   company  like  '%你曾%'   or   nickname  like  '%你曾%' ;
+        
+
+    //根据主键分页
+    String table = teacherDao.getReflexEntity().getTableEntity().getTableName();
+    String column = teacherDao.getReflexEntity().getTableIdEntity().getColumnName();
+    List list1 = teacherDao.getQueryBuilder().callQuery().queryAll().where(Where.handle().and(column, "<=", lastid).and(column, ">", lastid - 10).desc()).executeQueryList();
+ 
 
 
-
-
+</code></pre>
 
 ##有问题反馈
 在使用中有任何问题，欢迎反馈给我，可以用以下联系方式跟我交流
 
 * 邮件:menglei0207@sina.cn
 * QQ群: 215233258
-* github:https://github.com/MengLeiGitHub/)
+* 本人其他开源github:https://github.com/MengLeiGitHub/)

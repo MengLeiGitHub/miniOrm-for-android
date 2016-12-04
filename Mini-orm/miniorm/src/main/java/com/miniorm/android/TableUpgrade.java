@@ -8,6 +8,7 @@ import com.miniorm.android.impl.Updateimpl;
 import com.miniorm.android.parseType.parser.StringParser;
 import com.miniorm.dao.BaseDao;
 import com.miniorm.dao.utils.ResultType;
+import com.miniorm.debug.DebugLog;
 import com.miniorm.entity.TableColumnEntity;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class TableUpgrade {
             }
             cursorisexit.close();
         }
-        Log.e("tag","tableUpdate===第一步  查询表"+talbeName+"是否存在");
+        DebugLog.e("tableUpdate===第一步  查询表"+talbeName+"是否存在");
 
 
         String queryCreateSql="select name,sql from sqlite_master  where type='table'  and  name='"+talbeName+"'";
@@ -71,30 +72,30 @@ public class TableUpgrade {
 
             int result=databaseExcute.excuteUpdate(createsql);
 
-            Log.e("tag", "createsql="+createsql);
+            DebugLog.e( "createsql="+createsql);
 
             if(ResultType.SUCCESS!=result){
                 return;
             }
             querycursor.close();
-            Log.e("tag","tableUpdate===第二步  查询表"+talbeName+"创建的sql语句，然后创建临时表");
+            DebugLog.e("tableUpdate===第二步  查询表"+talbeName+"创建的sql语句，然后创建临时表");
         }
 
 
         String copyDataSql="insert into "+talbeName+"_temp    select  *  from  "+talbeName ;
         int result=databaseExcute.excuteUpdate(copyDataSql);
-        Log.e("tag", "copyDataSql=" + copyDataSql);
+        DebugLog.e("copyDataSql=" + copyDataSql);
 
         if(ResultType.SUCCESS!=result){
             return;
         }
-        Log.e("tag","tableUpdate===第三步  查询老表"+talbeName+"   向临时表 插入老数据");
+        DebugLog.e("tableUpdate===第三步  查询老表"+talbeName+"   向临时表 插入老数据");
 
        int  dropOldTableResult=  databaseExcute.excuteUpdate("DROP TABLE IF EXISTS   " + talbeName + ";");
         if(ResultType.SUCCESS!=dropOldTableResult){
             return;
         }
-        Log.e("tag","tableUpdate===第四步  删除老表"+talbeName+"   ");
+        DebugLog.e("tableUpdate===第四步  删除老表"+talbeName+"   ");
 
 
 
@@ -103,7 +104,7 @@ public class TableUpgrade {
         if(ResultType.SUCCESS!=createTableResult){
             return;
         }
-        Log.e("tag","tableUpdate===第五步  创建新表"+talbeName );
+        DebugLog.e("tableUpdate===第五步  创建新表"+talbeName );
 
         //==============================查看表中的数据结构==================================
         String getAllColumns="pragma table_info ('"+talbeName+"_temp');";
@@ -157,16 +158,21 @@ public class TableUpgrade {
         dataSql.append("_temp");
 
         int dataCopyresult=	databaseExcute.excuteUpdate(dataSql.toString());
-        Log.e("tag", "copyDataSql=" + dataSql);
+        DebugLog.e("copyDataSql=" + dataSql);
 
         if(dataCopyresult!=ResultType.SUCCESS){
 
             return;
         }
-        Log.e("tag","tableUpdate===第三步  查询临时表 "+talbeName+"_temp   向新标 插入临时表数据");
+        DebugLog.e( "tableUpdate===第六步  查询临时表 " + talbeName + "_temp   向新标 插入临时表数据");
 
-        databaseExcute.excuteUpdate("DROP TABLE   IF EXISTS   " + talbeName + "_temp ;");
-     }
+      int  dropresultLinshi=  databaseExcute.excuteUpdate("DROP TABLE   IF EXISTS   " + talbeName + "_temp ;");
+        if(dropresultLinshi==ResultType.FAIL ){
+            return;
+        }
+        DebugLog.e( "tableUpdate===第七步  删除临时表 ");
+
+    }
 
     private  ArrayList<String>  getIntersection(ArrayList<String> table,ArrayList<String> bean){
         ArrayList<String>  result=new ArrayList<String>();

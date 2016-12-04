@@ -16,7 +16,7 @@ public class Teacher {
 	private  String pwd;
 	
 
-	@TableID(isPrimaryKey=true,name="userid",defaultVal=0,type= Parmary.AutoIncrement,columnType=ColumnType.INTEGER)
+	@TableID(isPrimaryKey=true,name="userid",defaultVal=0,type= Parmary.CUSTOM,columnType=ColumnType.INTEGER)
 	private int id;
 	
 	@TableColumn(name="sid",isForeignkey=true,columnType=ColumnType.INTEGER,HierarchicalQueries = true)
@@ -26,6 +26,10 @@ public class Teacher {
 	private  String sex;
 	@TableColumn(name="shengao",columnType=ColumnType.INTEGER)
 	private  int shengao;
+
+	@TableColumn(name="isGril",columnType= ColumnType.BOOLEAN,IgnoreBooleanParam = false)
+	private  boolean isGril;
+
 
 
 	public String getUserName() {
@@ -69,4 +73,11 @@ public class Teacher {
 		this.shengao = shengao;
 	}
 
+	public boolean isGril() {
+		return isGril;
+	}
+
+	public void setIsGril(boolean isGril) {
+		this.isGril = isGril;
+	}
 }

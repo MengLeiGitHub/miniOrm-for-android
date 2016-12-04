@@ -12,7 +12,7 @@ import com.miniorm.enumtype.Parmary;
 @Table(name = "card")
 public class Card {
 
-    @TableID(type = Parmary.AutoIncrement,columnType = ColumnType.NVARCHAR,name = "cid",defaultVal = 0,isPrimaryKey = false)
+    @TableID(type = Parmary.AutoIncrement,columnType = ColumnType.INTEGER,name = "cid",defaultVal = 0,isPrimaryKey = false)
     private  int id;
     @TableColumn(name = "address",columnType = ColumnType.NVARCHAR,isForeignkey = false,isPrimaryKey = false)
     private  String  address;

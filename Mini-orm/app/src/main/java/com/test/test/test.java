@@ -4,14 +4,14 @@ package com.test.test;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
-import com.miniorm.MiniOrm;
 import com.miniorm.android.DatabaseExcute;
 import com.miniorm.android.impl.QueryImpl;
 import com.miniorm.android.impl.ResultParseimpl;
 import com.miniorm.android.impl.TableImpl;
 import com.miniorm.dao.builder.QueryBuilder;
 
-import junit.framework.TestCase;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class test extends AndroidTestCase {
@@ -25,7 +25,6 @@ public class test extends AndroidTestCase {
 
 
         long timestart = System.currentTimeMillis();
-
 
         for (int i = 0; i < 1; i++) {
             Teacher user = new Teacher();
@@ -69,6 +68,17 @@ public class test extends AndroidTestCase {
             Log.e("tag","--------------");
         }
         System.out.println(System.currentTimeMillis() - timestart);
+
+        Set set=new HashSet<String>();
+
+        for (int i=0;i<10;i++){
+            set.add( i+"");
+        }
+        Log.e("tag","--------------"+set.toString()+"\n");
+
+
+
+
     }
 
 }

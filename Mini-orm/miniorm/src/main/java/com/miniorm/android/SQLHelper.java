@@ -6,38 +6,40 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Environment;
-import android.util.Log;
 
 import com.miniorm.MiniOrm;
-import com.miniorm.android.impl.TableImpl;
-import com.miniorm.dao.BaseDao;
-import com.miniorm.dao.reflex.ReflexCache;
-import com.miniorm.dao.reflex.ReflexEntity;
 import com.miniorm.dao.utils.ResultType;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+import com.miniorm.debug.DebugLog;
 
 public class SQLHelper extends SQLiteOpenHelper {
 
 	private static SQLHelper  sqlHelper;
-
 	SQLiteDatabase db;
+	static String DbName="";
 	protected SQLHelper(Context context,int version,String dbname) {
  		super(context, dbname, null, version);
 		db = getReadableDatabase();
 	}
 
 	public  static  synchronized   SQLHelper  getInstance(){
-			if(sqlHelper==null)		sqlHelper=new SQLHelper(MiniOrm.application, MiniOrm.version,MiniOrm.dbName);
+			initDbHelper();
 
-		return sqlHelper;
+		if(DbName.equals(MiniOrm.dbName))return sqlHelper;
+			else  {
+				sqlHelper=null;
+				initDbHelper();
+				return sqlHelper;
+			}
 	}
-	
+
+	private static void  initDbHelper(){
+		if(sqlHelper==null){
+			DebugLog.e("initDbHelper()  DbName="+DbName +"  MiniOrm.dbName="+MiniOrm.dbName);
+			DbName=MiniOrm.dbName;
+			sqlHelper=new SQLHelper(MiniOrm.application, MiniOrm.version,MiniOrm.dbName);
+		}
+	}
+
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 
