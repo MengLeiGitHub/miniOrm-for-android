@@ -385,6 +385,7 @@ teacherDao.executeQuery("select * from usertable",teacherDao.getQueryEntity(),te
         
 
     //根据主键分页
+    int lastid = teacherDao.queryLastInsertId();
     String table = teacherDao.getReflexEntity().getTableEntity().getTableName();
     String column = teacherDao.getReflexEntity().getTableIdEntity().getColumnName();
     List list1 = teacherDao.getQueryBuilder().callQuery().queryAll().where(Where.handle().and(column, "<=", lastid).and(column, ">", lastid - 10).desc()).executeQueryList();
