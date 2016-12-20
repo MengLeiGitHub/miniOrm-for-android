@@ -1,8 +1,5 @@
 package com.miniorm.dao.builder;
 
-import java.util.LinkedList;
-
-
 public class Where {
 	
 	private StringBuilder  sql=null;
@@ -156,6 +153,7 @@ public class Where {
 	}
 	public  String  sql(){
 		String sqls=sql.toString().replaceAll(Placeholder," ");
+		sql.delete(0,sql.length()-1);
  		return  sqls;
 	}
 

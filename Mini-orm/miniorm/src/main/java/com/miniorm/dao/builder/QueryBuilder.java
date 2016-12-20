@@ -2,18 +2,11 @@ package com.miniorm.dao.builder;
 
 
 
-import android.util.Log;
-
-import com.miniorm.android.parseType.ParseTypeFactory;
-import com.miniorm.annotation.TableID;
-import com.miniorm.dao.database.QueryInterface;
-import com.miniorm.dao.reflex.EntityParse;
-import com.miniorm.annotation.Table;
 import com.miniorm.dao.BaseDao;
+import com.miniorm.dao.database.QueryInterface;
 import com.miniorm.dao.reflex.ReflexCache;
 import com.miniorm.dao.reflex.ReflexEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class QueryBuilder<T> {
@@ -84,6 +77,7 @@ public class QueryBuilder<T> {
 
  		public  T      excute(){
 			String sqls=sql.toString().replaceAll(Placeholder, "")+";";
+			sql.delete(0,sqls.length()-1);
 			return 	baseDao.executeQuery(sqls,t,reflexEntity);
 		}
 		

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -161,14 +160,14 @@ public class MainActivity extends Activity implements OnClickListener {
                 Teacher teacher = new Teacher();
                 teacher.setSex("女");
                 teacher.setIsGril(true);
-                List<Teacher> listaaa = teacherDao.queryListByEntity(teacher);
-                teacherDao.queryByEntity(teacher);
-                //List<Teacher> listaaa=teacherDao.getQueryBuilder().callQuery().queryAll().where(Where.handle().eq("sex","女")).executeQueryList();
-                Log.e("tag", listaaa.size() + "");
-                myBaseAdapter.setList(listaaa);
-                int id = teacherDao.queryLastInsertId();
-                Log.e("tag", "id=" + id);
-
+              //  List<Teacher> listaaa = teacherDao.queryListByEntity(teacher);
+              //  teacherDao.queryByEntity(teacher);
+               // List<Teacher> listaaa=teacherDao.getQueryBuilder().callQuery().queryAll().where(Where.handle().eq("sex","女")).executeQueryList();
+             //   Log.e("tag", listaaa.size() + "");
+           //     myBaseAdapter.setList(listaaa);
+           /*     int id = teacherDao.queryLastInsertId();
+                Log.e("tag", "id=" + id);*/
+                teacherDao.getQueryBuilder().callQuery().queryAll().where(Where.handle().eq("sex","女")).excute();
 
                 break;
             case R.id.drop:

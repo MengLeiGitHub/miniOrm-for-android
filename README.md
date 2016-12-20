@@ -27,7 +27,7 @@ MiniOrm-for-android  是一款简单，只能，灵活的android   ORM框架，�
   
 dependencies {
   
-    compile 'com.ml.miniorm:miniorm:1.1.8'
+    compile 'com.ml.miniorm:miniorm:1.1.9'
 }
 
  
