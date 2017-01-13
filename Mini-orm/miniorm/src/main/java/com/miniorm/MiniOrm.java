@@ -7,7 +7,31 @@ import com.miniorm.dao.BaseDao;
 import java.util.ArrayList;
 
 /**
- * Created by admin on 2016/9/27.
+ *
+ *  ┏┓　　　┏┓
+ ┏┛┻━━━┛┻┓
+ ┃　　　　　　　┃ 　
+ ┃　　　━　　　┃ ++ + + +
+ ██━██ ┃++
+
+ ┃　　　　　　　┃
+ ┃　　　┻　　　┃
+ ┃　　　　　　　┃
+ ┗━┓　　　┏━┛
+
+ ┃　　　┃   Code is far away from bug with the animal protecting　　　　　　
+ ┃　　　┃   神兽保佑,代码无bug　
+ ┃　　　┗━━━┓
+ ┃　　　　　　　┣┓
+ ┃　　　　　　　┏┛
+ ┗┓┓┏━┳┓┏┛
+ ┃┫┫　 ┃┫┫
+ ┗┻┛　 ┗┻┛
+ author :ml
+ qq:1634990276
+ email:1634990276@qq.com
+ *
+ * Created by ML on 2016/9/27.
  */
 public class MiniOrm {
         public static  Application application;

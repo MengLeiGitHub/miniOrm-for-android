@@ -326,8 +326,7 @@ public abstract class BaseDao<T> {
 
 
     public T queryByEntity(T t) {
-        ReflexEntity reflexEntity = ReflexCache.getReflexEntity(t.getClass().getName());
-
+        ReflexEntity reflexEntity = getReflexEntity();
         String sql = null;
         try {
             sql = queryInterface.queryByEntity(t, reflexEntity);
@@ -374,13 +373,28 @@ public abstract class BaseDao<T> {
     // public abstract List<T> getEntityList();
 
     public T executeQuery(String sql, T t, ReflexEntity reflexEntity) {
-
         DebugLog.e(sql);
 
         try {
 
             return (T) resultParse.parse(
                     databaseexcute.excuteQuery(sql, reflexEntity), t, reflexEntity);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+
+    public T executeQuery(String sql) {
+        DebugLog.e(sql);
+
+        try {
+            ReflexEntity reflexEntity=getReflexEntity();
+            T t1=getQueryEntity();
+            return (T) resultParse.parse(
+                    databaseexcute.excuteQuery(sql, reflexEntity), t1, reflexEntity);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -444,6 +458,6 @@ public abstract class BaseDao<T> {
 
 
     public int drop() {
-        return executeUpadate(tableInterface.drop(new EntityParse<T>(t).getFieldValueFromT(t)));
+        return executeUpadate(tableInterface.drop(getReflexEntity()));
     }
 }

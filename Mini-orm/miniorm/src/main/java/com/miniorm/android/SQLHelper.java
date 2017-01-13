@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.miniorm.MiniOrm;
 import com.miniorm.dao.utils.ResultType;
+import com.miniorm.dao.utils.StringUtils;
 import com.miniorm.debug.DebugLog;
 
 public class SQLHelper extends SQLiteOpenHelper {
@@ -36,6 +37,47 @@ public class SQLHelper extends SQLiteOpenHelper {
 		if(sqlHelper==null){
 			DebugLog.e("initDbHelper()  DbName="+DbName +"  MiniOrm.dbName="+MiniOrm.dbName);
 			DbName=MiniOrm.dbName;
+
+			if(StringUtils.isNull(MiniOrm.dbName)){
+				MiniOrm.dbName="123";
+				MiniOrm.version=1;
+			}
+
+		/*	if(StringUtils.isNull(DbName)||MiniOrm.version==0){
+				try {
+					File path=StroageUtils.getCacheFile(MiniOrm.application,"db.txt");
+					String json=FileUtils.readFile(path);
+					JSONObject jsonObject=new JSONObject(json);
+					String name=jsonObject.getString("name");
+					int version=jsonObject.getInt("version");
+					if(StringUtils.isNull(name)){
+					}else {
+						DbName=name;
+						MiniOrm.dbName=name;
+						MiniOrm.version=version;
+					}
+
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					DbName="ML";
+					MiniOrm.version=1;
+				}
+
+			}else {
+				File path=StroageUtils.getOwnCacheDirectory(MiniOrm.application,"db.txt");
+				try {
+					JSONObject jsonObject=new JSONObject();
+					jsonObject.put("name",DbName);
+					jsonObject.put("version",MiniOrm.version);
+					FileUtils.writeFile(jsonObject.toString(),path);
+				}catch (Exception e){
+
+				}
+
+			}*/
+			DebugLog.e("initDbHelper()  2  DbName="+DbName +"  MiniOrm.dbName="+MiniOrm.dbName);
+
 			sqlHelper=new SQLHelper(MiniOrm.application, MiniOrm.version,MiniOrm.dbName);
 		}
 	}

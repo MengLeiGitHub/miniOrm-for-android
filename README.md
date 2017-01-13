@@ -394,6 +394,18 @@ teacherDao.executeQuery("select * from usertable",teacherDao.getQueryEntity(),te
 
 </code></pre>
 
+##代码混淆
+<code><pre>
+-keep class com.miniorm.**
+-keepclassmembers class com.miniorm.** { *; }
+-keep enum com.miniorm.**
+-keepclassmembers enum com.miniorm.** { *; }
+-keep interface com.miniorm.**
+-keepclassmembers interface com.miniorm.** { *; }
+
+</code></pre>
+
+
 ##有问题反馈
 在使用中有任何问题，欢迎反馈给我，可以用以下联系方式跟我交流
 

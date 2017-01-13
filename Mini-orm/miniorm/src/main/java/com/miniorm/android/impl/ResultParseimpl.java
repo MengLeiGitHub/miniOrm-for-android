@@ -2,6 +2,7 @@ package com.miniorm.android.impl;
 
 import android.database.Cursor;
 
+import com.miniorm.android.parseType.ParseTypeFactory;
 import com.miniorm.android.parseType.ParseTypeInterface;
 import com.miniorm.annotation.TableColumn;
 import com.miniorm.annotation.TableID;
@@ -10,7 +11,7 @@ import com.miniorm.dao.database.BaseResultParseInterface;
 import com.miniorm.dao.reflex.EntityParse;
 import com.miniorm.dao.reflex.ReflexCache;
 import com.miniorm.dao.reflex.ReflexEntity;
-import com.miniorm.android.parseType.ParseTypeFactory;
+import com.miniorm.debug.DebugLog;
 import com.miniorm.entity.TableIdEntity;
 
 import java.lang.reflect.Field;
@@ -74,7 +75,8 @@ public class ResultParseimpl implements BaseResultParseInterface<Cursor> {
         EntityParse entityParse = new EntityParse<T>(t);
         HashMap<String, Field> hashmap = entityParse
                 .getColumnAndField(t);
-
+        if(cursor!=null)
+        DebugLog.e("cursor.getCount()="+cursor.getCount());
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
@@ -82,7 +84,7 @@ public class ResultParseimpl implements BaseResultParseInterface<Cursor> {
                 for (String column : hashmap.keySet()) {
                     int index = cursor.getColumnIndex(column);
                     Field field = hashmap.get(column);
-
+                    DebugLog.e("index="+index+" column="+column+"  filed="+field.getName());
                     TableColumn table = field.getAnnotation(TableColumn.class);
                     TableID tableID = field.getAnnotation(TableID.class);
                     if (table != null && !table.isForeignkey() || tableID != null) {
@@ -91,6 +93,7 @@ public class ResultParseimpl implements BaseResultParseInterface<Cursor> {
 
                            if(parseTypeInterface!=null){
                                Object obj = parseTypeInterface.getValFromCursor(cursor, index);
+                               DebugLog.e("obj="+obj);
                                t1 = (T) entityParse.setEntityValue(t1, obj, field);
                            }
                     } else {
