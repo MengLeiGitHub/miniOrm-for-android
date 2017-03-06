@@ -1,6 +1,8 @@
 package com.miniorm.android;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 
 import com.miniorm.MiniOrm;
 import com.miniorm.dao.reflex.ReflexEntity;
@@ -28,6 +30,15 @@ public class DatabaseExcute  implements DatabaseExeInterface<Cursor> {
 
 		 return  sqlHelper.execSQL(sql);
 	}
+
+
+	public int excuteUpdate(SQLiteStatement sqLiteStatement){
+	 		return  sqlHelper.execSQL2(sqLiteStatement);
+	}
+
+
+
+
 
 	@Override
 	public void beginTransaction() {

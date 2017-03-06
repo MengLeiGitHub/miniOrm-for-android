@@ -2,11 +2,12 @@
 ##MiniOrm-for-Android是什么?
 MiniOrm-for-android  是一款简单，只能，灵活的android   ORM框架，完全基于对象进行操作。主要帮助android程序员的快速开发。通过反射将查询的数据智能的转换成 Entity 。省去开发人员手动解析的时间。
 
+##[新版效率更高](https://github.com/MengLeiGitHub/MiniOrm-2)
+
 ##功能特点：
 
 * 小巧，类库大小27k
  
-* 快速，10000条数据，时长3.6秒
 * 使用简单，支持实体类注解方式，除了实体类之外只需创建一个DAO就可以进行操作。
 
 * 支持原声的sql语句操作
@@ -46,7 +47,7 @@ dependencies {
     public void onCreate() {
         super.onCreate();
         //test.db数据库名称
-        //1数据库版本号	
+        //1数据库版本号    
         MiniOrm.init(this,1,"test.db");
         //如果表中新增字段，需要升级数据库，需要指定那个该表对应的Dao
         MiniOrm.addUpdateTable(TeacherDao.class);

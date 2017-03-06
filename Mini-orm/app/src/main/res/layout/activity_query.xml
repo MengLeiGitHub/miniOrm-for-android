@@ -1,0 +1,63 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+   tools:context=".MainActivity" >
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+          />
+
+
+    <Button
+        android:id="@+id/queryByEnytity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:text="queryByEnytity" />
+    <Button
+        android:id="@+id/queryByID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="queryByID" />
+    <Button
+        android:id="@+id/queryAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="queryAll" />
+    <Button
+    android:id="@+id/layz_manytomany"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="懒加载ManyToMany" />
+    <Button
+        android:id="@+id/layz_manytoone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="懒加载ManyToOne" />
+    <Button
+        android:id="@+id/layz_onetoone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="懒加载OneToOne" />
+    <Button
+        android:id="@+id/layz_onetoMany"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="懒加载OneToMany" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="queryBuilder"
+        android:id="@+id/queryBuilder"
+       />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="customerSQL"
+        android:id="@+id/customerSQL"
+        />
+
+</LinearLayout>

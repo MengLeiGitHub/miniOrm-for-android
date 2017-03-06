@@ -5,9 +5,11 @@ import android.support.multidex.MultiDexApplication;
 import com.async.http.AsyncHttp;
 import com.async.http.Interceptor2.RequestInterceptorActionInterface;
 import com.async.http.request2.BaseHttpRequest;
+import com.async.http.request2.BaseRequest;
 import com.async.http.request2.RequestConfig;
 import com.async.http.request2.entity.Header;
 import com.async.http.utils.LogUtils;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.util.ArrayList;
 
@@ -32,7 +34,7 @@ public class MyApplication extends MultiDexApplication {
 
         AsyncHttp.instance().addRequestInterceptor(new RequestInterceptorActionInterface() {
             @Override
-            public <T> BaseHttpRequest<T> interceptorAction(BaseHttpRequest<T> baserequest) throws Exception {
+            public <T> BaseRequest<T> interceptorAction(BaseRequest<T> baserequest) throws Exception {
                 baserequest.addHead(new Header("version", "1.0"));
                 baserequest.addHead(new Header("tokenId", "8FA24C888B39405FB46499C62E48A504"));
                 baserequest.addHead(new Header("token", "D38F719AEDCF4E6E8DADB7B773665E11"));
@@ -44,5 +46,10 @@ public class MyApplication extends MultiDexApplication {
             }
         });
         LogUtils.setDebug(true);
+
+        LeakCanary.install(this);
+
+
     }
+
 }

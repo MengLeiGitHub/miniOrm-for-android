@@ -9,7 +9,7 @@ import com.miniorm.enumtype.Parmary;
 /**
  * Created by admin on 2016-11-03.
  */
-@Table(name = "testbean")
+@Table(name = "a22231")
 public class TestBean {
 
 

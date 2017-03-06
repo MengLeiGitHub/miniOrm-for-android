@@ -107,7 +107,9 @@ public class EntityParse<T> {
 						tableColumnEntity.setForeignkey(true);
 
 					}*/
-
+					if(tableColumnEntity.isHierarchicalQueries()){
+						reflexEntity.getForeignkeyColumnMap().put(field.getName(), tableColumnEntity);
+					}
 					reflexEntity.getTableColumnMap().put(field.getName(), tableColumnEntity);
 
 

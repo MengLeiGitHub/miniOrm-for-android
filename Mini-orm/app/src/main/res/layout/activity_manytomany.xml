@@ -1,0 +1,108 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+   tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ListView
+            android:id="@+id/xueshenglistview"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="250dp"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:text="查询某个学生有几个老师"
+
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:text="学生的id"
+
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/xueshengid"
+                android:background="@color/colorAccent"/>
+            <Button
+                android:id="@+id/queryAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="学生查询" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="保存" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ListView
+            android:id="@+id/laoshilistview"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="250dp"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:text="查询老师下面有多少个学生"
+
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:text="老师的id"
+
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/laoshiid"
+                android:background="@color/colorAccent"/>
+            <Button
+                android:id="@+id/laoshichaxun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="老师查询" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+</LinearLayout>

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by admin on 2016/9/23.
  */
-public class MyBaseAdapter extends BaseAdapter {
+public class TeacherAndStudentAdapter extends BaseAdapter {
 
     List list;
     Activity activity;
@@ -32,6 +32,7 @@ public class MyBaseAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if(list==null)return 0;
         return list.size();
     }
 
@@ -53,11 +54,16 @@ public class MyBaseAdapter extends BaseAdapter {
             TextView tv = null;
 
             tv = new TextView(activity);
+            StringBuilder stringBuilder=new StringBuilder();
+            stringBuilder.append("学生姓名：");
+            stringBuilder.append(student.getStuName());
+            stringBuilder.append("学生的年龄：");
+            stringBuilder.append(student.getAge());
 
+            stringBuilder.append("学生的id：");
+            stringBuilder.append(student.getId());
 
-            tv.setText("id="+student.getId() +"\n"+
-                    "name="+student.getStuName()+"\n"+
-                    "age="+student.getAge());
+            tv.setText(stringBuilder.toString());
 
             tv.setTextSize(10);
 
@@ -70,13 +76,23 @@ public class MyBaseAdapter extends BaseAdapter {
             TextView tv = null;
 
             tv = new TextView(activity);
+            StringBuilder stringBuilder=new StringBuilder();
+            stringBuilder.append("老师姓名：");
+            stringBuilder.append(student.getUserName());
+            stringBuilder.append("老师密码：");
+            stringBuilder.append(student.getPwd());
 
+            stringBuilder.append("老师的性别：");
+            stringBuilder.append(student.getSex());
 
-            tv.setText(JSON.toJSONString(student));
+            stringBuilder.append("老师的id：");
+            stringBuilder.append(student.getId());
+
 
             tv.setTextSize(10);
 
-            tv.setTextColor(Color.RED);
+            tv.setTextColor(Color.GREEN);
+            tv.setText(stringBuilder.toString());
 
 
             return tv;

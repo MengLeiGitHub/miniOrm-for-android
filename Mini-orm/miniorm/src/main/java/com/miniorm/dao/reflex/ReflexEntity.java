@@ -19,6 +19,8 @@ public class ReflexEntity {
 	private HashMap<String, TableColumnEntity>    tableColumnMap;
 
 
+	private HashMap<String, TableColumnEntity>   foreignkeyColumnMap;
+
 
 	private String tableName;
 
@@ -38,6 +40,7 @@ public class ReflexEntity {
 		keyset=new HashSet<String>();
 		keyValue=new HashMap<String, Object>();
 		tableColumnMap=new HashMap<String, TableColumnEntity>();
+		foreignkeyColumnMap=new HashMap<>();
 	}
 	
 	public void  addKeyValue(String key,Object obj){
@@ -95,6 +98,13 @@ public class ReflexEntity {
 	public void setCondition(String[] condition) {
 		this.condition = condition;
 	}
-	
- 
+
+
+	public HashMap<String, TableColumnEntity> getForeignkeyColumnMap() {
+ 		return foreignkeyColumnMap;
+	}
+
+	public void setForeignkeyColumnMap(HashMap<String, TableColumnEntity> foreignkeyColumnMap) {
+		this.foreignkeyColumnMap = foreignkeyColumnMap;
+	}
 }
