@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="class1">
+        <item>米落兴</item>
+        <item>宣冬旭</item>
+        <item>毛驹治</item>
+        <item>戚量儒</item>
+        <item>闵言</item>
+        <item>孔帆新</item>
+        <item>麻章滕</item>
+        <item>李勇旭</item>
+
+    </array>
+    <array name="class2">
+        <item>陆祖湃</item>
+        <item>应材宁 </item>
+        <item>邵迈翔</item>
+        <item>倪钢明</item>
+        <item>柏僚敏</item>
+        <item>凌协</item>
+        <item>高汐</item>
+        <item>杜善稚</item>
+
+    </array>
+    <array name="class3">
+        <item>魏凌</item>
+        <item>酆延 </item>
+        <item>纪泰哲</item>
+        <item>萧戚禧</item>
+        <item>杨修纯</item>
+        <item>殷驳慈</item>
+        <item>高汐</item>
+        <item>经韶</item>
+    </array>
+    <array name="techers">
+        <item>邱冷菱</item>
+        <item>万飞薇</item>
+        <item>颜晓丝</item>
+        <item>彭孤菱</item>
+        <item>杨修纯</item>
+        <item>单沛凝 </item>
+        <item>许觅露</item>
+        <item>秦晓山</item>
+    </array>
+    <array name="courses">
+        <item>语文</item>
+        <item>数学</item>
+        <item>英语</item>
+        <item>生物</item>
+    </array>
+
+</resources>

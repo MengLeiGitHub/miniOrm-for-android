@@ -1,12 +1,13 @@
 ﻿
 ##MiniOrm-for-Android是什么?
 MiniOrm-for-android  是一款简单，只能，灵活的android   ORM框架，完全基于对象进行操作。主要帮助android程序员的快速开发。通过反射将查询的数据智能的转换成 Entity 。省去开发人员手动解析的时间。
+关系的映射支持多对多、一对多，通过apt 生成代理类，进行关系的映射查询，实现数据懒加载，侵入性小，优化了性能，提高了程序 的效率。
+ 
 
-##[新版效率更高](https://github.com/MengLeiGitHub/MiniOrm-2)
-
+ 
 ##功能特点：
 
-* 小巧，类库大小27k
+* 类库小
  
 * 使用简单，支持实体类注解方式，除了实体类之外只需创建一个DAO就可以进行操作。
 
@@ -17,8 +18,8 @@ MiniOrm-for-android  是一款简单，只能，灵活的android   ORM框架，�
 ##结构模型：
 ![mahua](jiegou.png)
 
-* 类关系图（核心不含有数据库操作部分）：
-    纯java结构设计，通过接口的设计，将上层业务和实际操作数据库的部分进行分离，开发者可以在此基础上自行实现mysql。。。等数据的支持。下面是java部分核心设计
+
+
 
 ##接入方法
 
@@ -395,6 +396,12 @@ teacherDao.executeQuery("select * from usertable",teacherDao.getQueryEntity(),te
 
 </code></pre>
 
+
+####[类关系使用方法](https://github.com/MengLeiGitHub/miniOrm-for-android/blob/master/README_2.md)
+
+
+
+
 ##代码混淆
 <code><pre>
 -keep class com.miniorm.**
@@ -407,9 +414,4 @@ teacherDao.executeQuery("select * from usertable",teacherDao.getQueryEntity(),te
 </code></pre>
 
 
-##有问题反馈
-在使用中有任何问题，欢迎反馈给我，可以用以下联系方式跟我交流
-
-* 邮件:menglei0207@sina.cn
-* QQ群: 215233258
-* 本人其他开源github:https://github.com/MengLeiGitHub/)
+在使用中有任何问题，欢迎反馈给我

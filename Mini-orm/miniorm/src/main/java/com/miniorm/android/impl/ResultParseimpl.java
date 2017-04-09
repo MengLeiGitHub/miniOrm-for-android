@@ -49,12 +49,14 @@ public class ResultParseimpl implements BaseResultParseInterface<Cursor> {
                     TableIdEntity tableId = entityParse.getTableIDEntity(fieldObj);
 
                     ParseTypeInterface parseTypeInterface = ParseTypeFactory.getFieldParser(tableId.getField().getType());
+                    if(index>=0){
+                        Object obj = parseTypeInterface.getValFromCursor(cursor, index);
 
-                    Object obj = parseTypeInterface.getValFromCursor(cursor, index);
+                        Object obj1 = baseDao.queryById(obj.toString());
 
-                    Object obj1 = baseDao.queryById(obj.toString());
+                        t1 = (T) entityParse.setEntityValue(t1, obj1, field);
+                    }
 
-                    t1 = (T) entityParse.setEntityValue(t1, obj1, field);
                 }
             }
             if (cursor != null)
@@ -91,7 +93,7 @@ public class ResultParseimpl implements BaseResultParseInterface<Cursor> {
                         ParseTypeInterface parseTypeInterface = ParseTypeFactory
                                 .getFieldParser(field.getType());
 
-                           if(parseTypeInterface!=null){
+                           if(parseTypeInterface!=null&&index>=0){
                                Object obj = parseTypeInterface.getValFromCursor(cursor, index);
                                DebugLog.e("obj="+obj);
                                t1 = (T) entityParse.setEntityValue(t1, obj, field);
@@ -108,7 +110,7 @@ public class ResultParseimpl implements BaseResultParseInterface<Cursor> {
                         //获取外键主键的 类型  转换
                         ParseTypeInterface parseTypeInterface = ParseTypeFactory.getFieldParser(tableId.getField().getType());
 
-                        if(parseTypeInterface!=null){
+                        if(parseTypeInterface!=null&&index>=0){
 
 
                                 //获取外键主键值

@@ -172,7 +172,7 @@ public class SaveImpl implements SaveInterface {
 		TableIdEntity tableIdEntity=reflexEntity.getTableIdEntity();
 		String  saveorUpdate=save(t,reflexEntity);
 
-		if(tableIdEntity.isPrimaryKey()){
+		/*if(tableIdEntity.isPrimaryKey()){
 			if(tableIdEntity.getKeytype()==Parmary.AutoIncrement){
 				StringBuilder stringBuilder=new StringBuilder(saveorUpdate);
 				//insert into student(name,age) select 'zz7zz7zz',25 where not exists(select * from student where name='zz7zz7zz' and age=25)
@@ -213,9 +213,9 @@ public class SaveImpl implements SaveInterface {
 
 				return 		saveorUpdate.replace("insert into ","REPLACE  into ");
 			}
-		}
+		}*/
 
-		return "";
+		return saveorUpdate.replace("insert into ","REPLACE  into ");
 	}
 
 }

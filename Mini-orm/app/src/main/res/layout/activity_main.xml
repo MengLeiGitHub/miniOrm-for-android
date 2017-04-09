@@ -1,34 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.test.MainActivity">
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    >
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+        android:text="所有的老师：（选择班级后，点击老师可将老师添加到班级）"
+        />
+    <GridView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/techerlist"
+        android:layout_margin="10dp"
+        android:numColumns="6">
 
-    <include layout="@layout/content_main" />
+    </GridView>
 
-</android.support.design.widget.CoordinatorLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_unit"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="15dp"
+                android:text="班级"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                />
+            <Spinner
+                android:spinnerMode="dropdown"
+                android:id="@+id/classSp"
+                android:dropDownWidth="110dp"
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="授课老师："
+            />
+        <GridView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numColumns="4"
+            android:id="@+id/TeachingGridview">
+
+        </GridView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="学生："/>
+        <GridView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numColumns="4"
+            android:id="@+id/StudentGridview">
+
+        </GridView>
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="15dp"
+                android:text="课程"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                />
+            <Spinner
+                android:spinnerMode="dropdown"
+                android:id="@+id/courseSp"
+                android:dropDownWidth="120dp"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="15dp"
+            android:text="老师"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            />
+        <GridView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numColumns="6"
+            android:id="@+id/teacherlessionview"></GridView>
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

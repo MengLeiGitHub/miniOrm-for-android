@@ -1,0 +1,19 @@
+apply plugin: 'java'
+
+ext {
+    bintrayName = 'miniorm-annotation'
+    artifact = bintrayName
+    libraryName = 'miniorm annotation'
+    libraryDescription = 'annotation for miniorm'
+    libraryVersion = miniorm_annotation_version
+}
+
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+compileJava {
+    sourceCompatibility = "1.7"
+    targetCompatibility = "1.7"
+}
