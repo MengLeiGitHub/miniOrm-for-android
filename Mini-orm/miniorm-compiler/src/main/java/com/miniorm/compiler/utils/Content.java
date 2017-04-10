@@ -1,6 +1,6 @@
 package com.miniorm.compiler.utils;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
+
 
 /**
  * Created by admin on 2017-03-29.
@@ -23,9 +23,11 @@ public   class Content {
     public static String MANY_TO_MANY_MAPPING = "ManyToManyMapping";
     public static String ONE_TO_MANY_MAPPING = "OneToManyMapping";
 
+    public static String TABLE_DAO_MAP="TableDaoMapping";
+    public static String TABLE_DAO_MAP_CHILD=TABLE_DAO_MAP+"_Child";
 
     public static String DAO_PACKAGE_NAME = "com.miniorm.android";
-    public static String DAO_NAME = "androidBaseDao2";
+    public static String DAO_NAME = "androidBaseDao";
     public static String NEW_DAO_NAME = "Dao";
     public static final String TABLE = MAINPACKAGE_NAME + ".annotation.Table";
 
@@ -38,5 +40,5 @@ public   class Content {
     public static final String MANY_TO_MANY = MAINPACKAGE_NAME + ".annotation.ManyToMany";
     public static final String MANY_TO_ONE = MAINPACKAGE_NAME + ".annotation.ManyToOne";
 
-
+    public static final String TABLE_DAO=MAINPACKAGE_NAME+".annotation.TableDao";
 }

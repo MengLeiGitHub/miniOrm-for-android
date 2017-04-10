@@ -408,9 +408,14 @@ public abstract class BaseDao<T> {
                 }
                 ProxyCache.addProxyClass(queryEntityClassName, tEntityClass);
             }else {
-                
-                tEntity=getTableEntity();
-                tEntityClass= (Class<T>) tEntity.getClass();
+                try {
+                    tEntity= (T) superClass.newInstance();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                tEntityClass= superClass;
             }
             return tEntityClass;
     }
@@ -439,6 +444,13 @@ public abstract class BaseDao<T> {
             Type[] p = ((ParameterizedType) t1).getActualTypeArguments();
             superClass = (Class<T>) p[0];
             tEntityClass = superClass;
+        }
+        try {
+            return tEntityClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
         return null;
     }

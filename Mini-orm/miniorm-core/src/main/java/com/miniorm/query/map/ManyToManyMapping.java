@@ -2,6 +2,7 @@ package com.miniorm.query.map;
 
 import android.util.Log;
 
+import com.miniorm.MiniOrm;
 import com.miniorm.android.KeyWork;
 import com.miniorm.android.androidBaseDao;
 import com.miniorm.annotation.ManyToMany;
@@ -167,7 +168,8 @@ public class ManyToManyMapping  {
 
         final Class<?> bridgingTableClass = bridgingTable;
 
-        androidBaseDao returnClassDao = new androidBaseDao<Object>() {
+
+     /*   androidBaseDao returnClassDao = new androidBaseDao<Object>() {
             @Override
             public Object getTableEntity() {
                 try {
@@ -179,7 +181,8 @@ public class ManyToManyMapping  {
                 }
                 return null;
             }
-        };
+        };*/
+        androidBaseDao returnClassDao = MiniOrm.getTableDaoMapping().getDaoByName(initClass.getName()).newInstance();
         ReflexEntity bridgingTableReflexEntity = ReflexCache.getReflexEntity(bridgingTableClass.getName());
         if (bridgingTableReflexEntity == null) {
             EntityParse entityParse = new EntityParse(bridgingTableClass);

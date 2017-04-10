@@ -128,7 +128,7 @@
         <GridView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:numColumns="6"
+            android:numColumns="4"
             android:id="@+id/teacherlessionview"></GridView>
     </LinearLayout>
 

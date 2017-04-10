@@ -9,8 +9,10 @@ import com.miniorm.android.impl.SaveImpl;
 import com.miniorm.android.impl.TableImpl;
 import com.miniorm.android.impl.Updateimpl;
 import com.miniorm.android.impl.DatabaseExcute;
+import com.miniorm.annotation.TableDao;
 import com.miniorm.dao.BaseDao;
 
+@TableDao
 public abstract class androidBaseDao<T>  extends BaseDao<T> {
 
 	public androidBaseDao(){
@@ -22,5 +24,4 @@ public abstract class androidBaseDao<T>  extends BaseDao<T> {
 		setDatabaseexcute(new DatabaseExcute());
 
 	}
-	
 }

@@ -2,6 +2,7 @@ package com.miniorm.query.map;
 
 import android.util.Log;
 
+import com.miniorm.MiniOrm;
 import com.miniorm.android.androidBaseDao;
 import com.miniorm.annotation.Table;
 import com.miniorm.dao.builder.Where;
@@ -46,7 +47,7 @@ public   abstract   class ToOneMapping  {
                 continue;
             }
         }
-        androidBaseDao baseDao2 = new androidBaseDao<Object>() {
+       /* androidBaseDao baseDao2 = new androidBaseDao<Object>() {
 
             @Override
             public Object getTableEntity() {
@@ -60,6 +61,9 @@ public   abstract   class ToOneMapping  {
                 return null;
             }
         };
+*/
+
+        androidBaseDao baseDao2= MiniOrm.getTableDaoMapping().getDaoByName(initClass.getName()).newInstance();
 
         if (foreignkeyfield == null) {
 

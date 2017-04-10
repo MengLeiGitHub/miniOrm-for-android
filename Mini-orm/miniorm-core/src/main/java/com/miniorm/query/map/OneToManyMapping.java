@@ -1,6 +1,7 @@
 package com.miniorm.query.map;
 
 
+import com.miniorm.MiniOrm;
 import com.miniorm.android.androidBaseDao;
 
 import com.miniorm.dao.builder.Where;
@@ -104,7 +105,8 @@ public class OneToManyMapping {
         final Class<?>  initClass=targetClass;
 
 
-        androidBaseDao baseDao2=   new androidBaseDao<Object>(){
+
+        /*androidBaseDao baseDao2=   new androidBaseDao<Object>(){
 
             @Override
             public Object getTableEntity() {
@@ -118,6 +120,8 @@ public class OneToManyMapping {
                 return null;
             }
         };
+*/
+        androidBaseDao baseDao2= MiniOrm.getTableDaoMapping().getDaoByName(initClass.getName()).newInstance();
 
         ReflexEntity targetReflex= ReflexCache.getReflexEntity(targetClass.getName());
 
