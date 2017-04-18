@@ -1,5 +1,5 @@
 ﻿##MiniOrm2
-在原来1版的基础上增加了，
+在原来1版的基础上增加了关系映射，优化了插入、查询，效率更高
 
 
 
@@ -8,8 +8,9 @@
 ####如何接入？
  
  ```java
-		   
-	
+	compile 'com.github.mengleigithub:miniorm-core:2.0.2'
+
+	annotationProcessor 'com.github.mengleigithub:miniorm-compiler:1.0.2'
 
  ```
 

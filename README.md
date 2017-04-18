@@ -21,6 +21,9 @@ MiniOrm-for-android  是一款简单，只能，灵活的android   ORM框架，�
 
 
 
+##1.1.9版本为版本一最后的版本，不再进行维护，使用版本2会更高效
+
+
 ##接入方法
 
 ####在你项目的 build.gradle 文件里添加如下配置 
@@ -253,12 +256,7 @@ public class TeacherDao  extends androidBaseDao< Teacher> {
 import com.miniorm.android.androidBaseDao;
 
 public class StuDao extends androidBaseDao< Student> {
-
-   @Override
-   public Student getQueryEntity() {
-      // TODO Auto-generated method stub
-      return new Student();
-   }
+ 
 
 }
 

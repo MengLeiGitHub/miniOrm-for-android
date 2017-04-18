@@ -1,3 +1,5 @@
-include ':app', ':miniorm-compiler', ':miniorm-annotation'/*,
+include ':app',
+        ':miniorm-compiler',
+        ':miniorm-annotation'/*,
 ':miniorm'*/,
         ':miniorm-core'
