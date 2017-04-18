@@ -1,5 +1,4 @@
-﻿
-##MiniOrm-for-Android是什么?
+﻿# MiniOrm-for-Android是什么?
 MiniOrm-for-android  是一款简单，只能，灵活的android   ORM框架，完全基于对象进行操作。主要帮助android程序员的快速开发。通过反射将查询的数据智能的转换成 Entity 。省去开发人员手动解析的时间。
 关系的映射支持多对多、一对多，通过apt 生成代理类，进行关系的映射查询，实现数据懒加载，侵入性小，优化了性能，提高了程序 的效率。
  
