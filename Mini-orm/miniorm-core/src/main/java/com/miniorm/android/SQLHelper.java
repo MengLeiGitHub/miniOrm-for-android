@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Build;
+import android.util.Log;
 
 import com.miniorm.MiniOrm;
 import com.miniorm.constant.MiniOrmDataConfig;
@@ -29,7 +30,6 @@ public class SQLHelper extends SQLiteOpenHelper {
 
     protected SQLHelper(Context context, int version, String dbname) {
         super(context, dbname, null, version);
-
         db = openDatabase();
     }
 
@@ -44,10 +44,16 @@ public class SQLHelper extends SQLiteOpenHelper {
     public synchronized void closeDatabase() {
         if (mOpenCounter.decrementAndGet() == 0) {
             // Closing database
-            db.close();
+            if(db!=null)
+                db.close();
         }
     }
 
+    @Override
+    public synchronized void close() {
+        sqlHelper=null;
+        super.close();
+    }
 
     public static synchronized SQLHelper getInstance() {
 
@@ -122,6 +128,19 @@ public class SQLHelper extends SQLiteOpenHelper {
     }
 
     public static long timer;
+
+
+    public long execInsert(SQLiteStatement sqLiteStatement){
+        try {
+            long timer1 = System.currentTimeMillis();
+            long result=sqLiteStatement.executeInsert();
+            timer += (System.currentTimeMillis() - timer1);
+            return result;
+        } catch (Exception e) {
+            return ResultType.FAIL;
+        }
+    }
+
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public int execSQL2(SQLiteStatement sqLiteStatement) {

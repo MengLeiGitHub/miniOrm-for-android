@@ -22,33 +22,39 @@ public class DatabaseExcute implements DatabaseExeInterface<Cursor> {
 	SQLiteDatabase sqLiteDatabase;
 
 	public DatabaseExcute(){
-		  sqlHelper=SQLHelper.getInstance();
-		  sqLiteDatabase=sqlHelper.getDb();
+		sqlHelper=SQLHelper.getInstance();
+		sqLiteDatabase=sqlHelper.getDb();
 	}
-       
+
 	public Cursor excuteQuery(String sql, ReflexEntity t) {
 		// TODO Auto-generated method stub
 		String[] selectionArgs=null;
 		if(sqlHelper!=null)
-		return sqlHelper.rawQuery(sql, selectionArgs);
+			return sqlHelper.rawQuery(sql, selectionArgs);
 		else return null;
+	}
+
+	@Override
+	public long excuteInsert(MySqliteStatement mySqliteStatement) {
+
+
+		return sqlHelper.execInsert(holdSQLSteByData(mySqliteStatement));
 	}
 
 	public int excuteUpdate(String sql) {
 		// TODO Auto-generated method stub
 
-		 return  sqlHelper.execSQL(sql);
+		return  sqlHelper.execSQL(sql);
 	}
 
-	@Override
-	public int excuteUpdate(MySqliteStatement mySqliteStatement) {
+	private SQLiteStatement holdSQLSteByData(MySqliteStatement mySqliteStatement){
 		long timer1=System.currentTimeMillis();
-	    SQLiteStatement sqLiteStatement=sqLiteDatabase.compileStatement(mySqliteStatement.getSql());
+		SQLiteStatement sqLiteStatement=sqLiteDatabase.compileStatement(mySqliteStatement.getSql());
 		List<KV> kvlist=mySqliteStatement.getKvlist();
 		if(DebugLog.isDebug){
 			log(kvlist);
 		}
- 		for (int i=0;i<kvlist.size();i++){
+		for (int i=0;i<kvlist.size();i++){
 			KV kv=kvlist.get(i);
 			int index = kv.getIndex();
 			Object val=kv.getObj();
@@ -69,10 +75,18 @@ public class DatabaseExcute implements DatabaseExeInterface<Cursor> {
 		}
 
 		timer+=(System.currentTimeMillis()-timer1);
-		return  sqlHelper.execSQL2(sqLiteStatement);
+		return  sqLiteStatement;
+	}
+
+
+	@Override
+	public int excuteUpdate(MySqliteStatement mySqliteStatement) {
+
+		return  sqlHelper.execSQL2(holdSQLSteByData(mySqliteStatement));
 	}
 
 	private void log(List<KV> kvlist) {
+		if(kvlist==null)return;
 		StringBuilder stringBuilder=new StringBuilder();
 		stringBuilder.append("{");
 
@@ -98,13 +112,13 @@ public class DatabaseExcute implements DatabaseExeInterface<Cursor> {
 
 	@Override
 	public void endTransaction() {
-			sqlHelper.endTransaction();
+		sqlHelper.endTransaction();
 
 	}
 
 	@Override
 	public void setTransactionSuccessful() {
-			sqlHelper.setTransactionSuccessful();
+		sqlHelper.setTransactionSuccessful();
 	}
 
 }

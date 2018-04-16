@@ -44,6 +44,10 @@ public class GeneralQueryByOtherSqlAnalysis<T> extends GeneralSqlAnalysis<T> {
 		fieldId.setAccessible(true);
 		Object ID=fieldId.get(o);
 		if(ID!=null){
+			 int defaultVal=reflexEntity.getTableIdEntity().getDefaultVal();
+			if(ID.toString().equals(""+defaultVal)){
+				return null;
+			}
 					Class<N> nClass= (Class<N>) o.getClass();
 				return 	new  GeneralQueryByIdSqlAnalysis<N>(reflexEntity,nClass).FieldCondition(o);
 

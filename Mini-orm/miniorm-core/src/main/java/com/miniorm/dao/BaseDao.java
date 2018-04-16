@@ -1,8 +1,8 @@
 package com.miniorm.dao;
 
-import android.util.Log;
 
-import com.miniorm.android.parseType.ParseTypeFactory;
+
+
 import com.miniorm.dao.builder.QueryBuilder;
 import com.miniorm.dao.builder.Where;
 import com.miniorm.dao.database.BaseResultParseInterface;
@@ -187,6 +187,7 @@ public abstract class BaseDao<T> {
     }
 
 
+    @Deprecated
     public int save(List<T> t) {
 
         int result = 0;
@@ -252,7 +253,7 @@ public abstract class BaseDao<T> {
         }
 
 
-        return executeUpadate(updatesql);
+        return executeUpadate(updatesql.getSql());
 
     }
 
@@ -387,37 +388,37 @@ public abstract class BaseDao<T> {
     }
 
     private Class<T> getTableEntitys() {
-            queryEntityClassName=getQueryEntityClassName();
-            Class superClass = ProxyCache.getProxyClass(queryEntityClassName);
-            if (superClass == null) {
-                tEntity = getTableEntity();
-                tEntityClass= tEntity==null?tEntityClass: (Class<T>) tEntity.getClass();
-                try {
-                    Class tclass = Class.forName(tEntityClass.getName() + Content.NEW_CLASS_NAME);
-                    tEntityClass = tclass;
-                } catch (Exception e) {
+        queryEntityClassName=getQueryEntityClassName();
+        Class superClass = ProxyCache.getProxyClass(queryEntityClassName);
+        if (superClass == null) {
+            tEntity = getTableEntity();
+            tEntityClass= tEntity==null?tEntityClass: (Class<T>) tEntity.getClass();
+            try {
+                Class tclass = Class.forName(tEntityClass.getName() + Content.NEW_CLASS_NAME);
+                tEntityClass = tclass;
+            } catch (Exception e) {
 
-                }
-
-                try {
-                    tEntity=tEntity==null?tEntityClass.newInstance():tEntity;
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                ProxyCache.addProxyClass(queryEntityClassName, tEntityClass);
-            }else {
-                try {
-                    tEntity= (T) superClass.newInstance();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                tEntityClass= superClass;
             }
-            return tEntityClass;
+
+            try {
+                tEntity=tEntity==null?tEntityClass.newInstance():tEntity;
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            ProxyCache.addProxyClass(queryEntityClassName, tEntityClass);
+        }else {
+            try {
+                tEntity= (T) superClass.newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            tEntityClass= superClass;
+        }
+        return tEntityClass;
     }
     private String queryEntityClassName;
     public final String  getQueryEntityClassName(){
@@ -478,9 +479,7 @@ public abstract class BaseDao<T> {
 
     public T executeQuery(String sql) {
         DebugLog.e(sql);
-
         try {
-
             if (baseQuery == null) {
                 baseQuery = new QueryALL<>(reflexEntity, tEntityClass);
                 baseQuery.getResultParse().useAlias(false);
@@ -490,7 +489,6 @@ public abstract class BaseDao<T> {
             e.printStackTrace();
             return null;
         }
-
     }
 
     private List<T> executeQueryBySQL(String sql) {
@@ -544,6 +542,13 @@ public abstract class BaseDao<T> {
         // TODO Auto-generated method stub
         int result = databaseexcute.excuteUpdate(sql);
         DebugLog.e(sql);
+        DebugLog.e("result=" + result + "     success=" + ResultType.SUCCESS + "  fail=" + ResultType.FAIL);
+        return result;
+    }
+    private long save(MySqliteStatement sql) {
+        // TODO Auto-generated method stub
+        long result = databaseexcute.excuteInsert(sql);
+        DebugLog.e(sql.getSql());
         DebugLog.e("result=" + result + "     success=" + ResultType.SUCCESS + "  fail=" + ResultType.FAIL);
         return result;
     }

@@ -3,16 +3,6 @@ apply plugin: 'java'
 
 
 
-ext {
-    bintrayName = 'miniorm-compiler'
-    artifact = bintrayName
-    libraryName = 'miniorm compiler'
-    libraryDescription = 'A compiler for miniorm to create child_proxy'
-    libraryVersion = miniorm_compiler_version
-
-}
-
-
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -28,5 +18,18 @@ compileJava {
     sourceCompatibility = '1.7'
     targetCompatibility = '1.7'
 }
+
+
+
+
+
+ext {
+    bintrayName = 'miniorm-compiler'
+    artifact = bintrayName
+    libraryName = 'miniorm compiler'
+    libraryDescription = 'A compiler for miniorm to create child_proxy'
+    libraryVersion = miniorm_compiler_version
+
+}/*
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'*/

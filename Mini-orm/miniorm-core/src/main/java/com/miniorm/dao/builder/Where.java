@@ -1,7 +1,7 @@
 package com.miniorm.dao.builder;
 
 public class Where {
-	
+
 	private StringBuilder  sql=null;
 
 	private 	final String  where ="  where  ";
@@ -16,12 +16,12 @@ public class Where {
 	public Where(){
 		sql=new StringBuilder();
 	}
-	
 
-	
+
+
 	public Where   and(String   columnName,String op,Object obj){
 
- 		if(sql.indexOf(where)<0){
+		if(sql.indexOf(where)<0){
 			where();
 		}
 		if(sql.toString().endsWith(Placeholder)){
@@ -34,14 +34,14 @@ public class Where {
 			sql.append("'");
 			sql.append(obj.toString());
 			sql.append("'");
-			
+
 		}else{
 			sql.append(obj.toString());
- 		}
+		}
 		sql.append(Placeholder);
 
 		return this;
- 	}
+	}
 
 
 	public  Where  and(){
@@ -150,10 +150,17 @@ public class Where {
 
 		return this;
 	}
+	public Where  and(String sql){
+		if(!sql.toLowerCase().contains("where")){
+			where();
+		}
+		this.sql.append(sql);
+		return this;
+	}
 	public  String  sql(){
 		String sqls=sql.toString().replaceAll(Placeholder," ");
 		sql.delete(0,sql.length()-1);
- 		return  sqls;
+		return  sqls;
 	}
 
 

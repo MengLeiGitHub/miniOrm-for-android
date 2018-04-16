@@ -7,11 +7,20 @@ import com.miniorm.constant.ParamConstant;
 import com.miniorm.dao.database.UpdateInterface;
 import com.miniorm.dao.reflex.EntityParse;
 import com.miniorm.dao.reflex.MySqliteStatement;
+import com.miniorm.dao.reflex.ReflexCache;
 import com.miniorm.dao.reflex.ReflexEntity;
+import com.miniorm.entity.KV;
 import com.miniorm.entity.TableColumnEntity;
 import com.miniorm.entity.TableIdEntity;
+import com.miniorm.enumtype.Parmary;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Updateimpl implements UpdateInterface {
 
@@ -21,9 +30,9 @@ public class Updateimpl implements UpdateInterface {
 		sb.append(" update ");
 		sb.append(rexEntity.getTableName());
 		sb.append("  set ");
-
+		String keyWord=" , ";
 		for (TableColumnEntity tableColumn:rexEntity.getTableColumnMap().values()) {
-			
+
 			if(tableColumn.isPrimaryKey())continue;
 			Object obj = EntityParse.getFieldObjectVal(t,tableColumn.getField());
 			if(obj==null)continue;
@@ -34,12 +43,15 @@ public class Updateimpl implements UpdateInterface {
 				};
 			}
 			String key=tableColumn.getColumnName();
-			sb=appVal(sb,key,obj,tableColumn,",");
+			sb=appVal(sb,key,obj,tableColumn,keyWord);
 		}
+
 		if (rexEntity.getKeyset().size() != 0) {
-			sb.deleteCharAt(sb.length()-1);
+			if(sb.toString().endsWith(keyWord)){
+				sb.delete(sb.lastIndexOf(keyWord),sb.length()-1);
+			}
 		}
-		
+
 		TableIdEntity id=rexEntity.getTableIdEntity();
 		if(id!=null){
 			sb.append(KeyWork.WHERE);
@@ -48,10 +60,10 @@ public class Updateimpl implements UpdateInterface {
 			sb=appVal(sb,key,obj,null,"");
 		}
 		sb.append(";");
-
- 		return null;
+		MySqliteStatement mySqliteStatement=new MySqliteStatement();
+		mySqliteStatement.setSql(sb.toString());
+		return mySqliteStatement;
 	}
-
 
 	private  StringBuilder  appVal(StringBuilder sb,String key,Object obj,TableColumnEntity tableColumnEntity,String end){
 		if (obj instanceof String) {
@@ -67,13 +79,13 @@ public class Updateimpl implements UpdateInterface {
 /*
 			if(!tableColumnEntity.isIgnoreBooleanParam()){
 */
-				sb.append(key);
-				sb.append(" = ");
-				if(((Boolean) obj).booleanValue())
-					sb.append(ParamConstant.BOOLEAN_TRUE  );
-				else
-					sb.append(ParamConstant.BOOLEAN_FALSE );
-				sb.append(end);
+			sb.append(key);
+			sb.append(" = ");
+			if(((Boolean) obj).booleanValue())
+				sb.append(ParamConstant.BOOLEAN_TRUE  );
+			else
+				sb.append(ParamConstant.BOOLEAN_FALSE );
+			sb.append(end);
 /*
 			}
 */
@@ -89,28 +101,40 @@ public class Updateimpl implements UpdateInterface {
 				sb.append(end);
 
 			}
-		}
-
-		else{
-			sb.append(key);
-			sb.append(" = ");
-			sb.append(obj);
-			sb.append(end);
+		} else{
+			ReflexEntity  fieldObjReflex= ReflexCache.getReflexEntity(obj.getClass().getName());
+			if(fieldObjReflex!=null){
+				TableIdEntity tableIdEntity=fieldObjReflex.getTableIdEntity();
+				Field field1=tableIdEntity.getField();
+				field1.setAccessible(true);
+				Object objects= null;
+				try {
+					objects = field1.get(obj);
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				sb.append(key).append(" = ").append(objects.toString()).append(end);
+			}else {
+				sb.append(key);
+				sb.append(" = ");
+				sb.append(obj);
+				sb.append(end);
+			}
 		}
 		return  sb;
 	}
 
 	public  <T> MySqliteStatement update(List<T> t,ReflexEntity reflexEntity) {
 		// TODO Auto-generated method stub
-		
-		
-		
-		
+
+
+
+
 		return null;
 	}
 
- 
 
-	 
+
+
 
 }
