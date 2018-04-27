@@ -22,7 +22,6 @@ compileJava {
 
 
 
-
 ext {
     bintrayName = 'miniorm-compiler'
     artifact = bintrayName
@@ -30,6 +29,6 @@ ext {
     libraryDescription = 'A compiler for miniorm to create child_proxy'
     libraryVersion = miniorm_compiler_version
 
-}/*
+}
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'*/
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

@@ -2,6 +2,7 @@ package com.miniorm;
 
 import android.app.Application;
 
+import com.miniorm.android.ContextUtils;
 import com.miniorm.annotation.Table;
 import com.miniorm.dao.BaseDao;
 import com.miniorm.query.map.TableDaoMapping;
@@ -49,7 +50,11 @@ public class MiniOrm {
 
     public static TableDaoMapping getTableDaoMapping() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         if(tableDaoMapping==null){
-            tableDaoMapping= (TableDaoMapping) Class.forName(TableDaoMapping.class.getName()+"_Child").newInstance();
+            if(application!=null){
+                tableDaoMapping= (TableDaoMapping) Class.forName(TableDaoMapping.class.getName()+"_Child",false,  application.getClassLoader()).newInstance();
+            }else {
+                tableDaoMapping= (TableDaoMapping) Class.forName(TableDaoMapping.class.getName()+"_Child").newInstance();
+            }
         }
         return tableDaoMapping;
     }
@@ -70,4 +75,8 @@ public class MiniOrm {
         return daos;
     }
 
+    public static Application getApplication() {
+        if(application!=null)return application;
+        return application= ContextUtils.getAppication();
+    }
 }

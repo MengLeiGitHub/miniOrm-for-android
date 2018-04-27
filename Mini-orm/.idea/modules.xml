@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/miniorm-annotation/miniorm-annotation.iml" filepath="$PROJECT_DIR$/miniorm-annotation/miniorm-annotation.iml" />
       <module fileurl="file://$PROJECT_DIR$/miniorm-compiler/miniorm-compiler.iml" filepath="$PROJECT_DIR$/miniorm-compiler/miniorm-compiler.iml" />
       <module fileurl="file://$PROJECT_DIR$/miniorm-core/miniorm-core.iml" filepath="$PROJECT_DIR$/miniorm-core/miniorm-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/miniorm-gradle/miniorm-gradle.iml" filepath="$PROJECT_DIR$/miniorm-gradle/miniorm-gradle.iml" />
     </modules>
   </component>
 </project>

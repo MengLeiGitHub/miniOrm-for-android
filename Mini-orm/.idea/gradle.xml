@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/miniorm-annotation" />
             <option value="$PROJECT_DIR$/miniorm-compiler" />
             <option value="$PROJECT_DIR$/miniorm-core" />
+            <option value="$PROJECT_DIR$/miniorm-gradle" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

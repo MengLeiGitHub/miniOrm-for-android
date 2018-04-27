@@ -1,8 +1,10 @@
 package com.miniorm.dao;
 
 
-
-
+import com.miniorm.MiniOrm;
+import com.miniorm.android.impl.DatabaseExcute;
+import com.miniorm.customer.ResultParser;
+import com.miniorm.customer.ResultParserCallBack;
 import com.miniorm.dao.builder.QueryBuilder;
 import com.miniorm.dao.builder.Where;
 import com.miniorm.dao.database.BaseResultParseInterface;
@@ -52,6 +54,7 @@ public abstract class BaseDao<T> {
     T tEntity = null;
     private QueryBuilder<T> queryBuilder;
     ReflexEntity reflexEntity;
+
     public BaseDao() {
         tEntityClass = getTableEntitys();
         EntityParse entityParse = new EntityParse(tEntityClass);
@@ -388,41 +391,43 @@ public abstract class BaseDao<T> {
     }
 
     private Class<T> getTableEntitys() {
-        queryEntityClassName=getQueryEntityClassName();
+        queryEntityClassName = getQueryEntityClassName();
         Class superClass = ProxyCache.getProxyClass(queryEntityClassName);
         if (superClass == null) {
             tEntity = getTableEntity();
-            tEntityClass= tEntity==null?tEntityClass: (Class<T>) tEntity.getClass();
+            tEntityClass = tEntity == null ? tEntityClass : (Class<T>) tEntity.getClass();
             try {
-                Class tclass = Class.forName(tEntityClass.getName() + Content.NEW_CLASS_NAME);
+                Class tclass = Class.forName(tEntityClass.getName() + Content.NEW_CLASS_NAME, false, MiniOrm.getApplication().getClassLoader());
                 tEntityClass = tclass;
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
 
             try {
-                tEntity=tEntity==null?tEntityClass.newInstance():tEntity;
+                tEntity = tEntity == null ? tEntityClass.newInstance() : tEntity;
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
             ProxyCache.addProxyClass(queryEntityClassName, tEntityClass);
-        }else {
+        } else {
             try {
-                tEntity= (T) superClass.newInstance();
+                tEntity = (T) superClass.newInstance();
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-            tEntityClass= superClass;
+            tEntityClass = superClass;
         }
         return tEntityClass;
     }
+
     private String queryEntityClassName;
-    public final String  getQueryEntityClassName(){
-        if(queryEntityClassName==null){
+
+    public final String getQueryEntityClassName() {
+        if (queryEntityClassName == null) {
             Class superClass;
             Type t1 = getClass().getGenericSuperclass();
             if (t1 instanceof ParameterizedType) {
@@ -431,11 +436,9 @@ public abstract class BaseDao<T> {
                 return superClass.getName();
             }
             return null;
-        }else {
+        } else {
             return queryEntityClassName;
         }
-
-
     }
 
     public T getTableEntity() {
@@ -545,6 +548,7 @@ public abstract class BaseDao<T> {
         DebugLog.e("result=" + result + "     success=" + ResultType.SUCCESS + "  fail=" + ResultType.FAIL);
         return result;
     }
+
     private long save(MySqliteStatement sql) {
         // TODO Auto-generated method stub
         long result = databaseexcute.excuteInsert(sql);
@@ -563,6 +567,19 @@ public abstract class BaseDao<T> {
 
     public int drop() {
         return executeUpadate(tableInterface.drop(getReflexEntity()));
+    }
+
+
+    public static <T> T executeQuery(String sql, ResultParserCallBack<T> resultParserCallBack) {
+        DebugLog.e(sql);
+        try {
+            ResultParser resultParser = new ResultParser(resultParserCallBack);
+            return resultParser.parse(new DatabaseExcute().excuteQuery(sql, null), null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
 

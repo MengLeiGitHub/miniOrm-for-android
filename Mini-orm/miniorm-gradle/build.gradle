@@ -1,0 +1,54 @@
+apply plugin: 'groovy'
+apply plugin: 'java'
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+    compile 'com.android.tools.build:gradle:2.2.2'
+    compile 'org.ow2.asm:asm:5.0.3'
+    compile 'org.ow2.asm:asm-commons:5.0.3'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+compileJava {
+    sourceCompatibility = '1.7'
+    targetCompatibility = '1.7'
+}
+/*
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: LOCAL_REPO_URL)
+        pom.groupId = PROJ_GROUP
+        pom.artifactId = PROJ_ARTIFACTID
+        pom.version = PROJ_VERSION
+    }
+}
+
+
+buildscript {
+
+    repositories {
+        //google()
+        jcenter()
+        //TODO 需要更换成你自己的路径
+        maven {
+            url 'E:/gradlePlugin'
+        }
+    }
+
+}*/
+
+ext {
+    bintrayName = 'miniorm-gradle'
+    artifact = bintrayName
+    libraryName = 'miniorm gradle'
+    libraryDescription = 'auto edit class file'
+    libraryVersion = miniorm_gradle
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+
+

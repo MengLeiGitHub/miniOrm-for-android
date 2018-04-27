@@ -73,7 +73,9 @@ public class SQLHelper extends SQLiteOpenHelper {
         if (sqlHelper == null) {
             DebugLog.e("initDbHelper()  DbName=" + DbName + "  MiniOrm.dbName=" + MiniOrm.dbName);
             DbName = MiniOrm.dbName;
-
+            if(MiniOrm.application==null){
+                MiniOrm.application=ContextUtils.getAppication();
+            }
             MiniOrmDataConfig dataConfig = new MiniOrmDataConfig(MiniOrm.application);
             if (StringUtils.isNull(MiniOrm.dbName) || MiniOrm.version == 0) {
                 MiniOrm.dbName = dataConfig.get("DBNAME");

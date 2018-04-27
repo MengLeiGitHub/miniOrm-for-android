@@ -17,6 +17,8 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.WildcardTypeName;
 
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,6 +68,7 @@ public class TableDaoClass extends AbstractProcessor {
     Map<TypeMirror, List<Element>> mirrorListMap;
     Types types;
     Elements elementUtills;
+    HashSet<TypeMirror>  includeDataRelation;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
@@ -79,11 +82,11 @@ public class TableDaoClass extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         if (CollectionUtils.isEmpty(set)) return false;
         List<Set<? extends Element>> list = new LinkedList<>();
+        includeDataRelation(roundEnvironment);
         Class[] classes = {TableDao.class};
         for (Class cls : classes) {
             Set<? extends Element> set1 = roundEnvironment.getElementsAnnotatedWith(cls);
             list.add(set1);
-
         }
         if (CollectionUtils.notEmpty(list)) {
             for (Set<? extends Element> elements : list) {
@@ -127,55 +130,87 @@ public class TableDaoClass extends AbstractProcessor {
         ClassName newClass = ClassName.get(Content.MAP_QUERY, Content.TABLE_DAO_MAP_CHILD);
         ClassName superClassName = ClassName.get(Content.MAP_QUERY, Content.TABLE_DAO_MAP);
 
-        ClassName  androidBaseDaoName=ClassName.get(Content.DAO_PACKAGE_NAME,Content.DAO_NAME);
-        ClassName  dapMap=ClassName.get(Map.class);
-        ClassName  stringClassName=ClassName.get(String.class);
+        ClassName androidBaseDaoName = ClassName.get(Content.DAO_PACKAGE_NAME, Content.DAO_NAME);
+        ClassName dapMap = ClassName.get(Map.class);
+        ClassName stringClassName = ClassName.get(String.class);
 
-        TypeName  className=ParameterizedTypeName.get(ClassName.get(Class.class),WildcardTypeName.subtypeOf(androidBaseDaoName));
+        TypeName className = ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(androidBaseDaoName));
 
-        TypeName fildtype=ParameterizedTypeName.get(dapMap,stringClassName,className);
-
-
-
+        TypeName fildtype = ParameterizedTypeName.get(dapMap, stringClassName, className);
 
 
         TypeSpec.Builder builder = TypeSpec.classBuilder(newClass)
                 .superclass(superClassName)
-                .addField(fildtype,"daoMap",Modifier.PRIVATE)
+                .addField(fildtype, "daoMap", Modifier.PRIVATE)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         MethodSpec.Builder methoBuilder = MethodSpec.methodBuilder("putDaoClass")
                 .addModifiers(Modifier.PRIVATE);
         methoBuilder.addStatement("if(daoMap==null){\n" +
                 "            daoMap=new $T<>();\n" +
-                "        }",LinkedHashMap.class);
+                "        }", LinkedHashMap.class);
         for (TypeMirror typeMirror : mirrorSet) {
             List<Element> elementList = mirrorListMap.get(typeMirror);
             for (Element element : elementList) {
                 TypeElement typeElement = (TypeElement) element;
                 TypeMirror superclassTypeMirror = typeElement.getSuperclass();
                 TypeMirror typeParamMirror = getGenericType(superclassTypeMirror);
-                String key=typeParamMirror.toString();
-                ClassName daoClass=ClassName.get(elementUtills.getPackageOf(typeElement).toString(),typeElement.getSimpleName().toString());
-                methoBuilder.addStatement(" daoMap.put( \""+key+"\",$T.class);",daoClass);
+                //  String key=typeParamMirror.toString();
 
+                TypeName entityTypeName = ClassName.get(typeParamMirror);
+                ClassName daoClass = ClassName.get(elementUtills.getPackageOf(typeElement).toString(), typeElement.getSimpleName().toString());
+                //  methoBuilder.addStatement(" daoMap.put( \""+key+"\",$T.class);",daoClass);
+
+                methoBuilder.addStatement(" daoMap.put( $T.class.getName(),$T.class);", entityTypeName, daoClass);
             }
 
         }
         builder.addMethod(methoBuilder.build());
 
 
+        TypeName stringclassName = ParameterizedTypeName.get(dapMap, ClassName.get(String.class), ClassName.get(String.class));
+        builder.addField(stringclassName, "entityMap", Modifier.PRIVATE)
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+
+        MethodSpec.Builder methoentityMappingBuilder = MethodSpec.methodBuilder("putEntityMapping")
+                .addModifiers(Modifier.PRIVATE);
+        methoentityMappingBuilder.addStatement("if(entityMap==null){\n" +
+                "            entityMap=new $T<>();\n" +
+                "        }", LinkedHashMap.class);
+
+        for (TypeMirror typeMirror : mirrorSet) {
+            List<Element> elementList = mirrorListMap.get(typeMirror);
+            for (Element element : elementList) {
+                TypeElement typeElement = (TypeElement) element;
+                TypeMirror superclassTypeMirror = typeElement.getSuperclass();
+                TypeMirror typeParamMirror = getGenericType(superclassTypeMirror);
+                TypeName entityTypeName = ClassName.get(typeParamMirror);
+                String key = entityTypeName.toString();
+                if(includeDataRelation.contains(typeParamMirror)){
+                    ClassName proxyclass = ClassName.get(elementUtills.getPackageOf(typeElement).toString(), key.substring(key.lastIndexOf(".") + 1) + Content.NEW_CLASS_NAME);
+                    //  methoBuilder.addStatement(" daoMap.put( \""+key+"\",$T.class);",daoClass);
+                    methoentityMappingBuilder.addStatement(" entityMap.put( $T.class.getName(),$T.class.getName());", proxyclass, entityTypeName);
+
+                }
+              }
+
+        }
+        builder.addMethod(methoentityMappingBuilder.build());
+
+
         MethodSpec.Builder getClassMethod = MethodSpec.methodBuilder("getDaoByName")
-                .addParameter(String.class,"name",Modifier.FINAL)
+                .addParameter(String.class, "name", Modifier.FINAL)
                 .addAnnotation(Override.class)
                 .returns(className)
                 .addModifiers(Modifier.PUBLIC);
 
-        getClassMethod.addStatement("if(daoMap==null)  putDaoClass();\n " );
-        getClassMethod.addStatement(" return daoMap.get(name.replace(\""+Content.NEW_CLASS_NAME+"\",\"\"))");
+        getClassMethod.addStatement("if(daoMap==null)  putDaoClass() ");
+        getClassMethod.addStatement("if(entityMap==null)  putEntityMapping()");
+        getClassMethod.addStatement(" Class<? extends androidBaseDao>   cls=daoMap.get(name)");
+        getClassMethod.addStatement(" if(cls!=null) return cls");
+        getClassMethod.addStatement(" return daoMap.get(entityMap.get(name))");
 
         builder.addMethod(getClassMethod.build());
-
 
 
         TypeSpec typeSpec = builder.build();
@@ -226,4 +261,27 @@ public class TableDaoClass extends AbstractProcessor {
 
         return result[0];
     }
+
+    private void   includeDataRelation(RoundEnvironment roundEnvironment){
+        List<Set<? extends Element>> list = new LinkedList<>();
+        Class[] classes={ManyToMany.class,ManyToOne.class,OneToMany.class,OneToOne.class};
+        for (Class cls:classes){
+            Set<? extends Element> set1 = roundEnvironment.getElementsAnnotatedWith(cls);
+            list.add(set1);
+
+        }
+        if (CollectionUtils.notEmpty(list)) {
+            includeDataRelation=new HashSet<>();
+            for (Set<? extends Element> elements : list) {
+                for (Element element : elements) {
+                    TypeMirror mirror = element.getEnclosingElement().asType();
+
+                    includeDataRelation.add(mirror);
+                }
+            }
+        }
+    }
+
+
+
 }
