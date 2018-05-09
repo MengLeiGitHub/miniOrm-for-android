@@ -3,6 +3,7 @@ package com.miniorm.dao.reflex;
 import android.util.Log;
 
 import com.miniorm.dao.utils.Content;
+import com.miniorm.debug.DebugLog;
 
 import java.util.HashMap;
 
@@ -14,7 +15,7 @@ public class ReflexCache {
     private  static HashMap<String ,ReflexEntity>  xCache=new HashMap<String ,ReflexEntity>();
 
     public static  void  addReflexEntity(String name,ReflexEntity reflexEntity){
-        Log.e("tag",name+"  "+reflexEntity.getTableName());
+        DebugLog.e(name+"  "+reflexEntity.getTableName());
         xCache.put(name,reflexEntity);
     }
 

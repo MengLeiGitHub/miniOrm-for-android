@@ -2,6 +2,7 @@ package com.example;
 
 import android.app.Application;
 
+import com.facebook.stetho.Stetho;
 import com.miniorm.MiniOrm;
 import com.squareup.leakcanary.LeakCanary;
 
@@ -16,5 +17,7 @@ public class MyApplication extends Application {
         super.onCreate();
         LeakCanary.install(this);
         MiniOrm.init(this,1,"test.db");
+        Stetho.initializeWithDefaults(this);
+
     }
 }

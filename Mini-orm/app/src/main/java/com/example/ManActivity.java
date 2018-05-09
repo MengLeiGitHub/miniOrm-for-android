@@ -218,7 +218,7 @@ public class ManActivity extends Activity {
             int resouresid = (schoolClass.getSid() - 1);
             String[] names = getResources().getStringArray(class_students[resouresid]);
             for (int i = 1; i < names.length; i++) {
-                Student student = new Student();
+                 Student student = new Student();
                 student.setSchoolClass(schoolClass);
                 student.setName(names[i - 1]);
                 students.add(student);

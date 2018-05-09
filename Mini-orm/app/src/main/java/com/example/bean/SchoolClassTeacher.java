@@ -39,6 +39,7 @@ public class SchoolClassTeacher {
         this.teacher = teacher;
     }
 
+
     public SchoolClass getSchoolClass() {
         return schoolClass;
     }

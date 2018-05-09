@@ -397,8 +397,11 @@ public abstract class BaseDao<T> {
             tEntity = getTableEntity();
             tEntityClass = tEntity == null ? tEntityClass : (Class<T>) tEntity.getClass();
             try {
-                Class tclass = Class.forName(tEntityClass.getName() + Content.NEW_CLASS_NAME, false, MiniOrm.getApplication().getClassLoader());
-                tEntityClass = tclass;
+                boolean isExistProxyClass=EntityParse.isExistProxySubClass(tEntityClass);
+                if (isExistProxyClass){
+                    Class tclass = Class.forName(tEntityClass.getName() + Content.NEW_CLASS_NAME, false, MiniOrm.getApplication().getClassLoader());
+                    tEntityClass = tclass;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
