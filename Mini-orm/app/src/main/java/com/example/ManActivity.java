@@ -1,8 +1,10 @@
 package com.example;
 
+import android.Manifest;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +25,7 @@ import com.example.bean.Student;
 import com.example.bean.StudentDao;
 import com.example.bean.Teacher;
 import com.example.bean.TeacherDao;
+import com.miniorm.MiniOrm;
 import com.miniorm.dao.utils.ResultType;
 import com.test.R;
 
@@ -53,14 +56,49 @@ public class ManActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         queryUtils = new QueryUtils();
+        String[] permis= new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+        boolean isp=PermissionUtil.hasPermissons(this,permis);
+        if (!isp)
+        PermissionUtil.requestPerssions(this,123,permis);
+        else {
+            initOrm();
+        }
 
-        CreateTable();
-        initTableData();
-        initWidget();
 
 
     }
 
+    private void initOrm() {
+        long time1=System.currentTimeMillis();
+        MiniOrm.init(ManActivity.this.getApplication(),1,"test.db");
+        MiniOrm.useSDCard(true,"miniorm");
+        CreateTable();
+        Log.e("tag  CreateTable",(time1-System.currentTimeMillis())+"");
+        time1=System.currentTimeMillis();
+        initTableData();
+        Log.e("tag  initTableData",(time1-System.currentTimeMillis())+"");
+        initWidget();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults, new PermissionUtil.OnRequestPermissionsResultCallbacks() {
+            @Override
+            public void onPermissionsGranted(int requestCode, List<String> perms, boolean isAllGranted) {
+                if (isAllGranted)
+                initOrm();
+            }
+
+            @Override
+            public void onPermissionsDenied(int requestCode, List<String> perms, boolean isAllDenied) {
+
+            }
+        });
+
+
+
+    }
 
     private void initWidget() {
 

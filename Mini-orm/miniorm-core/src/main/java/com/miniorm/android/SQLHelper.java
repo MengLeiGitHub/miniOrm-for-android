@@ -24,6 +24,9 @@ public class SQLHelper extends SQLiteOpenHelper {
     private static SQLHelper sqlHelper;
     SQLiteDatabase db;
     static String DbName = "";
+    private static  boolean isUseSdCard;
+    String path;
+
     private AtomicInteger mOpenCounter = new AtomicInteger();
     private static java.util.concurrent.Semaphore semaphoreTransaction = new java.util.concurrent.Semaphore(1);
 
@@ -73,10 +76,8 @@ public class SQLHelper extends SQLiteOpenHelper {
         if (sqlHelper == null) {
             DebugLog.e("initDbHelper()  DbName=" + DbName + "  MiniOrm.dbName=" + MiniOrm.dbName);
             DbName = MiniOrm.dbName;
-            if(MiniOrm.application==null){
-                MiniOrm.application=ContextUtils.getAppication();
-            }
-            MiniOrmDataConfig dataConfig = new MiniOrmDataConfig(MiniOrm.application);
+
+            MiniOrmDataConfig dataConfig = new MiniOrmDataConfig(MiniOrm.getApplication());
             if (StringUtils.isNull(MiniOrm.dbName) || MiniOrm.version == 0) {
                 MiniOrm.dbName = dataConfig.get("DBNAME");
                 MiniOrm.version = dataConfig.getInt("DBVersion");
@@ -84,8 +85,16 @@ public class SQLHelper extends SQLiteOpenHelper {
                 dataConfig.save("DBNAME", MiniOrm.dbName);
                 dataConfig.saveint("DBVersion", MiniOrm.version);
             }
-
-            sqlHelper = new SQLHelper(MiniOrm.application, MiniOrm.version, MiniOrm.dbName);
+            if (!isUseSdCard){
+                isUseSdCard=dataConfig.getBoolean(MiniOrmDataConfig.Config.USE_SD_CARD+MiniOrm.version);
+            }
+            if (isUseSdCard){
+                String path=dataConfig.get(MiniOrmDataConfig.Config.PATH_SD_CARD+MiniOrm.version);
+                DatabaseContext databaseContext=new DatabaseContext(MiniOrm.getApplication(),path);
+                sqlHelper = new SQLHelper(databaseContext, MiniOrm.version, MiniOrm.dbName);
+            }
+            else
+              sqlHelper = new SQLHelper(MiniOrm.getApplication(), MiniOrm.version, MiniOrm.dbName);
         }
     }
 
@@ -214,4 +223,8 @@ public class SQLHelper extends SQLiteOpenHelper {
     }
 
 
+    public void useSDCard(boolean isUseSdCard, String path) {
+        this.isUseSdCard=isUseSdCard;
+        this.path=path;
+    }
 }

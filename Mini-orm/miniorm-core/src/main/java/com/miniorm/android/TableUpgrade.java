@@ -24,10 +24,10 @@ public class TableUpgrade {
     }
 
     public void update(){
-        ArrayList<Class<BaseDao>> daolist= MiniOrm.getUpdateTables();
+        ArrayList<Class<? extends BaseDao>> daolist= MiniOrm.getUpdateTables();
         try {
             databaseExcute. beginTransaction();
-            for (Class<BaseDao> daoClass:daolist){
+            for (Class<? extends BaseDao> daoClass:daolist){
                 BaseDao dao=daoClass.newInstance();
                 tableUpdate(dao);
 

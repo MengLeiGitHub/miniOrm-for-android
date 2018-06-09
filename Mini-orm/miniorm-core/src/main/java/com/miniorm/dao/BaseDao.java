@@ -399,7 +399,8 @@ public abstract class BaseDao<T> {
             try {
                 boolean isExistProxyClass=EntityParse.isExistProxySubClass(tEntityClass);
                 if (isExistProxyClass){
-                    Class tclass = Class.forName(tEntityClass.getName() + Content.NEW_CLASS_NAME, false, MiniOrm.getApplication().getClassLoader());
+                    Class tclass = Class.forName(tEntityClass.getName() + Content.NEW_CLASS_NAME,
+                            false, MiniOrm.getApplication().getClassLoader());
                     tEntityClass = tclass;
                 }
             } catch (Exception e) {

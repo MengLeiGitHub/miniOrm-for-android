@@ -10,6 +10,7 @@ public class MiniOrmDataConfig {
     private static String name = "miniorm";
     Application application;
 
+
     public MiniOrmDataConfig(Application application) {
         this.application = application;
     }
@@ -81,6 +82,12 @@ public class MiniOrmDataConfig {
         SharedPreferences mySharedPreferences = application.getSharedPreferences(name,
                 Activity.MODE_PRIVATE);
         return mySharedPreferences.getString(key, defaultVal);
+    }
+
+    public interface Config{
+        public static final String  USE_SD_CARD="USE_SD_CARD";
+        public static final String  PATH_SD_CARD="PATH_SD_CARD";
+
     }
 
 }
