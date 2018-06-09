@@ -8,7 +8,7 @@
 ####如何接入？
  
  ```java
-	compile 'com.github.mengleigithub:miniorm-core:2.0.2'
+	compile 'com.github.mengleigithub:miniorm-core:2.0.5'
 
 	annotationProcessor 'com.github.mengleigithub:miniorm-compiler:1.0.2'
 
