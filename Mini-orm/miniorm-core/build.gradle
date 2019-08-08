@@ -34,6 +34,8 @@ ext {
     libraryName = 'miniorm core'
     libraryDescription = 'A lightweight Android database persistence tool class library'
     libraryVersion = miniorm_core_version
+    user =  project.properties["bintray.user"]
+    key = project.properties["bintray.apikey"]
 }
 
 

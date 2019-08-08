@@ -9,7 +9,7 @@ import com.miniorm.entity.TableColumnEntity;
 
 public class FieldConditionUtils {
 
-    public static   StringBuilder  appVal(StringBuilder sb, String key, Object obj, String end){
+    public static StringBuilder appVal(StringBuilder sb, String key, Object obj, String end) {
         if (obj instanceof String) {
             sb.append(key);
             sb.append(" = ");
@@ -19,40 +19,36 @@ public class FieldConditionUtils {
             sb.append("'");
             sb.append(end);
 
-        }	else if(obj instanceof Boolean ){
+        } else if (obj instanceof Boolean) {
 /*
-			if(!tableColumnEntity.isIgnoreBooleanParam()){
+            if(!tableColumnEntity.isIgnoreBooleanParam()){
 */
             sb.append(key);
             sb.append(" = ");
-            if(((Boolean) obj).booleanValue())
-                sb.append(ParamConstant.BOOLEAN_TRUE  );
+            if (((Boolean) obj).booleanValue())
+                sb.append(ParamConstant.BOOLEAN_TRUE);
             else
-                sb.append(ParamConstant.BOOLEAN_FALSE );
+                sb.append(ParamConstant.BOOLEAN_FALSE);
             sb.append(end);
 /*
 			}
 */
-        }else  if(obj instanceof Integer ){
-            if(((Integer) obj).intValue()==0)
-            {
+        } else if (obj instanceof Integer) {
+            if (((Integer) obj).intValue() == 0) {
 
-            }
-            else{
+            } else {
                 sb.append(key);
                 sb.append(" = ");
                 sb.append(((Integer) obj).intValue());
                 sb.append(end);
 
             }
-        }
-
-        else{
+        } else {
             sb.append(key);
             sb.append(" = ");
             sb.append(obj);
             sb.append(end);
         }
-        return  sb;
+        return sb;
     }
 }

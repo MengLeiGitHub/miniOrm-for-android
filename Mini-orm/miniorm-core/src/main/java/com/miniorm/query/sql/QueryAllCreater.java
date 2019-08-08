@@ -41,7 +41,12 @@ public class QueryAllCreater<T> extends SQLCreater<T>{
 	@Override
 	public BaseSqlAnalysis<T> getBaseSqlAnalysis() {
 		// TODO Auto-generated method stub
-			return    new GeneralQueryAllSqlAnalysis<T>(reflexEntity,t);
+		HashMap<String,TableColumnEntity> hashMap= reflexEntity.getForeignkeyColumnMap();
+		if(hashMap.size()==0){//该表中没有外键
+			return    new  GeneralQueryAllSqlAnalysis<T>(reflexEntity,t);
+		}else{
+			return    new  HierarchicalQueryAllAnalysis<T>(reflexEntity, t);
+		}
 	}
 
 }

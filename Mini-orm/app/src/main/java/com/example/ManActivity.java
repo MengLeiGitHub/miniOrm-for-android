@@ -54,6 +54,7 @@ public class ManActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ScreenAdapter.match(this,375);
         setContentView(R.layout.activity_main);
         queryUtils = new QueryUtils();
         String[] permis= new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};

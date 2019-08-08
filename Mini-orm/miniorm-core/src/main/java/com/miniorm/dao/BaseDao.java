@@ -144,7 +144,9 @@ public abstract class BaseDao<T> {
             e.printStackTrace();
         }
         int flag = executeUpadateNoOpenTrancation(saveString);
-        if (flag == ResultType.FAIL) return flag;
+        if (flag == ResultType.FAIL){
+            return flag;
+        }
 
         flag = queryLastInsertId();
 
@@ -182,7 +184,9 @@ public abstract class BaseDao<T> {
             e.printStackTrace();
         }
         int flag = executeUpadate(saveString);
-        if (flag == ResultType.FAIL) return flag;
+        if (flag == ResultType.FAIL){
+            return flag;
+        }
 
         flag = queryLastInsertId();
 
@@ -336,12 +340,34 @@ public abstract class BaseDao<T> {
 
     }
 
-    public List<T> queryList(int start, int end) {
+    public List<T> queryList(Where where) {
+        try {
+            baseQuery = new QueryALL<>(reflexEntity, tEntityClass);
+            String querysql = baseQuery.getSQLCreater().toSQL(tEntity);
+            querysql=querysql+where.sql();
+            return executeQueryBySQL(querysql);
 
-        return getQueryBuilder().callQuery().queryAll().where(Where.handle().limit(start, end)).executeQueryList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        //   return getQueryBuilder().callQuery().queryAll().where(Where.handle().limit(start, end)).executeQueryList();
 
     }
+    public List<T> queryList(int start, int end) {
+        try {
+            baseQuery = new QueryALL<>(reflexEntity, tEntityClass);
+            String querysql = baseQuery.getSQLCreater().toSQL(tEntity);
+            querysql=Where.handle(querysql).limit(start, end).sql();
+            return executeQueryBySQL(querysql);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        //   return getQueryBuilder().callQuery().queryAll().where(Where.handle().limit(start, end)).executeQueryList();
+
+    }
 
     public T queryByEntity(T t) {
         String sql = null;
@@ -471,7 +497,9 @@ public abstract class BaseDao<T> {
                 baseQuery.getResultParse().useAlias(false);
             }
             Object cursor = databaseexcute.excuteQuery(sql, reflexEntity);
-            if (cursor == null) return null;
+            if (cursor == null){
+                return null;
+            }
 
             return baseQuery.getResultParse().parse(cursor, this.tEntityClass, reflexEntity);
 

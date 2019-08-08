@@ -5,6 +5,7 @@ import android.database.Cursor;
 import com.miniorm.MiniOrm;
 import com.miniorm.android.impl.DatabaseExcute;
 import com.miniorm.dao.BaseDao;
+import com.miniorm.dao.database.DatabaseExeInterface;
 import com.miniorm.dao.utils.ResultType;
 import com.miniorm.debug.DebugLog;
 import com.miniorm.entity.TableColumnEntity;
@@ -17,10 +18,9 @@ import java.util.Iterator;
  * Created by admin on 2016/10/28.
  */
 public class TableUpgrade {
-    DatabaseExcute databaseExcute;
-    public TableUpgrade( ){
-
-        databaseExcute= new DatabaseExcute();
+    DatabaseExeInterface<Cursor> databaseExcute;
+    public TableUpgrade( DatabaseExeInterface databaseExcute){
+        this.databaseExcute= databaseExcute;
     }
 
     public void update(){
@@ -80,7 +80,7 @@ public class TableUpgrade {
             return;
         }
 
-       int  dropOldTableResult=  databaseExcute.excuteUpdate("DROP TABLE IF EXISTS   " + talbeName + ";");
+        int  dropOldTableResult=  databaseExcute.excuteUpdate("DROP TABLE IF EXISTS   " + talbeName + ";");
         if(ResultType.SUCCESS!=dropOldTableResult){
             return;
         }
@@ -108,22 +108,22 @@ public class TableUpgrade {
 
 
         /*
-          ******************************获取当前实体类中所有的列**********************************
+         ******************************获取当前实体类中所有的列**********************************
          */
 
-         HashMap<String,TableColumnEntity> columnEntityHashMap= baseDao.getReflexEntity().getTableColumnMap();
+        HashMap<String,TableColumnEntity> columnEntityHashMap= baseDao.getReflexEntity().getTableColumnMap();
         int nowBeanColumns=columnEntityHashMap.size();
         Iterator<String> key=  columnEntityHashMap.keySet().iterator();
         ArrayList<String> nowBeanColumsList=new ArrayList<String>();
         while (key.hasNext()){
-          String keys=  key.next();
+            String keys=  key.next();
             TableColumnEntity tableColumnEntity=    columnEntityHashMap.get(keys);
             nowBeanColumsList.add(tableColumnEntity.getColumnName());
         }
         nowBeanColumsList.add(baseDao.getReflexEntity().getTableIdEntity().getColumnName());
 
 
-       ArrayList<String> queryColumns= getIntersection(tablecolums,nowBeanColumsList);
+        ArrayList<String> queryColumns= getIntersection(tablecolums,nowBeanColumsList);
 
         StringBuilder  columsString=new StringBuilder();
         Iterator<String> iterator= queryColumns.iterator();
@@ -156,7 +156,7 @@ public class TableUpgrade {
         "tableUpdate===第六步  查询临时表 " + talbeName + "_temp   向新标 插入临时表数据"
          */
 
-      int  dropresultLinshi=  databaseExcute.excuteUpdate("DROP TABLE   IF EXISTS   " + talbeName + "_temp ;");
+        int  dropresultLinshi=  databaseExcute.excuteUpdate("DROP TABLE   IF EXISTS   " + talbeName + "_temp ;");
         if(dropresultLinshi==ResultType.FAIL ){
             return;
         }

@@ -1,6 +1,6 @@
 package com.miniorm.query.map;
 
-import com.miniorm.android.androidBaseDao;
+import com.miniorm.dao.BaseDao;
 
 /**
  * Created by admin on 2017-04-09.
@@ -21,12 +21,12 @@ public class ManyToOneMapping extends ToOneMapping {
 
 
         *//**
-         * 两种情况 1.是外键管理在本类中 2：外键关联设置在关联对象中
-         *//*
+     * 两种情况 1.是外键管理在本类中 2：外键关联设置在关联对象中
+     *//*
 
-        *//**
-         * 1，
-         *//*
+     *//**
+     * 1，
+     *//*
         ReflexEntity thisreflexEntity = ReflexCache.getReflexEntity(thisObject.getClass().getName());
         HashMap<String, TableColumnEntity> thisReflexForeignkeyColumnMap = thisreflexEntity.getForeignkeyColumnMap();
 
@@ -34,7 +34,7 @@ public class ManyToOneMapping extends ToOneMapping {
         Field foreignkeyfield = null;
         *//*
 
-         *//*
+     *//*
         for (String key : thisReflexForeignkeyColumnMap.keySet()) {
             TableColumnEntity tableColumnEntity = thisReflexForeignkeyColumnMap.get(key);
             foreignkeyfield = tableColumnEntity.getField();
@@ -91,7 +91,7 @@ public class ManyToOneMapping extends ToOneMapping {
     }*/
 
     @Override
-    protected Object thisObjectNoForeignKey(Object thisObject, Class<? extends Object> returnclass, androidBaseDao baseDao2) throws Exception {
+    protected Object thisObjectNoForeignKey(Object thisObject, Class<? extends Object> returnclass, BaseDao baseDao2) throws Exception {
         throw new Exception("没有发现对应关系，多对一 ，必须在 多的一方的  TableColumn 中 isForeignkey = true ");
     }
 }

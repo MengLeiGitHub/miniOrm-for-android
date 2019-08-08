@@ -3,7 +3,7 @@ package com.miniorm.query.map;
 import android.util.Log;
 
 import com.miniorm.MiniOrm;
-import com.miniorm.android.androidBaseDao;
+import com.miniorm.dao.BaseDao;
 import com.miniorm.annotation.Table;
 import com.miniorm.dao.builder.Where;
 import com.miniorm.dao.reflex.EntityParse;
@@ -63,7 +63,7 @@ public   abstract   class ToOneMapping  {
         };
 */
 
-        androidBaseDao baseDao2= MiniOrm.getTableDaoMapping().getDaoByName(initClass.getName()).newInstance();
+        BaseDao baseDao2= MiniOrm.getTableDaoMapping().getDaoByName(initClass.getName()).newInstance();
 
         if (foreignkeyfield == null) {
 
@@ -91,8 +91,9 @@ public   abstract   class ToOneMapping  {
             } else {
                 boolean isIntegerOrLong = (idval instanceof Integer) || (idval instanceof Long);
                 if (isIntegerOrLong) {
-                    if (idval.toString().equalsIgnoreCase(tableIdEntity.getDefaultVal() + ""))
+                    if (idval.toString().equalsIgnoreCase(tableIdEntity.getDefaultVal() + "")) {
                         throw new Exception("外键Id没有赋值，无法查询");
+                    }
                     else {
                         return baseDao2.queryById(idval.toString());
                     }
@@ -104,7 +105,7 @@ public   abstract   class ToOneMapping  {
 
     }
 
-    protected abstract Object thisObjectNoForeignKey(final Object thisObject, Class<? extends Object> returnclass, androidBaseDao baseDao2) throws Exception;
+    protected abstract Object thisObjectNoForeignKey(final Object thisObject, Class<? extends Object> returnclass, BaseDao baseDao2) throws Exception;
 
 
 }

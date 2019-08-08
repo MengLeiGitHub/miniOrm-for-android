@@ -12,6 +12,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.miniorm.MiniOrm;
+import com.miniorm.android.impl.DatabaseExcute;
 import com.miniorm.constant.MiniOrmDataConfig;
 import com.miniorm.dao.utils.ResultType;
 import com.miniorm.dao.utils.StringUtils;
@@ -74,7 +75,7 @@ public class SQLHelper extends SQLiteOpenHelper {
 
     private static void initDbHelper() {
         if (sqlHelper == null) {
-            DebugLog.e("initDbHelper()  DbName=" + DbName + "  MiniOrm.dbName=" + MiniOrm.dbName);
+            DebugLog.e("initDbHelper()  DbName=" + DbName + "  MiniOrm.dbName=" + MiniOrm.dbName+"-android");
             DbName = MiniOrm.dbName;
 
             MiniOrmDataConfig dataConfig = new MiniOrmDataConfig(MiniOrm.getApplication());
@@ -91,10 +92,11 @@ public class SQLHelper extends SQLiteOpenHelper {
             if (isUseSdCard){
                 String path=dataConfig.get(MiniOrmDataConfig.Config.PATH_SD_CARD+MiniOrm.version);
                 DatabaseContext databaseContext=new DatabaseContext(MiniOrm.getApplication(),path);
-                sqlHelper = new SQLHelper(databaseContext, MiniOrm.version, MiniOrm.dbName);
+                sqlHelper = new SQLHelper(databaseContext, MiniOrm.version, MiniOrm.dbName+"-android");
             }
-            else
-              sqlHelper = new SQLHelper(MiniOrm.getApplication(), MiniOrm.version, MiniOrm.dbName);
+            else {
+                sqlHelper = new SQLHelper(MiniOrm.getApplication(), MiniOrm.version, MiniOrm.dbName + "-android");
+            }
         }
     }
 
@@ -119,7 +121,9 @@ public class SQLHelper extends SQLiteOpenHelper {
 
     public void endTransaction() {
         synchronized (db) {
-            if (db.inTransaction()) db.endTransaction();
+            if (db.inTransaction()) {
+                db.endTransaction();
+            }
         }
         semaphoreTransaction.release();
 
@@ -146,6 +150,7 @@ public class SQLHelper extends SQLiteOpenHelper {
             long timer1 = System.currentTimeMillis();
             long result=sqLiteStatement.executeInsert();
             timer += (System.currentTimeMillis() - timer1);
+            sqLiteStatement.close();
             return result;
         } catch (Exception e) {
             return ResultType.FAIL;
@@ -165,13 +170,13 @@ public class SQLHelper extends SQLiteOpenHelper {
         }
     }
 
-
+    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
         new Thread(new Runnable() {
             @Override
             public void run() {
-                new TableUpgrade().update();
+                new TableUpgrade(new DatabaseExcute()).update();
             }
         }).start();
 
@@ -182,7 +187,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                new TableUpgrade().update();
+                new TableUpgrade(new DatabaseExcute()).update();
             }
         }).start();
 

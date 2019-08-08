@@ -12,6 +12,14 @@ public class Where {
 
 		return  new Where();
 	}
+	public  static  Where  handle(String sql){
+
+		return  new Where(sql);
+	}
+	public Where(String sql){
+		this.sql=new StringBuilder();
+		this.sql.append(sql);
+	}
 
 	public Where(){
 		sql=new StringBuilder();

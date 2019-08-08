@@ -8,13 +8,14 @@ package com.miniorm.compiler.utils;
 
 public   class Content {
 
-    public static String NEW_CLASS_NAME = "_miniorm_query_agent_subclass";
-
+    public static final String NEW_CLASS_NAME = "_miniorm_query_agent_subclass";
     public static final String MAINPACKAGE_NAME = "com.miniorm";
 
-    public static String PROXY_PACKAGE_NAME = MAINPACKAGE_NAME + ".proxy.bean";
+    public static final String PROXY_PACKAGE_NAME = MAINPACKAGE_NAME + ".proxy.bean";
 
-    public static String MAP_QUERY = MAINPACKAGE_NAME + ".query.map";
+    public static final String MAP_QUERY = MAINPACKAGE_NAME + ".query.map";
+    public static final String PROXYUTILSCLASSNAME="QueryAgentBeanUtils";
+    public static final String INITPPROXYUTILSMETHOD = "initSubBean";
 
     public static String ONE_TO_ONE_MAPPING = "OneToOneMapping";
 
@@ -26,8 +27,13 @@ public   class Content {
     public static String TABLE_DAO_MAP="TableDaoMapping";
     public static String TABLE_DAO_MAP_CHILD=TABLE_DAO_MAP+"_Child";
 
-    public static String DAO_PACKAGE_NAME = "com.miniorm.android";
-    public static String DAO_NAME = "androidBaseDao";
+    public static String DAO_PACKAGE_NAME = "com.miniorm.dao";
+    public static String DAO_NAME = "BaseDao";
+    public static String ENCRYPTION_PACKAGE_NAME=MAINPACKAGE_NAME+".sqlcipher";
+    public static String ENCRYPTION_DAO_NAME =   "androidSqlcipherDao";
+    public static String UNENCRYPTION_PACKAGE_NAME=MAINPACKAGE_NAME+".android";
+    public static String UNENCRYPTION_DAO_NAME = "androidBaseDao";
+
     public static String NEW_DAO_NAME = "Dao";
     public static final String TABLE = MAINPACKAGE_NAME + ".annotation.Table";
 

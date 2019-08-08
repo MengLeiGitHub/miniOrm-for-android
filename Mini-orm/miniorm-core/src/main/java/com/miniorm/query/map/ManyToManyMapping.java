@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.miniorm.MiniOrm;
 import com.miniorm.android.KeyWork;
-import com.miniorm.android.androidBaseDao;
+import com.miniorm.dao.BaseDao;
 import com.miniorm.annotation.ManyToMany;
 import com.miniorm.dao.reflex.EntityParse;
 import com.miniorm.dao.reflex.ProxyCache;
@@ -182,7 +182,7 @@ public class ManyToManyMapping  {
                 return null;
             }
         };*/
-        androidBaseDao returnClassDao = MiniOrm.getTableDaoMapping().getDaoByName(initClass.getName()).newInstance();
+        BaseDao returnClassDao = MiniOrm.getTableDaoMapping().getDaoByName(initClass.getName()).newInstance();
         ReflexEntity bridgingTableReflexEntity = ReflexCache.getReflexEntity(bridgingTableClass.getName());
         if (bridgingTableReflexEntity == null) {
             EntityParse entityParse = new EntityParse(bridgingTableClass);
@@ -208,7 +208,7 @@ public class ManyToManyMapping  {
 
             TableColumnEntity tableColumnEntity = bridgingTableReflexEntityTableColumnMap.get(key);
             field = tableColumnEntity.getField();
-             Class  superClass=thisObject.getClass().getSuperclass();
+            Class  superClass=thisObject.getClass().getSuperclass();
             if (field.getType() == superClass) {
                 thisObjectBridgingColumnName = tableColumnEntity.getColumnName();
                 thisObjectbridgingTableIDField = field;

@@ -16,7 +16,9 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.WildcardTypeName;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,7 +83,9 @@ public class EntityCreaterClass extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-        if(CollectionUtils.isEmpty(set))return false;
+        if(CollectionUtils.isEmpty(set)){
+            return false;
+        }
         List<Set<? extends Element>> list = new LinkedList<>();
         Class[] classes={ManyToMany.class,ManyToOne.class,OneToMany.class,OneToOne.class};
         for (Class cls:classes){
@@ -129,14 +133,16 @@ public class EntityCreaterClass extends AbstractProcessor {
     private void createHelper() throws Exception {
         Set<TypeMirror> mirrorSet = mirrorListMap.keySet();
 
+        /*保存 当前所有又代理子类的 类*/
+        HashMap<ClassName,TypeName>  proxyClass=new HashMap<>();
+
         for (TypeMirror typeMirror : mirrorSet) {
             TypeElement typeElement = (TypeElement) types.asElement(typeMirror);
             String Package_name = elementUtills.getPackageOf(typeElement).toString();
             String parentClassName = typeElement.getSimpleName().toString();
-
             String className = parentClassName + Content.NEW_CLASS_NAME;
-
             TypeName typeName = ParameterizedTypeName.get(typeMirror);
+            proxyClass.put(ClassName.get(Package_name,className),typeName);
             TypeSpec.Builder builder = TypeSpec.classBuilder(className)
                     .superclass(typeName)
                     .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
@@ -171,6 +177,38 @@ public class EntityCreaterClass extends AbstractProcessor {
                     .build();
             javaFile.writeTo(filer);
         }
+
+        TypeSpec.Builder builder = TypeSpec.classBuilder(Content.PROXYUTILSCLASSNAME)
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+   /*     ClassName dapMap = ClassName.get(Map.class);
+        ClassName stringClassName = ClassName.get(String.class);
+        TypeName className = ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(androidBaseDaoName));
+
+        TypeName fildtype = ParameterizedTypeName.get(dapMap, stringClassName, className);*/
+        MethodSpec.Builder   meyhodbuilder = MethodSpec.methodBuilder(Content.INITPPROXYUTILSMETHOD)
+                .addModifiers(Modifier.PUBLIC,Modifier.FINAL,Modifier.STATIC)
+                .addParameter(Map.class,"map")
+                ;
+
+        for (ClassName className:proxyClass.keySet()) {
+            StringBuilder methods = new StringBuilder();
+            methods.append(" map.put($T.class.getName(),$T.class.getName());");
+            //  ClassName debug = ClassName.get(Content.DEBUG_LOG_PACKAGE, Content.DEBUG);
+            meyhodbuilder.addStatement(methods.toString(),className ,proxyClass.get(className));
+        }
+        MethodSpec beyond =meyhodbuilder.build();
+        builder.addMethod(beyond);
+        TypeSpec typeSpec = builder.build();
+        JavaFile javaFile = JavaFile.builder(Content.MAP_QUERY, typeSpec)
+                .build();
+        javaFile.writeTo(filer);
+
+
+
+
+
+
+
     }
 
 
@@ -204,7 +242,7 @@ public class EntityCreaterClass extends AbstractProcessor {
                 "\n" +
                 "}\n" +
                 " return   null");
-         ClassName debug = ClassName.get(Content.DEBUG_LOG_PACKAGE, Content.DEBUG);
+        ClassName debug = ClassName.get(Content.DEBUG_LOG_PACKAGE, Content.DEBUG);
         builder.addStatement(methods.toString(),returnClass ,mapping, returnClass, debug);
     }
 
@@ -258,7 +296,7 @@ public class EntityCreaterClass extends AbstractProcessor {
     ;
 
 
-   /*many 2 many*/
+    /*many 2 many*/
 
     private MethodSpec ManyToManyMappingCreateMethodSpec(Element element) {
         String methodName = element.getSimpleName().toString();

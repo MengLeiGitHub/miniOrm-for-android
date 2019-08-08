@@ -2,4 +2,4 @@ include ':app', ':miniorm-gradle',
         ':miniorm-compiler',
         ':miniorm-annotation'/*,
 ':miniorm'*/,
-        ':miniorm-core'
+        ':miniorm-core', ':miniorm-sqlcipher'

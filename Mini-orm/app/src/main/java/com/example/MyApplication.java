@@ -18,6 +18,6 @@ public class MyApplication extends Application {
         LeakCanary.install(this);
         MiniOrm.init(this,1,"test.db");
         Stetho.initializeWithDefaults(this);
-
+        ScreenAdapter.setup(this);
     }
 }

@@ -3,8 +3,6 @@ package com.miniorm;
 import android.app.Application;
 
 import com.miniorm.android.ContextUtils;
-import com.miniorm.android.SQLHelper;
-import com.miniorm.annotation.Table;
 import com.miniorm.constant.MiniOrmDataConfig;
 import com.miniorm.dao.BaseDao;
 import com.miniorm.query.map.TableDaoMapping;
@@ -37,7 +35,7 @@ public class MiniOrm {
     private static Application application;
     public static int version;
     public static String dbName;
-
+    public static String password;
     private static ArrayList<Class<? extends BaseDao>> daos;
 
     public static void init(Application application, int versionCode, String dbName) {
@@ -45,6 +43,14 @@ public class MiniOrm {
         MiniOrm.dbName = dbName;
         MiniOrm.version = versionCode;
     }
+
+    public static void init(Application application, int versionCode, String dbName,String password) {
+        MiniOrm.application = application;
+        MiniOrm.dbName = dbName;
+        MiniOrm.version = versionCode;
+        MiniOrm.password = password;
+    }
+
 
     /**该方法在创建表之前调用且在初始化init(Application application, int versionCode, String dbName)
      * 方法之后调用，否则将会不能生效
@@ -77,7 +83,9 @@ public class MiniOrm {
      */
 
     public static void addUpdateTable(Class<? extends BaseDao> dao) {
-        if (daos == null) daos = new ArrayList<>();
+        if (daos == null) {
+            daos = new ArrayList<>();
+        }
         daos.add(dao);
     }
 
@@ -87,7 +95,9 @@ public class MiniOrm {
     }
 
     public static Application getApplication() {
-        if (application==null) application=ContextUtils.getAppication();
+        if (application==null) {
+            application=ContextUtils.getAppication();
+        }
         return application;
     }
 }

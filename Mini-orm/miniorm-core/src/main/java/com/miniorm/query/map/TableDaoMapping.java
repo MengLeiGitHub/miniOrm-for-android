@@ -1,7 +1,9 @@
 package com.miniorm.query.map;
 
-import com.miniorm.android.androidBaseDao;
 
+import com.miniorm.dao.BaseDao;
+
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import java.util.Map;
  */
 
 public abstract class TableDaoMapping {
-    public abstract  Class<? extends androidBaseDao> getDaoByName(String name);
+    public abstract  Class<? extends BaseDao> getDaoByName(String name);
+    public abstract Collection<String> allEntryName();
 
 }

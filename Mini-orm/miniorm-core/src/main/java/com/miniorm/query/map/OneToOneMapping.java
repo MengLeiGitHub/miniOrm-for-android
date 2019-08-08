@@ -1,7 +1,5 @@
 package com.miniorm.query.map;
 
-import com.miniorm.android.androidBaseDao;
-import com.miniorm.annotation.Table;
 import com.miniorm.dao.BaseDao;
 import com.miniorm.dao.builder.Where;
 import com.miniorm.dao.reflex.EntityParse;
@@ -24,7 +22,7 @@ public class OneToOneMapping extends ToOneMapping{
 
 
     @Override
-    protected Object thisObjectNoForeignKey(final Object thisObject, Class<? extends Object> returnclass, androidBaseDao baseDao2) throws Exception {
+    protected Object thisObjectNoForeignKey(final Object thisObject, Class<? extends Object> returnclass, BaseDao baseDao2) throws Exception {
         ReflexEntity thisreflexEntity = ReflexCache.getReflexEntity(thisObject.getClass().getName());
         ReflexEntity targetreflexEntity = ReflexCache.getReflexEntity(returnclass.getName());
         HashMap<String, TableColumnEntity> targetReflexForeignkeyColumnMap = targetreflexEntity.getForeignkeyColumnMap();

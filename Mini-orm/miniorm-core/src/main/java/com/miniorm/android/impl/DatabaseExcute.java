@@ -26,12 +26,16 @@ public class DatabaseExcute implements DatabaseExeInterface<Cursor> {
 		sqLiteDatabase=sqlHelper.getDb();
 	}
 
+	@Override
 	public Cursor excuteQuery(String sql, ReflexEntity t) {
 		// TODO Auto-generated method stub
 		String[] selectionArgs=null;
-		if(sqlHelper!=null)
+		if(sqlHelper!=null) {
 			return sqlHelper.rawQuery(sql, selectionArgs);
-		else return null;
+		}
+		else{
+			return null;
+		}
 	}
 
 	@Override
@@ -40,7 +44,7 @@ public class DatabaseExcute implements DatabaseExeInterface<Cursor> {
 
 		return sqlHelper.execInsert(holdSQLSteByData(mySqliteStatement));
 	}
-
+	@Override
 	public int excuteUpdate(String sql) {
 		// TODO Auto-generated method stub
 
@@ -67,8 +71,9 @@ public class DatabaseExcute implements DatabaseExeInterface<Cursor> {
 				sqLiteStatement.bindLong(index,Long.valueOf(val.toString()));
 			}else if(val instanceof String){
 				sqLiteStatement.bindString(index,val.toString());
-			}else if(val instanceof Double )
-				sqLiteStatement.bindDouble(index,(double)val);
+			}else if(val instanceof Double ) {
+				sqLiteStatement.bindDouble(index, (double) val);
+			}
 			else if(val instanceof  Float){
 				sqLiteStatement.bindDouble(index,(Double.valueOf( val.toString())));
 			}
@@ -86,15 +91,18 @@ public class DatabaseExcute implements DatabaseExeInterface<Cursor> {
 	}
 
 	private void log(List<KV> kvlist) {
-		if(kvlist==null)return;
+		if(kvlist==null){
+			return;
+		}
 		StringBuilder stringBuilder=new StringBuilder();
 		stringBuilder.append("{");
 
 		for (int i=0;i<kvlist.size();i++) {
 			KV kv = kvlist.get(i);
 			Object val = kv.getObj();
-			if (val != null)
+			if (val != null) {
 				stringBuilder.append(kv.getColumnName() + ":" + kv.getObj().toString());
+			}
 			else {
 				stringBuilder.append(kv.getColumnName() + ": null");
 			}
