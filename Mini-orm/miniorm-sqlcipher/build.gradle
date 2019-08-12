@@ -25,7 +25,9 @@ android {
     }
 
 }
-
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
 dependencies {
     compile project(':miniorm-core')
     compile 'net.zetetic:android-database-sqlcipher:3.5.9@aar'

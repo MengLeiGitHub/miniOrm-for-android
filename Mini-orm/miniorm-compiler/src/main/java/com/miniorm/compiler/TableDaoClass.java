@@ -176,9 +176,17 @@ public class TableDaoClass extends AbstractProcessor {
         MethodSpec.Builder methoentityMappingBuilder = MethodSpec.methodBuilder("putEntityMapping")
                 .addModifiers(Modifier.PRIVATE);
         ClassName QueryAgentBeanUtilsClassName = ClassName.get(Content.MAP_QUERY, Content.PROXYUTILSCLASSNAME);
-        methoentityMappingBuilder.addStatement("if(entityMap==null){" +
+        StringBuilder methods=new StringBuilder();
+        methods.append("if(entityMap==null){" +
                 "  entityMap=new $T<>();" +
-                "        }" + "\n$T." + Content.INITPPROXYUTILSMETHOD + "(entityMap)", LinkedHashMap.class, QueryAgentBeanUtilsClassName);
+                "        }");
+        if(EntityCreaterClass.isRunned){
+            methods.append( "\n$T." + Content.INITPPROXYUTILSMETHOD + "(entityMap)");
+            methoentityMappingBuilder.addStatement(methods.toString(), LinkedHashMap.class, QueryAgentBeanUtilsClassName);
+        }else {
+            methoentityMappingBuilder.addStatement(methods.toString(), LinkedHashMap.class);
+        }
+
         builder.addMethod(methoentityMappingBuilder.build());
         MethodSpec.Builder getClassMethod = MethodSpec.methodBuilder("getDaoByName")
                 .addParameter(String.class, "name", Modifier.FINAL)

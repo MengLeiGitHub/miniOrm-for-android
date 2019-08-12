@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/miniorm-compiler/miniorm-compiler.iml" filepath="$PROJECT_DIR$/miniorm-compiler/miniorm-compiler.iml" />
       <module fileurl="file://$PROJECT_DIR$/miniorm-core/miniorm-core.iml" filepath="$PROJECT_DIR$/miniorm-core/miniorm-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/miniorm-gradle/miniorm-gradle.iml" filepath="$PROJECT_DIR$/miniorm-gradle/miniorm-gradle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/miniorm-sqlcipher/miniorm-sqlcipher.iml" filepath="$PROJECT_DIR$/miniorm-sqlcipher/miniorm-sqlcipher.iml" />
     </modules>
   </component>
 </project>

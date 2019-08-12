@@ -232,6 +232,7 @@ public class SQLCipherHelper extends SQLiteOpenHelper {
             long timer1 = System.currentTimeMillis();
             sqLiteStatement.executeUpdateDelete();
             timer += (System.currentTimeMillis() - timer1);
+            sqLiteStatement.close();
             return ResultType.SUCCESS;
         } catch (Exception e) {
             return ResultType.FAIL;

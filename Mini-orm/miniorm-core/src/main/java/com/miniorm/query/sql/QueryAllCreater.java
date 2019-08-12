@@ -1,6 +1,8 @@
 package com.miniorm.query.sql;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import com.miniorm.android.KeyWork;
 import com.miniorm.dao.reflex.ReflexEntity;
@@ -13,6 +15,7 @@ import com.miniorm.query.analysis.hierarchical.HierarchicalQueryAllAnalysis;
 import com.miniorm.query.analysis.hierarchical.HierarchicalQueryByOtherAnalysis;
 
 public class QueryAllCreater<T> extends SQLCreater<T>{
+	BaseSqlAnalysis<T>  baseSqlAnalysis;
 
 
 	public QueryAllCreater(ReflexEntity reflexEntity, Class<T> t) {
@@ -27,12 +30,6 @@ public class QueryAllCreater<T> extends SQLCreater<T>{
 		sql.append(selectQueryField());
 		sql.append("   from   ");
 		sql.append(getTables());
-		/*String fieldCondition=FieldCondition(t1);
-		if(StringUtils.isNull(fieldCondition)){
-			sql.append(fieldCondition);
-		}else {
-			sql.append(KeyWork.WHERE);
-		}*/
 		return sql.toString();
 
 	}
@@ -41,12 +38,23 @@ public class QueryAllCreater<T> extends SQLCreater<T>{
 	@Override
 	public BaseSqlAnalysis<T> getBaseSqlAnalysis() {
 		// TODO Auto-generated method stub
-		HashMap<String,TableColumnEntity> hashMap= reflexEntity.getForeignkeyColumnMap();
-		if(hashMap.size()==0){//该表中没有外键
-			return    new  GeneralQueryAllSqlAnalysis<T>(reflexEntity,t);
-		}else{
-			return    new  HierarchicalQueryAllAnalysis<T>(reflexEntity, t);
+		if (baseSqlAnalysis!=null){
+			return baseSqlAnalysis;
 		}
+		HashMap<String,TableColumnEntity> hashMap= reflexEntity.getForeignkeyColumnMap();
+		Collection<TableColumnEntity> list= hashMap.values();
+		int i=0;
+		for (TableColumnEntity tableColumnEntity:list){
+			if (tableColumnEntity.isHierarchicalQueries()){
+				i++;
+			}
+		}
+		if(i==0){//该表中没有外键
+			return    baseSqlAnalysis=new  GeneralQueryAllSqlAnalysis<T>(reflexEntity,t);
+		}else{
+			return    baseSqlAnalysis=new  HierarchicalQueryAllAnalysis<T>(reflexEntity, t);
+		}
+
 	}
 
 }

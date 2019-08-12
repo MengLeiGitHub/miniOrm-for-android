@@ -10,6 +10,9 @@ import com.miniorm.compiler.utils.Content;
 
 
 import com.miniorm.compiler.utils.TextUtils;
+import com.miniorm.dao.reflex.ReflexCache;
+import com.miniorm.dao.reflex.ReflexEntity;
+import com.miniorm.entity.TableColumnEntity;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -68,7 +71,7 @@ import static com.miniorm.compiler.utils.Content.ONE_TO_ONE;
 public class EntityCreaterClass extends AbstractProcessor {
 
     Filer filer;
-
+    public static volatile boolean isRunned=false;
     Map<TypeMirror, List<Element>> mirrorListMap;
     Types types;
     Elements elementUtills;
@@ -111,9 +114,8 @@ public class EntityCreaterClass extends AbstractProcessor {
     }
 
     private void classify(Element element) {
-
+        isRunned=true;
         TypeMirror mirror = element.getEnclosingElement().asType();
-
         if (mirror != null) {
             if (mirrorListMap == null) {
                 mirrorListMap = new LinkedHashMap<>();
@@ -208,7 +210,6 @@ public class EntityCreaterClass extends AbstractProcessor {
 
 
 
-
     }
 
 
@@ -225,7 +226,7 @@ public class EntityCreaterClass extends AbstractProcessor {
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC);
 
-        ToOneMapping(builder, returnClassName,mapping);
+        ToOneMapping(builder, returnClassName,mapping,methodName);
 
         MethodSpec beyond =
                 builder.build();
@@ -233,17 +234,41 @@ public class EntityCreaterClass extends AbstractProcessor {
         return beyond;
     }
 
-    private void ToOneMapping(MethodSpec.Builder builder, ClassName returnClass,ClassName mapping) {
+    private void ToOneMapping(MethodSpec.Builder builder, ClassName returnClass,ClassName mapping,String methodName) {
         StringBuilder methods = new StringBuilder();
+        ClassName ReflexEntityClass = ClassName.get(ReflexEntity.class.getPackage().getName(), ReflexEntity.class.getSimpleName());
+        ClassName ReflexCacheClass = ClassName.get(ReflexCache.class.getPackage().getName(), ReflexCache.class.getSimpleName());
+        ClassName TableColumnEntityClass = ClassName.get(TableColumnEntity.class.getPackage().getName(), TableColumnEntity.class.getSimpleName());
+
+        ClassName dapMap = ClassName.get(Map.class);
+        ClassName stringClassName = ClassName.get(String.class);
+        TypeName fildtype = ParameterizedTypeName.get(dapMap, stringClassName, TableColumnEntityClass);
+        String returnClassNames="this.getClass().getName()";
+        methods.append("$T reflexEntity= $T.getReflexEntity("+returnClassNames+");\n");
+        methods.append("if (reflexEntity!=null){\n");
+        methods.append(" \t$T  h= reflexEntity.getForeignkeyColumnMap();\n");
+        methods.append("\t  if(\""+methodName+"\".startsWith(\"get\")){\n ");
+        String  methodName2=methodName.substring(3,methodName.length());
+        String key=methodName2.charAt(0)+"";
+        String first=  key.toLowerCase();
+        String me=methodName2.replaceFirst(key,first);
+        methods.append("\t\t  if (h!=null){\n");
+        methods.append(" \t\t\t $T tableColumnEntity= h.get(\""+me+"\");\n");
+        methods.append(" \t\t\t\t if (tableColumnEntity!=null&&tableColumnEntity.isHierarchicalQueries()){\n");
+        methods.append("\t\t\t\t\tif (super."+methodName+"()!=null){return super."+methodName+"();};\n");
+        methods.append("\t\t\t}\n");
+        methods.append("\t\t}\n");
+        methods.append("\t}\n");
+        methods.append("}\n");
         methods.append(" try {\n" +
-                " return   ($T)  new    $T().proceedFilterToQuery(this,$T.class);\n" +
+                " \treturn   ($T)  new    $T().proceedFilterToQuery(this,$T.class);\n" +
                 " } catch (Exception e) {\n" +
                 " $T.e(e);\n" +
                 "\n" +
                 "}\n" +
                 " return   null");
         ClassName debug = ClassName.get(Content.DEBUG_LOG_PACKAGE, Content.DEBUG);
-        builder.addStatement(methods.toString(),returnClass ,mapping, returnClass, debug);
+        builder.addStatement(methods.toString(),ReflexEntityClass,ReflexCacheClass,fildtype,TableColumnEntityClass,returnClass ,mapping, returnClass, debug);
     }
 
 
