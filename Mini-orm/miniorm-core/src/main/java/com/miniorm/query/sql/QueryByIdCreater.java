@@ -1,5 +1,6 @@
 package com.miniorm.query.sql;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import com.miniorm.dao.reflex.ReflexEntity;
@@ -38,12 +39,21 @@ public class QueryByIdCreater<T> extends SQLCreater<T>{
 	public BaseSqlAnalysis<T> getBaseSqlAnalysis() {
 		// TODO Auto-generated method stub
 		//return   new HierarchicalQueryByIdSqlAnalysis<T>(reflexEntity,t);
-
+		if (baseSqlAnalysis!=null){
+			return  baseSqlAnalysis;
+		}
 		HashMap<String,TableColumnEntity> hashMap= reflexEntity.getForeignkeyColumnMap();
-		if(hashMap.size()==0){//该表中没有外键
-			return   new GeneralQueryByIdSqlAnalysis<T>(reflexEntity,t);
+		Collection<TableColumnEntity> list= hashMap.values();
+		int i=0;
+		for (TableColumnEntity tableColumnEntity:list){
+			if (tableColumnEntity.isHierarchicalQueries()){
+				i++;
+			}
+		}
+		if(i==0){//该表中没有外键
+			return    baseSqlAnalysis=new GeneralQueryByIdSqlAnalysis<T>(reflexEntity,t);
 		}else{
-			return    new  HierarchicalQueryByIdSqlAnalysis<T>(reflexEntity, t);
+			return    baseSqlAnalysis=new HierarchicalQueryByIdSqlAnalysis<T>(reflexEntity, t);
 		}
 
 
