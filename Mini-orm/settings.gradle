@@ -1,5 +1,6 @@
-include ':app', ':miniorm-gradle',
-        ':miniorm-compiler',
-        ':miniorm-annotation'/*,
-':miniorm'*/,
-        ':miniorm-core', ':miniorm-sqlcipher'
+include ':app',':miniorm-compiler',':miniorm-annotation',/*':main-library',*/
+/*,
+/*,
+':miorm',*/
+':miniorm-core',
+        ':miniorm-sqlcipher'

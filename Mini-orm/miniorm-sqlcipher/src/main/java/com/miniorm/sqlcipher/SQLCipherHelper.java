@@ -5,10 +5,9 @@ import android.content.ContentValues;
 import android.content.Context;
 
 import android.os.Build;
-import android.util.Log;
+
 
 import com.miniorm.MiniOrm;
-import com.miniorm.android.DatabaseContext;
 import com.miniorm.android.TableUpgrade;
 import com.miniorm.constant.MiniOrmDataConfig;
 import com.miniorm.dao.utils.ResultType;

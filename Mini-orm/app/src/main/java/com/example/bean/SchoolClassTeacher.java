@@ -5,11 +5,12 @@ import com.miniorm.annotation.Table;
 import com.miniorm.annotation.TableColumn;
 import com.miniorm.annotation.TableID;
 import com.miniorm.enumtype.Parmary;
+import com.miniorm.annotation.Sqlcipher;
 
 /**
  * Created by admin on 2017-04-07.
  */
-
+@Sqlcipher
 @Table(name = "SchoolClassTeacher")
 public class SchoolClassTeacher {
 

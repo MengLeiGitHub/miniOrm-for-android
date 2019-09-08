@@ -23,8 +23,8 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-/*
 
+/*
 ext {
     bintrayName = 'miniorm-compiler'
     artifact = bintrayName

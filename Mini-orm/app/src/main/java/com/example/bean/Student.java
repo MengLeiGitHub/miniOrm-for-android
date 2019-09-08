@@ -3,6 +3,7 @@ package com.example.bean;
 import com.miniorm.android.ColumnType;
 import com.miniorm.annotation.ManyToMany;
 import com.miniorm.annotation.ManyToOne;
+import com.miniorm.annotation.Sqlcipher;
 import com.miniorm.annotation.Table;
 import com.miniorm.annotation.TableColumn;
 import com.miniorm.annotation.TableID;
@@ -12,7 +13,7 @@ import com.miniorm.enumtype.Parmary;
 /**
  * Created by admin on 2017-04-05.
  */
-
+@Sqlcipher
 @Table(name = "student")
 public class Student {
     @TableID(name = "sid",columnType = ColumnType.INTEGER,type = Parmary.AutoIncrement,defaultVal = -1)

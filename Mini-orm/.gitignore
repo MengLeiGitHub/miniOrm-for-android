@@ -9,3 +9,6 @@
 /app/build
 /miniorm-core/build
 /miniorm-sqlcipher/build
+/main-library
+/BuildSrc
+/lib

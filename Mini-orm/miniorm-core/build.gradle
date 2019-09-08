@@ -30,6 +30,7 @@ dependencies {
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
+/*
 ext {
     bintrayName = 'miniorm-core'
     artifact = bintrayName
@@ -43,3 +44,4 @@ ext {
 
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+*/

@@ -4,8 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -30,6 +32,8 @@ import com.miniorm.dao.utils.ResultType;
 import com.test.R;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -64,7 +68,14 @@ public class ManActivity extends Activity {
         else {
             initOrm();
         }
-
+        LinkedList linkedList=new LinkedList();
+        Iterator iterator= linkedList.iterator();
+        while (iterator.hasNext()){
+            iterator.next();
+        }
+        SparseArray sparseArray;
+        StringBuilder stringBuilder=null;
+        StringBuffer stringBuffer;
 
 
     }

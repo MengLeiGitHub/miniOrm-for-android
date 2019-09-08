@@ -9,5 +9,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Table {
 	String name();
-	boolean encryption() default false;
 }

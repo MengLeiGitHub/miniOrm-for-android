@@ -4,7 +4,6 @@ import java.util.List;
 
 
 
-import android.database.Cursor;
 
 import com.miniorm.dao.reflex.ReflexEntity;
 

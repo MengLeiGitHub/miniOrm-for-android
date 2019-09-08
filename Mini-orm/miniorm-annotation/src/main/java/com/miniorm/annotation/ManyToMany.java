@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
 @Documented
 public @interface ManyToMany {
     public Class<?>  bridgingTable() ;
-    String val();
+    String val() default "";
 
 }

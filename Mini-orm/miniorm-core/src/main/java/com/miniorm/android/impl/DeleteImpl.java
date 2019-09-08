@@ -15,6 +15,7 @@ import java.util.List;
 
 public class DeleteImpl implements DeleteInterface {
 
+	@Override
 	public <T> String delete(T t, ReflexEntity rexEntity) throws IllegalAccessException {
 		// TODO Auto-generated method stub
 
@@ -43,8 +44,10 @@ public class DeleteImpl implements DeleteInterface {
 				}else  if(obj instanceof  Boolean){
 					sb.append((((Boolean)obj)?1:0) + ",");
 				}
-				else
+				else{
 					sb.append(obj);
+				}
+
 			}
 
 		} else {
@@ -66,8 +69,10 @@ public class DeleteImpl implements DeleteInterface {
 		for (TableColumnEntity tableColumn : rexEntity.getTableColumnMap()
 				.values()) {
 
-			if (tableColumn.isPrimaryKey())
+			if (tableColumn.isPrimaryKey()){
 				continue;
+			}
+
 			String key=tableColumn.getColumnName();
 			Object fildObj = EntityParse.getFieldObjectVal(t,tableColumn.getField());
 
@@ -100,6 +105,7 @@ public class DeleteImpl implements DeleteInterface {
 
 
 
+	@Override
 	public <T> String delete(List<T> t, ReflexEntity reflexEntity) {
 		// TODO Auto-generated method stub
 		return null;

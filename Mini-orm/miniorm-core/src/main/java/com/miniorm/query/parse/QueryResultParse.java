@@ -203,6 +203,7 @@ public class QueryResultParse extends BaseResultParse<Cursor> {
         return list;
     }
 
+    @Override
     public <T> int ParseLastInsertRowId(Cursor cursor, Class<T> t, ReflexEntity reflexEntity) {
         int strid = 0;
         if (cursor.moveToFirst()) {

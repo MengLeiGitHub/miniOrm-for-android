@@ -3,6 +3,7 @@ package com.example.bean;
 import com.miniorm.android.ColumnType;
 import com.miniorm.annotation.ManyToMany;
 import com.miniorm.annotation.OneToOne;
+import com.miniorm.annotation.Sqlcipher;
 import com.miniorm.annotation.Table;
 import com.miniorm.annotation.TableColumn;
 import com.miniorm.annotation.TableID;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * Created by admin on 2017-04-05.
  */
+@Sqlcipher
 @Table(name = "teacher")
 public class Teacher {
 

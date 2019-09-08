@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -63,7 +64,7 @@ import static com.miniorm.compiler.utils.Content.TABLE_DAO;
  */
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
-@SupportedAnnotationTypes({TABLE, TABLE_DAO})
+@SupportedAnnotationTypes({TABLE_DAO})
 public class TableDaoClass extends AbstractProcessor {
 
     Filer filer;
@@ -72,7 +73,7 @@ public class TableDaoClass extends AbstractProcessor {
     Types types;
     Elements elementUtills;
     HashSet<TypeMirror> includeDataRelation;
-
+    AtomicInteger atomicInteger=new AtomicInteger(0);
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
@@ -97,7 +98,10 @@ public class TableDaoClass extends AbstractProcessor {
                     classify(element);
                 }
             }
-            try {
+            try {//dao生成可能分为多次，防止多次调用报错
+                if(EntityDaoCreaterClass.atomicInteger.get()!=atomicInteger.addAndGet(list.get(0).size())){
+                    return false;
+                }
                 createHelper();
             } catch (Exception e) {
                 e.printStackTrace();
