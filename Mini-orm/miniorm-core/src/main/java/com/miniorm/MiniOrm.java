@@ -8,9 +8,6 @@ import com.miniorm.dao.BaseDao;
 import com.miniorm.query.map.TableDaoMapping;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * ┏┓　　　┏┓
@@ -39,7 +36,7 @@ public class MiniOrm {
     public static int version;
     public static String dbName;
     public static String password;
-
+    private static ArrayList<Class<? extends BaseDao>> daos;
 
     public static void init(Application application, int versionCode, String dbName) {
         MiniOrm.application = application;
@@ -68,28 +65,15 @@ public class MiniOrm {
     }
 
 
-    private static class TableDaoSingle {
-        private static TableDaoMapping tableDaoMapping;
-        private static List<Class<? extends BaseDao>> daos=Collections.synchronizedList(new ArrayList<Class<? extends BaseDao>>());
-        static {
-                try {
-                    tableDaoMapping= (TableDaoMapping) Class.forName(TableDaoMapping.class.getName()+"_Child",
-                            false,MiniOrm.application.getClassLoader()).newInstance();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-        }
-    }
 
-
-
+    private static TableDaoMapping tableDaoMapping;
 
     public static TableDaoMapping getTableDaoMapping() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-         return TableDaoSingle.tableDaoMapping;
+        if(tableDaoMapping==null){
+            tableDaoMapping= (TableDaoMapping) Class.forName(TableDaoMapping.class.getName()+"_Child",
+                    false,MiniOrm.application.getClassLoader()).newInstance();
+        }
+        return tableDaoMapping;
     }
 
     /**
@@ -99,12 +83,15 @@ public class MiniOrm {
      */
 
     public static void addUpdateTable(Class<? extends BaseDao> dao) {
-        TableDaoSingle.daos.add(dao);
+        if (daos == null) {
+            daos = new ArrayList<>();
+        }
+        daos.add(dao);
     }
 
 
-    public static List<Class<? extends BaseDao>> getUpdateTables() {
-        return TableDaoSingle.daos;
+    public static ArrayList<Class<? extends BaseDao>> getUpdateTables() {
+        return daos;
     }
 
     public static Application getApplication() {
