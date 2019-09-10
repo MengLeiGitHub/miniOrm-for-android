@@ -46,8 +46,8 @@ repositories {
     options.encoding = "UTF-8"
 }*/
 dependencies {
-   // compile project(':miniorm-core')
-     compile 'com.github.mengleigithub:miniorm-core:2.0.7'
+    compile project(':miniorm-core')
+    // compile 'com.github.mengleigithub:miniorm-core:2.0.7'
     compile 'net.zetetic:android-database-sqlcipher:4.2.0@aar'
     // implementation files('libs/sqlcipher.jar')
    // implementation(name:'android-database-sqlcipher-4.2.0', ext:'aar')
