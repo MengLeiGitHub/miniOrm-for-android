@@ -1,12 +1,10 @@
 package com.example;
 
-import com.example.bean.CourseDao;
 import com.example.bean.SchoolClass;
-import com.example.bean.SchoolClassDao;
 import com.example.bean.SchoolClassTeacher;
-import com.example.bean.SchoolClassTeacherDao;
 import com.example.bean.Teacher;
-import com.example.bean.TeacherDao;
+import com.miniorm.MiniOrm;
+import com.miniorm.MiniOrmUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,23 +25,23 @@ public class QueryUtils {
 
     }
 
-    public List<SchoolClass> queryAllClass(SchoolClassDao schoolClassDao) {
-        return     schoolClassDao.queryAll();
+    public List<SchoolClass> queryAllClass() {
+
+        return    MiniOrmUtils.getInstance().getDao(SchoolClass.class).queryAll();
     }
 
-    public List<Teacher> queryAllTeacher(TeacherDao teacherDao) {
-        List<Teacher> list=teacherDao.queryAll();
-        return list;
+    public List<Teacher> queryAllTeacher() {
+        return MiniOrmUtils.getInstance().getDao(Teacher.class).queryAll();
     }
 
     //查询老师是否在班里代课
-    public boolean queryTeacherInClass(Teacher teacher, SchoolClass currentClass, SchoolClassTeacherDao schoolClassTeacherDao) {
+    public boolean queryTeacherInClass(Teacher teacher, SchoolClass currentClass) {
         SchoolClassTeacher schoolClassTeacher=new SchoolClassTeacher();
         schoolClassTeacher.setTeacher(teacher);
         schoolClassTeacher.setSchoolClass(currentClass);
-        return     !(schoolClassTeacherDao.queryByEntity(schoolClassTeacher)==null);
+        return     !( MiniOrmUtils.getInstance().getDao(SchoolClassTeacher.class).queryByEntity(schoolClassTeacher)==null);
     }
-    public List<Teacher> queryTeachersInClass(SchoolClass currentClass, SchoolClassTeacherDao schoolClassTeacherDao) {
+    public List<Teacher> queryTeachersInClass(SchoolClass currentClass) {
         List list=currentClass.getTeachers();
        return list==null?new ArrayList<Teacher>():list;
     }

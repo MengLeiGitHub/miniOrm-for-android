@@ -1,46 +1,31 @@
 package com.miniorm;
 
 import android.app.Application;
-import android.content.res.AssetManager;
-import android.util.Log;
-
-import com.miniorm.android.SQLHelper;
 import com.miniorm.android.impl.DatabaseExcute;
-import com.miniorm.customer.ResultParserCallBack;
 import com.miniorm.dao.BaseDao;
-import com.miniorm.dao.builder.Where;
 import com.miniorm.dao.database.DatabaseExeInterface;
 import com.miniorm.dao.utils.ResultType;
-import com.miniorm.debug.DebugLog;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 import java.util.WeakHashMap;
 
 /**
  * Created by ML on 2018/4/10.
  */
 
-public class DbUtils {
+public final class MiniOrmUtils {
 
 
    private volatile static WeakHashMap<String, BaseDao> hashMap = new WeakHashMap<>();
 
     private static final class ChildClass{
-        private static DbUtils dbUtils=new DbUtils();
+        private static MiniOrmUtils dbUtils=new MiniOrmUtils();
     }
 
-    private DbUtils() {
+    private MiniOrmUtils() {
 
     }
 
-    public static synchronized DbUtils getInstance() {
+    public  static synchronized MiniOrmUtils getInstance() {
          return  ChildClass.dbUtils;
     }
 
