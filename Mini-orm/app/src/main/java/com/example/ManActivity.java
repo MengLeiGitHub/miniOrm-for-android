@@ -18,16 +18,13 @@ import com.example.adapter.SchoolClassAdpter;
 import com.example.adapter.StudentAdpter;
 import com.example.adapter.TecherAdpter;
 import com.example.bean.Course;
-import com.example.bean.CourseDao;
 import com.example.bean.SchoolClass;
-import com.example.bean.SchoolClassDao;
 import com.example.bean.SchoolClassTeacher;
-import com.example.bean.SchoolClassTeacherDao;
 import com.example.bean.Student;
-import com.example.bean.StudentDao;
 import com.example.bean.Teacher;
-import com.example.bean.TeacherDao;
 import com.miniorm.MiniOrm;
+import com.miniorm.MiniOrmUtils;
+import com.miniorm.dao.BaseDao;
 import com.miniorm.dao.utils.ResultType;
 import com.test.R;
 
@@ -42,11 +39,11 @@ import java.util.List;
 
 public class ManActivity extends Activity {
 
-    CourseDao courseDao;//课程
-    SchoolClassDao schoolClassDao;//班级
-    SchoolClassTeacherDao schoolClassTeacherDao;//班级老师表
-    StudentDao studentDao;//学生
-    TeacherDao teacherDao;//老师
+    BaseDao<Course> courseDao;//课程
+    BaseDao< SchoolClass> schoolClassDao;//班级
+    BaseDao< SchoolClassTeacher> schoolClassTeacherDao;//班级老师表
+    BaseDao< Student> studentDao;//学生
+    BaseDao< Teacher> teacherDao;//老师
 
     Spinner courseSp,classSp;
     GridView teacherlistgridview,TeachingGridview,StudentGridview,teacherlessionview;
@@ -237,17 +234,16 @@ public class ManActivity extends Activity {
 
 
     void CreateTable() {
-        courseDao = new CourseDao();
+        courseDao = MiniOrmUtils.getInstance().getDao(Course.class);
         courseDao.createTable();
-        schoolClassDao = new SchoolClassDao();//班级
+        schoolClassDao = MiniOrmUtils.getInstance().getDao(SchoolClass.class);//班级
         schoolClassDao.createTable();
-        schoolClassTeacherDao = new SchoolClassTeacherDao();//班级老师表
+        schoolClassTeacherDao = MiniOrmUtils.getInstance().getDao(SchoolClassTeacher.class);;//班级老师表
         schoolClassTeacherDao.createTable();
-        studentDao = new StudentDao();//学生
+        studentDao = MiniOrmUtils.getInstance().getDao(Student.class);;//学生
         studentDao.createTable();
-        teacherDao = new TeacherDao();//老师
+        teacherDao = MiniOrmUtils.getInstance().getDao(Teacher.class);//老师
         teacherDao.createTable();
-
     }
 
     private void initTableData() {

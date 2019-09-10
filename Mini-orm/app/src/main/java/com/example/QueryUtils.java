@@ -1,12 +1,13 @@
 package com.example;
 
-import com.example.bean.CourseDao;
+
 import com.example.bean.SchoolClass;
-import com.example.bean.SchoolClassDao;
+
 import com.example.bean.SchoolClassTeacher;
-import com.example.bean.SchoolClassTeacherDao;
+
 import com.example.bean.Teacher;
-import com.example.bean.TeacherDao;
+
+import com.miniorm.dao.BaseDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,23 +28,23 @@ public class QueryUtils {
 
     }
 
-    public List<SchoolClass> queryAllClass(SchoolClassDao schoolClassDao) {
+    public List<SchoolClass> queryAllClass(BaseDao<SchoolClass> schoolClassDao) {
         return     schoolClassDao.queryAll();
     }
 
-    public List<Teacher> queryAllTeacher(TeacherDao teacherDao) {
+    public List<Teacher> queryAllTeacher(BaseDao< Teacher>  teacherDao) {
         List<Teacher> list=teacherDao.queryAll();
         return list;
     }
 
     //查询老师是否在班里代课
-    public boolean queryTeacherInClass(Teacher teacher, SchoolClass currentClass, SchoolClassTeacherDao schoolClassTeacherDao) {
+    public boolean queryTeacherInClass(Teacher teacher, SchoolClass currentClass, BaseDao< SchoolClassTeacher>  schoolClassTeacherDao) {
         SchoolClassTeacher schoolClassTeacher=new SchoolClassTeacher();
         schoolClassTeacher.setTeacher(teacher);
         schoolClassTeacher.setSchoolClass(currentClass);
         return     !(schoolClassTeacherDao.queryByEntity(schoolClassTeacher)==null);
     }
-    public List<Teacher> queryTeachersInClass(SchoolClass currentClass, SchoolClassTeacherDao schoolClassTeacherDao) {
+    public List<Teacher> queryTeachersInClass(SchoolClass currentClass, BaseDao< SchoolClassTeacher>  schoolClassTeacherDao) {
         List list=currentClass.getTeachers();
        return list==null?new ArrayList<Teacher>():list;
     }

@@ -13,6 +13,7 @@ import com.miniorm.entity.TableColumnEntity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by admin on 2016/10/28.
@@ -24,7 +25,7 @@ public class TableUpgrade {
     }
 
     public void update(){
-        ArrayList<Class<? extends BaseDao>> daolist= MiniOrm.getUpdateTables();
+        List<Class<? extends BaseDao>> daolist= MiniOrm.getUpdateTables();
         try {
             databaseExcute. beginTransaction();
             for (Class<? extends BaseDao> daoClass:daolist){
