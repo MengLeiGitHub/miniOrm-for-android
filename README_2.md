@@ -1,6 +1,6 @@
 ﻿# MiniOrm2
 在原来1版的基础上增加了关系映射，优化了插入、查询，效率更高
-
+新版本采用注解编译器生成代码，去掉手动创建Dao类
 
 
 ##使用方法
@@ -8,9 +8,9 @@
 ####如何接入？
  
  ```java
-	compile 'com.github.mengleigithub:miniorm-core:2.0.5'
+	compile 'com.github.mengleigithub:miniorm-core:2.0.7'
 
-	annotationProcessor 'com.github.mengleigithub:miniorm-compiler:1.0.2'
+	annotationProcessor 'com.github.mengleigithub:miniorm-compiler:1.0.5'
 
  ```
 
@@ -501,7 +501,7 @@ public class StudentTeacher {
 在设置多对多的关系的同时，要指定中间表的class类。
 
 
-****注意：千万不要使用JSON工具直接打印对象 否则可能会出现死循环
+
 
 
  
