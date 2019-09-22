@@ -70,9 +70,11 @@ import static com.miniorm.compiler.utils.Content.ONE_TO_ONE;
 @SupportedAnnotationTypes({ONE_TO_ONE, ONE_TO_MANY, MANY_TO_MANY, MANY_TO_ONE})
 public class EntityCreaterClass extends AbstractProcessor {
 
+    public static volatile boolean isTrue=false;
+
     Filer filer;
-    public static volatile boolean isRunned=false;
-    Map<TypeMirror, List<Element>> mirrorListMap;
+
+    public static  Map<TypeMirror, List<Element>> mirrorListMap;
     Types types;
     Elements elementUtills;
 
@@ -86,9 +88,11 @@ public class EntityCreaterClass extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+        System.err.println("Thread.currentThread().getId()="+Thread.currentThread().getId());
         if(CollectionUtils.isEmpty(set)){
             return false;
         }
+
         List<Set<? extends Element>> list = new LinkedList<>();
         Class[] classes={ManyToMany.class,ManyToOne.class,OneToMany.class,OneToOne.class};
         for (Class cls:classes){
@@ -114,8 +118,9 @@ public class EntityCreaterClass extends AbstractProcessor {
     }
 
     private void classify(Element element) {
-        isRunned=true;
+
         TypeMirror mirror = element.getEnclosingElement().asType();
+
         if (mirror != null) {
             if (mirrorListMap == null) {
                 mirrorListMap = new LinkedHashMap<>();
@@ -182,11 +187,6 @@ public class EntityCreaterClass extends AbstractProcessor {
 
         TypeSpec.Builder builder = TypeSpec.classBuilder(Content.PROXYUTILSCLASSNAME)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-   /*     ClassName dapMap = ClassName.get(Map.class);
-        ClassName stringClassName = ClassName.get(String.class);
-        TypeName className = ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(androidBaseDaoName));
-
-        TypeName fildtype = ParameterizedTypeName.get(dapMap, stringClassName, className);*/
         MethodSpec.Builder   meyhodbuilder = MethodSpec.methodBuilder(Content.INITPPROXYUTILSMETHOD)
                 .addModifiers(Modifier.PUBLIC,Modifier.FINAL,Modifier.STATIC)
                 .addParameter(Map.class,"map")
@@ -195,16 +195,34 @@ public class EntityCreaterClass extends AbstractProcessor {
         for (ClassName className:proxyClass.keySet()) {
             StringBuilder methods = new StringBuilder();
             methods.append(" map.put($T.class.getName(),$T.class.getName());");
+
             //  ClassName debug = ClassName.get(Content.DEBUG_LOG_PACKAGE, Content.DEBUG);
             meyhodbuilder.addStatement(methods.toString(),className ,proxyClass.get(className));
         }
         MethodSpec beyond =meyhodbuilder.build();
         builder.addMethod(beyond);
+
+        MethodSpec.Builder   proxymeyhodbuilder = MethodSpec.methodBuilder(Content.INITPROXYMAPCLASS)
+                .addModifiers(Modifier.PUBLIC,Modifier.FINAL,Modifier.STATIC)
+                .addParameter(Map.class,"proxyClassMap")
+                ;
+        for (ClassName className:proxyClass.keySet()) {
+            StringBuilder methods = new StringBuilder();
+            methods.append("proxyClassMap.put($T.class.getName(),$T.class);");
+            //  ClassName debug = ClassName.get(Content.DEBUG_LOG_PACKAGE, Content.DEBUG);
+            proxymeyhodbuilder.addStatement(methods.toString(),proxyClass.get(className),className );
+        }
+
+        MethodSpec beyond2 =proxymeyhodbuilder.build();
+
+        builder.addMethod(beyond2);
+
         TypeSpec typeSpec = builder.build();
         JavaFile javaFile = JavaFile.builder(Content.MAP_QUERY, typeSpec)
                 .build();
         javaFile.writeTo(filer);
 
+        isTrue=true;
 
 
 
@@ -245,6 +263,8 @@ public class EntityCreaterClass extends AbstractProcessor {
         TypeName fildtype = ParameterizedTypeName.get(dapMap, stringClassName, TableColumnEntityClass);
         String returnClassNames="this.getClass().getName()";
         methods.append("$T reflexEntity= $T.getReflexEntity("+returnClassNames+");\n");
+
+        //methods.append("ReflexEntity reflexEntity= ReflexCache.getReflexEntity(methodName);");
         methods.append("if (reflexEntity!=null){\n");
         methods.append(" \t$T  h= reflexEntity.getForeignkeyColumnMap();\n");
         methods.append("\t  if(\""+methodName+"\".startsWith(\"get\")){\n ");

@@ -6,7 +6,6 @@ import com.miniorm.annotation.ManyToMany;
 import com.miniorm.annotation.ManyToOne;
 import com.miniorm.annotation.OneToMany;
 import com.miniorm.annotation.OneToOne;
-import com.miniorm.annotation.Sqlcipher;
 import com.miniorm.annotation.Table;
 import com.miniorm.compiler.utils.CollectionUtils;
 import com.miniorm.compiler.utils.Content;
@@ -21,13 +20,11 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -51,7 +48,6 @@ import javax.lang.model.util.Types;
 
 import static com.miniorm.compiler.utils.Content.DAO_NAME;
 import static com.miniorm.compiler.utils.Content.NEW_CLASS_NAME;
-import static com.miniorm.compiler.utils.Content.SQLCIPHERTABLE;
 import static com.miniorm.compiler.utils.Content.TABLE;
 
 /**
@@ -80,23 +76,6 @@ public class EntityDaoCreaterClass extends AbstractProcessor {
         if(CollectionUtils.isEmpty(set)){
             return false;
         }
-     /*   Set<? extends Element> typeElemnts=new HashSet<>();
-        Class[] annitons={Table.class};
-        boolean  isSuccess=false;
-        for (Class cls:annitons){
-            Set<? extends Element> table = roundEnvironment.getElementsAnnotatedWith(cls);
-            if (CollectionUtils.notEmpty(table)) {
-
-                try {
-                    createHelper(table);
-                    isSuccess=true;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    isSuccess=false;
-                }
-            }
-        }
-        return isSuccess;*/
         Set<? extends Element> table = roundEnvironment.getElementsAnnotatedWith(Table.class);
 
         if (CollectionUtils.notEmpty(table)) {
@@ -119,6 +98,7 @@ public class EntityDaoCreaterClass extends AbstractProcessor {
             }
             return true;
         }
+
         return false;
     }
 
@@ -140,12 +120,10 @@ public class EntityDaoCreaterClass extends AbstractProcessor {
             }
         }
     }
-   public static AtomicInteger atomicInteger=new AtomicInteger(0);
 
 
     private void createHelper( Set<? extends Element> typeElemnts) throws Exception {
         for (Element tableElemnt : typeElemnts) {
-            atomicInteger.addAndGet(1);
             Table table= tableElemnt.getAnnotation(Table.class);
             TypeElement typeElement = (TypeElement) tableElemnt;
             String Package_name = elementUtills.getPackageOf(typeElement).toString();
@@ -156,8 +134,7 @@ public class EntityDaoCreaterClass extends AbstractProcessor {
             String className = parentSimpleName + Content.NEW_DAO_NAME;
             ClassName       parentClassName=      ClassName.get(Package_name,parentSimpleName);
             ClassName typeName;
-            Sqlcipher sqlcipher=tableElemnt.getAnnotation(Sqlcipher.class);
-            if(sqlcipher!=null){
+            if (table.encryption()){
                 typeName = ClassName.get(Content.ENCRYPTION_PACKAGE_NAME,Content.ENCRYPTION_DAO_NAME);
             }else {
                 typeName = ClassName.get(Content.UNENCRYPTION_PACKAGE_NAME,Content.UNENCRYPTION_DAO_NAME);

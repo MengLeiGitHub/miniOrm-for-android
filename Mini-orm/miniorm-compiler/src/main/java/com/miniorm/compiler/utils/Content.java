@@ -16,6 +16,8 @@ public   class Content {
     public static final String MAP_QUERY = MAINPACKAGE_NAME + ".query.map";
     public static final String PROXYUTILSCLASSNAME="QueryAgentBeanUtils";
     public static final String INITPPROXYUTILSMETHOD = "initSubBean";
+    public static final String INITPROXYMAPCLASS = "initProxyClass";
+
 
     public static String ONE_TO_ONE_MAPPING = "OneToOneMapping";
 
@@ -36,7 +38,7 @@ public   class Content {
 
     public static String NEW_DAO_NAME = "Dao";
     public static final String TABLE = MAINPACKAGE_NAME + ".annotation.Table";
-    public static final String SQLCIPHERTABLE = MAINPACKAGE_NAME + ".annotation.Sqlcipher";
+
 
     public static String DEBUG_LOG_PACKAGE = "com.miniorm.debug";
     public static String DEBUG = "DebugLog";

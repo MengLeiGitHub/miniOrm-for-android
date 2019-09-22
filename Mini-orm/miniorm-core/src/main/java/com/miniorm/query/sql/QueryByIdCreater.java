@@ -39,9 +39,6 @@ public class QueryByIdCreater<T> extends SQLCreater<T>{
 	public BaseSqlAnalysis<T> getBaseSqlAnalysis() {
 		// TODO Auto-generated method stub
 		//return   new HierarchicalQueryByIdSqlAnalysis<T>(reflexEntity,t);
-		if (baseSqlAnalysis!=null){
-			return  baseSqlAnalysis;
-		}
 		HashMap<String,TableColumnEntity> hashMap= reflexEntity.getForeignkeyColumnMap();
 		Collection<TableColumnEntity> list= hashMap.values();
 		int i=0;

@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -73,7 +72,7 @@ public class TableDaoClass extends AbstractProcessor {
     Types types;
     Elements elementUtills;
     HashSet<TypeMirror> includeDataRelation;
-    AtomicInteger atomicInteger=new AtomicInteger(0);
+
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
@@ -84,6 +83,8 @@ public class TableDaoClass extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+        System.err.println("Thread.currentThread().getId()="+Thread.currentThread().getId());
+
         if (CollectionUtils.isEmpty(set)) return false;
         List<Set<? extends Element>> list = new LinkedList<>();
         includeDataRelation(roundEnvironment);
@@ -98,10 +99,7 @@ public class TableDaoClass extends AbstractProcessor {
                     classify(element);
                 }
             }
-            try {//dao生成可能分为多次，防止多次调用报错
-                if(EntityDaoCreaterClass.atomicInteger.get()!=atomicInteger.addAndGet(list.get(0).size())){
-                    return false;
-                }
+            try {
                 createHelper();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -181,15 +179,24 @@ public class TableDaoClass extends AbstractProcessor {
                 .addModifiers(Modifier.PRIVATE);
         ClassName QueryAgentBeanUtilsClassName = ClassName.get(Content.MAP_QUERY, Content.PROXYUTILSCLASSNAME);
         StringBuilder methods=new StringBuilder();
+
         methods.append("if(entityMap==null){" +
                 "  entityMap=new $T<>();" +
+                "        }\n");
+        methods.append("if(proxyMap==null){" +
+                "  proxyMap=new $T<>();" +
                 "        }");
-        if(EntityCreaterClass.isRunned){
-            methods.append( "\n$T." + Content.INITPPROXYUTILSMETHOD + "(entityMap)");
-            methoentityMappingBuilder.addStatement(methods.toString(), LinkedHashMap.class, QueryAgentBeanUtilsClassName);
+        if(EntityCreaterClass.isTrue){
+            methods.append( "\n$T." + Content.INITPPROXYUTILSMETHOD + "(entityMap);");
+            methods.append( "\n$T." + Content.INITPROXYMAPCLASS + "(proxyMap)");
+            methoentityMappingBuilder.addStatement(methods.toString(), LinkedHashMap.class,LinkedHashMap.class, QueryAgentBeanUtilsClassName,QueryAgentBeanUtilsClassName);
         }else {
             methoentityMappingBuilder.addStatement(methods.toString(), LinkedHashMap.class);
         }
+
+
+
+
 
         builder.addMethod(methoentityMappingBuilder.build());
         MethodSpec.Builder getClassMethod = MethodSpec.methodBuilder("getDaoByName")
@@ -218,6 +225,25 @@ public class TableDaoClass extends AbstractProcessor {
         allEntryNameMethod.addStatement("if(entityMap==null){  putEntityMapping();}");
         allEntryNameMethod.addStatement(" return  entityMap.values()");
         builder.addMethod(allEntryNameMethod.build());
+
+
+        /*Proxy方法实现*/
+
+        TypeName proxyfildtype = ParameterizedTypeName.get(dapMap, stringClassName,TypeName.get(Class.class));
+        builder.addField(proxyfildtype, "proxyMap", Modifier.PRIVATE, Modifier.VOLATILE)
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+
+        MethodSpec.Builder proxyMethod = MethodSpec.methodBuilder("getProxyClass")
+                .addAnnotation(Override.class)
+                .addParameter(String.class, "clsName", Modifier.FINAL)
+                .returns(Class.class)
+                .addModifiers(Modifier.PUBLIC, Modifier.SYNCHRONIZED);
+
+        proxyMethod.addStatement("if(proxyMap==null){  putEntityMapping();}");
+        proxyMethod.addStatement(" return  proxyMap.get(clsName)");
+        builder.addMethod(proxyMethod.build());
+
+
 
 
         TypeSpec typeSpec = builder.build();
@@ -276,7 +302,6 @@ public class TableDaoClass extends AbstractProcessor {
             Set<? extends Element> set1 = roundEnvironment.getElementsAnnotatedWith(cls);
             list.add(set1);
         }
-
         if (CollectionUtils.notEmpty(list)) {
             includeDataRelation = new HashSet<>();
             for (Set<? extends Element> elements : list) {

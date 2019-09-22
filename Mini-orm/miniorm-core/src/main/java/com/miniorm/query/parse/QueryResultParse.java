@@ -2,15 +2,18 @@ package com.miniorm.query.parse;
 
 import android.database.Cursor;
 
+import com.miniorm.MiniOrm;
 import com.miniorm.android.parseType.ParseTypeFactory;
 import com.miniorm.android.parseType.ParseTypeInterface;
 import com.miniorm.constant.ParamConstant;
 import com.miniorm.dao.reflex.EntityParse;
+import com.miniorm.dao.reflex.ProxyCache;
 import com.miniorm.dao.reflex.ReflexCache;
 import com.miniorm.dao.reflex.ReflexEntity;
 import com.miniorm.debug.DebugLog;
 import com.miniorm.entity.TableColumnEntity;
 import com.miniorm.entity.TableIdEntity;
+import com.miniorm.query.map.TableDaoMapping;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -28,8 +31,8 @@ public class QueryResultParse extends BaseResultParse<Cursor> {
     @Override
     public <T> T parse(Cursor cursor, Class<T> t, ReflexEntity reflexEntity) throws Exception {
         // TODO Auto-generated method stub
-            DebugLog.e("cursor.length="+cursor.getCount());
-
+        DebugLog.e("cursor.length="+cursor.getCount());
+        t=ProxyCache.isHaveProxy(t.getName())?ProxyCache.getProxyClass(t.getName()):t;
         if (cursor != null && cursor.moveToFirst()&&cursor.getCount()!=0) {
             T newObject=t.newInstance();
             T t1 = resolveCursor(reflexEntity, newObject, cursor, true,t);
@@ -88,9 +91,14 @@ public class QueryResultParse extends BaseResultParse<Cursor> {
                 } else {//是
                     ReflexEntity reflexEntity2 = ReflexCache.getReflexEntity(field.getType().getName());
                     Class<Object> o2Class= (Class<Object>) field.getType();
+                    Class proxyClass = MiniOrm.getTableDaoMapping().getProxyClass(o2Class.getName());
+                    if (proxyClass==null){
+                        proxyClass=o2Class;
+                    }
                     Object o2 =o2Class.newInstance();
                     if (isFlag && tableColumnEntity.isHierarchicalQueries()) {//只有当是外键并且查询关联及第二层解析的时候执行
-                        o2 = resolveCursor(reflexEntity2, o2, cursor, false,o2Class);
+
+                        o2 = resolveCursor(reflexEntity2, o2, cursor, false,proxyClass);
                         t1 = entityParse.setEntityValue(t1, o2, field);
                     } else {//先给ID赋值   在将外键对象赋值到对象中
                         if(reflexEntity2==null)continue;
@@ -172,7 +180,7 @@ public class QueryResultParse extends BaseResultParse<Cursor> {
         if (parseTypeInterface == null) return t1;
 
         int obj =(int) parseTypeInterface.getValFromCursor(cursor, index);
-       boolean  val=obj== ParamConstant.BOOLEAN_TRUE?true:false;
+        boolean  val=obj== ParamConstant.BOOLEAN_TRUE?true:false;
         t1 = entityParse.setEntityValue(t1, val, field);
         return t1;
 
@@ -203,7 +211,6 @@ public class QueryResultParse extends BaseResultParse<Cursor> {
         return list;
     }
 
-    @Override
     public <T> int ParseLastInsertRowId(Cursor cursor, Class<T> t, ReflexEntity reflexEntity) {
         int strid = 0;
         if (cursor.moveToFirst()) {

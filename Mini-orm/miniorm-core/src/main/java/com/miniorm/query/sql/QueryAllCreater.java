@@ -15,7 +15,6 @@ import com.miniorm.query.analysis.hierarchical.HierarchicalQueryAllAnalysis;
 import com.miniorm.query.analysis.hierarchical.HierarchicalQueryByOtherAnalysis;
 
 public class QueryAllCreater<T> extends SQLCreater<T>{
-	BaseSqlAnalysis<T>  baseSqlAnalysis;
 
 
 	public QueryAllCreater(ReflexEntity reflexEntity, Class<T> t) {
@@ -38,9 +37,6 @@ public class QueryAllCreater<T> extends SQLCreater<T>{
 	@Override
 	public BaseSqlAnalysis<T> getBaseSqlAnalysis() {
 		// TODO Auto-generated method stub
-		if (baseSqlAnalysis!=null){
-			return baseSqlAnalysis;
-		}
 		HashMap<String,TableColumnEntity> hashMap= reflexEntity.getForeignkeyColumnMap();
 		Collection<TableColumnEntity> list= hashMap.values();
 		int i=0;

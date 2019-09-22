@@ -56,7 +56,11 @@ public abstract class BaseDao<T> {
     ReflexEntity reflexEntity;
 
     public BaseDao() {
-        tEntityClass = getTableEntitys();
+        try {
+            tEntityClass = getTableEntitys();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         EntityParse entityParse = new EntityParse(tEntityClass);
         reflexEntity = entityParse.getFieldValueFromT(tEntity);
         ReflexCache.addReflexEntity(tEntityClass.getName(), reflexEntity);
@@ -144,7 +148,7 @@ public abstract class BaseDao<T> {
             e.printStackTrace();
         }
         int flag = executeUpadateNoOpenTrancation(saveString);
-        if (flag == ResultType.FAIL){
+        if (flag == ResultType.FAIL) {
             return flag;
         }
 
@@ -184,7 +188,7 @@ public abstract class BaseDao<T> {
             e.printStackTrace();
         }
         int flag = executeUpadate(saveString);
-        if (flag == ResultType.FAIL){
+        if (flag == ResultType.FAIL) {
             return flag;
         }
 
@@ -344,7 +348,7 @@ public abstract class BaseDao<T> {
         try {
             baseQuery = new QueryALL<>(reflexEntity, tEntityClass);
             String querysql = baseQuery.getSQLCreater().toSQL(tEntity);
-            querysql=querysql+where.sql();
+            querysql = querysql + where.sql();
             return executeQueryBySQL(querysql);
 
         } catch (Exception e) {
@@ -354,11 +358,12 @@ public abstract class BaseDao<T> {
         //   return getQueryBuilder().callQuery().queryAll().where(Where.handle().limit(start, end)).executeQueryList();
 
     }
+
     public List<T> queryList(int start, int end) {
         try {
             baseQuery = new QueryALL<>(reflexEntity, tEntityClass);
             String querysql = baseQuery.getSQLCreater().toSQL(tEntity);
-            querysql=Where.handle(querysql).limit(start, end).sql();
+            querysql = Where.handle(querysql).limit(start, end).sql();
             return executeQueryBySQL(querysql);
 
         } catch (Exception e) {
@@ -416,39 +421,22 @@ public abstract class BaseDao<T> {
 
     }
 
-    private Class<T> getTableEntitys() {
+    private Class<T> getTableEntitys() throws Exception {
         queryEntityClassName = getQueryEntityClassName();
-        Class superClass = ProxyCache.getProxyClass(queryEntityClassName);
+        Class superClass = MiniOrm.getTableDaoMapping().getProxyClass(queryEntityClassName);
         if (superClass == null) {
             tEntity = getTableEntity();
             tEntityClass = tEntity == null ? tEntityClass : (Class<T>) tEntity.getClass();
-            try {
-                boolean isExistProxyClass=EntityParse.isExistProxySubClass(tEntityClass);
-                if (isExistProxyClass){
-                    Class tclass = Class.forName(tEntityClass.getName() + Content.NEW_CLASS_NAME,
-                            false, MiniOrm.getApplication().getClassLoader());
-                    tEntityClass = tclass;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            boolean isExistProxyClass = EntityParse.isExistProxySubClass(tEntityClass);
+            if (isExistProxyClass) {
+                Class tclass = Class.forName(tEntityClass.getName() + Content.NEW_CLASS_NAME,
+                        false, MiniOrm.getApplication().getClassLoader());
+                tEntityClass = tclass;
             }
-
-            try {
-                tEntity = tEntity == null ? tEntityClass.newInstance() : tEntity;
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            tEntity = tEntity == null ? tEntityClass.newInstance() : tEntity;
             ProxyCache.addProxyClass(queryEntityClassName, tEntityClass);
         } else {
-            try {
-                tEntity = (T) superClass.newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            tEntity = (T) superClass.newInstance();
             tEntityClass = superClass;
         }
         return tEntityClass;
@@ -497,7 +485,7 @@ public abstract class BaseDao<T> {
                 baseQuery.getResultParse().useAlias(false);
             }
             Object cursor = databaseexcute.excuteQuery(sql, reflexEntity);
-            if (cursor == null){
+            if (cursor == null) {
                 return null;
             }
 

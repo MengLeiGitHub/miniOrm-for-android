@@ -12,6 +12,11 @@ public abstract class SQLCreater<T> {
 	public SQLCreater(ReflexEntity reflexEntity,Class<T> t){
 		this.reflexEntity=reflexEntity;
 		this.t=t;
+		try {
+			baseSqlAnalysis=getBaseSqlAnalysis();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 
@@ -32,20 +37,20 @@ public abstract class SQLCreater<T> {
 	
 	protected String getTables() throws Exception {
 		// TODO Auto-generated method stub
-	    return	getBaseSqlAnalysis().fromTables().toSQL();
+	    return	baseSqlAnalysis.fromTables().toSQL();
 		
 	}
 
 	
 	protected String selectQueryField() throws Exception {
 		// TODO Auto-generated method stub
-		return	getBaseSqlAnalysis().selectQueryField().toSQL();
+		return	baseSqlAnalysis.selectQueryField().toSQL();
 	}
 
 	protected   <N>    String FieldCondition(N t) throws Exception {
 		// TODO Auto-generated method stub
 
-		return	getBaseSqlAnalysis().FieldCondition(t).toSQL();
+		return	baseSqlAnalysis.FieldCondition(t).toSQL();
 	}
 
 

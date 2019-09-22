@@ -15,6 +15,10 @@ public class ProxyCache {
         xCache.put(name,proclass);
     }
 
+    public static boolean isHaveProxy(String name){
+        return xCache.containsKey(name);
+    }
+
     public static Class  getProxyClass(String name){
         return xCache.get(name);
     }
