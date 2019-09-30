@@ -3,9 +3,6 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <compositeConfiguration>
-          <compositeBuild compositeDefinitionSource="SCRIPT" />
-        </compositeConfiguration>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
@@ -15,7 +12,7 @@
             <option value="$PROJECT_DIR$/miniorm-annotation" />
             <option value="$PROJECT_DIR$/miniorm-compiler" />
             <option value="$PROJECT_DIR$/miniorm-core" />
-            <option value="$PROJECT_DIR$/miniorm-gradle" />
+            <option value="$PROJECT_DIR$/miniorm-sqlcipher" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

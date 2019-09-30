@@ -1,11 +1,14 @@
 package com.miniorm;
 
 import android.app.Application;
+
 import com.miniorm.android.impl.DatabaseExcute;
 import com.miniorm.dao.BaseDao;
 import com.miniorm.dao.database.DatabaseExeInterface;
 import com.miniorm.dao.utils.ResultType;
+
 import java.util.Collection;
+import java.util.List;
 import java.util.WeakHashMap;
 
 /**
@@ -17,33 +20,45 @@ public final class MiniOrmUtils {
 
     private volatile static WeakHashMap<String, BaseDao> hashMap = new WeakHashMap<>();
 
-    private static final class ChildClass{
-        private static MiniOrmUtils dbUtils=new MiniOrmUtils();
+    private static final class ChildClass {
+        private static MiniOrmUtils dbUtils = new MiniOrmUtils();
     }
 
     private MiniOrmUtils() {
 
     }
 
-    public  static synchronized MiniOrmUtils getInstance() {
-        return  ChildClass.dbUtils;
+    public static synchronized MiniOrmUtils getInstance() {
+        return ChildClass.dbUtils;
     }
 
-    public synchronized <T> BaseDao<T> getDao(String name){
+    public synchronized <T> BaseDao<T> getDao(String name) {
         try {
-            Class cls= Class.forName(name, false,MiniOrm.getApplication().getClassLoader());
-            return   getDao(cls);
+            Class cls = Class.forName(name, false, MiniOrm.getApplication().getClassLoader());
+            return getDao(cls);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public synchronized  <T> BaseDao<T> getDao(Class<T> cls) {
+    private synchronized <T> BaseDao<T> getDaoByDaoClass(Class<? extends BaseDao> cls) {
         try {
-            if (hashMap.get(cls.getName())==null){
-                Class<? extends BaseDao>   daocls=   MiniOrm.getTableDaoMapping().getDaoByName(cls.getName());
-                hashMap.put(cls.getName(),daocls.newInstance());
+            BaseDao baseDao = cls.newInstance();
+            String key = baseDao.getQueryEntityClassName();
+            hashMap.put(key, baseDao);
+            return (BaseDao<T>) baseDao;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("重新编译，缺少文件生成");
+        }
+    }
+
+    public synchronized <T> BaseDao<T> getDao(Class<T> cls) {
+        try {
+            if (hashMap.get(cls.getName()) == null) {
+                Class<? extends BaseDao> daocls = MiniOrm.getTableDaoMapping().getDaoByName(cls.getName());
+                hashMap.put(cls.getName(), daocls.newInstance());
             }
             return (BaseDao<T>) hashMap.get(cls.getName());
         } catch (InstantiationException e) {
@@ -56,8 +71,8 @@ public final class MiniOrmUtils {
         return null;
     }
 
-    public void init(Application context, String dbName, int version, String password){
-        MiniOrm.init(context, version, dbName,password);
+    public void init(Application context, String dbName, int version, String password) {
+        MiniOrm.init(context, version, dbName, password);
         create();
     }
 
@@ -67,9 +82,12 @@ public final class MiniOrmUtils {
     }
 
     protected void create() {
-        Collection<String> strings = null;
         try {
-            strings = MiniOrm.getTableDaoMapping().allEntryName();
+            List<Class<? extends BaseDao>> list = MiniOrm.getTableDaoMapping().getDaos();
+            for (Class<? extends BaseDao> cls : list){
+                BaseDao baseDao = getDaoByDaoClass(cls);
+                baseDao.createTable();
+            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -77,18 +95,13 @@ public final class MiniOrmUtils {
         } catch (InstantiationException e) {
             e.printStackTrace();
         }
-        for (String key : strings) {
-            BaseDao baseDao = getDao(key);
-            baseDao.createTable();
-        }
-
     }
 
-    public  int execSQL(String sql,boolean useEncryption) {
-        if(useEncryption){
+    public int execSQL(String sql, boolean useEncryption) {
+        if (useEncryption) {
             try {
-                Class cls=Class.forName("com.miniorm.sqlcipher.SqlcipherDatabaseExcute");
-                DatabaseExeInterface databaseExeInterface= (DatabaseExeInterface) cls.newInstance();
+                Class cls = Class.forName("com.miniorm.sqlcipher.SqlcipherDatabaseExcute");
+                DatabaseExeInterface databaseExeInterface = (DatabaseExeInterface) cls.newInstance();
                 int result = databaseExeInterface.excuteUpdate(sql);
                 return result;
             } catch (ClassNotFoundException e) {
@@ -99,7 +112,7 @@ public final class MiniOrmUtils {
                 e.printStackTrace();
             }
             return ResultType.FAIL;
-        }else {
+        } else {
             int result = new DatabaseExcute().excuteUpdate(sql);
             return result;
         }

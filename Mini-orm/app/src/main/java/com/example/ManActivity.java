@@ -22,6 +22,7 @@ import com.example.bean.SchoolClass;
 import com.example.bean.SchoolClassTeacher;
 import com.example.bean.Student;
 import com.example.bean.Teacher;
+import com.example.bean.TestBean;
 import com.miniorm.MiniOrm;
 import com.miniorm.MiniOrmUtils;
 import com.miniorm.dao.BaseDao;
@@ -64,24 +65,38 @@ public class ManActivity extends Activity {
         PermissionUtil.requestPerssions(this,123,permis);
         else {
             initOrm();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    long time=System.currentTimeMillis();
+                    List<TestBean> testBeans=new ArrayList<>();
+                    for (int i=0;i<1000000;i++){
+                        TestBean testBean=new TestBean();
+                        testBean.setName("name="+i);
+                        testBean.setSid(i+1);
+                        testBeans.add(testBean);
+                    }
+                    MiniOrmUtils.getInstance().getDao(TestBean.class).saveOrUpdate(testBeans);
+                    Log.e("time","使用时间："+Long.toString(System.currentTimeMillis()-time));
+                }
+            }).start();
+
         }
         LinkedList linkedList=new LinkedList();
         Iterator iterator= linkedList.iterator();
         while (iterator.hasNext()){
             iterator.next();
         }
-        SparseArray sparseArray;
-        StringBuilder stringBuilder=null;
-        StringBuffer stringBuffer;
 
 
     }
 
     private void initOrm() {
         long time1=System.currentTimeMillis();
-        MiniOrm.init(ManActivity.this.getApplication(),1,"test.db");
-        MiniOrm.useSDCard(true,"miniorm");
-        CreateTable();
+        MiniOrmUtils.getInstance().init(getApplication(),"test.db",1,"caosimafdlj");
+/*        MiniOrm.init(ManActivity.this.getApplication(),1,"test.db");
+        MiniOrm.useSDCard(true,"miniorm");*/
+        init();
         Log.e("tag  CreateTable",(time1-System.currentTimeMillis())+"");
         time1=System.currentTimeMillis();
         initTableData();
@@ -233,17 +248,12 @@ public class ManActivity extends Activity {
 
 
 
-    void CreateTable() {
+    void init() {
         courseDao = MiniOrmUtils.getInstance().getDao(Course.class);
-        courseDao.createTable();
         schoolClassDao = MiniOrmUtils.getInstance().getDao(SchoolClass.class);//班级
-        schoolClassDao.createTable();
         schoolClassTeacherDao = MiniOrmUtils.getInstance().getDao(SchoolClassTeacher.class);;//班级老师表
-        schoolClassTeacherDao.createTable();
         studentDao = MiniOrmUtils.getInstance().getDao(Student.class);;//学生
-        studentDao.createTable();
         teacherDao = MiniOrmUtils.getInstance().getDao(Teacher.class);//老师
-        teacherDao.createTable();
     }
 
     private void initTableData() {

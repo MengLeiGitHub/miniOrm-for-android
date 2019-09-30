@@ -18,8 +18,11 @@ import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.WildcardTypeName;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -195,10 +198,13 @@ public class TableDaoClass extends AbstractProcessor {
         }
 
 
-
-
-
         builder.addMethod(methoentityMappingBuilder.build());
+
+        implGetDaosMethod(builder,className);
+
+
+
+
         MethodSpec.Builder getClassMethod = MethodSpec.methodBuilder("getDaoByName")
                 .addParameter(String.class, "name", Modifier.FINAL)
                 .addAnnotation(Override.class)
@@ -250,6 +256,38 @@ public class TableDaoClass extends AbstractProcessor {
         JavaFile javaFile = JavaFile.builder(Content.MAP_QUERY, typeSpec)
                 .build();
         javaFile.writeTo(filer);
+    }
+
+    private void implGetDaosMethod(TypeSpec.Builder builder,TypeName className) {
+        /*
+        List<Class<?  extends BaseDao>> list=new ArrayList<>();
+        Iterator<Map.Entry<String,Class<? extends BaseDao>>> iterator = daoMap.entrySet().iterator();
+        while (iterator.hasNext()){
+           list.add(iterator.next().getValue());
+        }
+        return list;
+         */
+        ClassName androidBaseDaoName = ClassName.get(Content.DAO_PACKAGE_NAME, Content.DAO_NAME);
+        TypeName returnclassNameType = ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(androidBaseDaoName));
+
+        TypeName returnclassName = ParameterizedTypeName.get(ClassName.get(List.class), returnclassNameType);
+        TypeName IteratorClassName=ClassName.get(Iterator.class);
+        TypeName MapEntryClassName=ClassName.get(Map.Entry.class);
+
+        MethodSpec.Builder getClassMethod = MethodSpec.methodBuilder("getDaos")
+                .addAnnotation(Override.class)
+                .returns(returnclassName)
+                .addModifiers(Modifier.PUBLIC, Modifier.SYNCHRONIZED);
+        getClassMethod.addStatement("if(daoMap==null)  putDaoClass() ");
+        getClassMethod.addStatement("if(entityMap==null)  putEntityMapping()");
+        getClassMethod.addStatement("\tList<Class<?  extends BaseDao>> list=new $T<>()",ClassName.get(ArrayList.class));
+        getClassMethod.addStatement("\t$T<$T<String,Class<? extends BaseDao>>> iterator = daoMap.entrySet().iterator()",IteratorClassName,MapEntryClassName);
+        getClassMethod.addStatement("\twhile (iterator.hasNext()){");
+        getClassMethod.addStatement(" \t\t\tlist.add(iterator.next().getValue())");
+        getClassMethod.addStatement("\t }");
+        getClassMethod.addStatement(" return list");
+        builder.addMethod(getClassMethod.build());
+
     }
 
 

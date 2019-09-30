@@ -61,6 +61,7 @@ public class SQLCipherHelper extends SQLiteOpenHelper {
         if (mOpenCounter.incrementAndGet() == 1) {
             // Opening new database
             db = getWritableDatabase(MiniOrm.password);
+            DebugLog.e(db.getPath());
         }
         return db;
     }
@@ -103,6 +104,9 @@ public class SQLCipherHelper extends SQLiteOpenHelper {
             DbName = MiniOrm.dbName;
 
             MiniOrmDataConfig dataConfig = new MiniOrmDataConfig(MiniOrm.getApplication());
+            if ((!StringUtils.isNull(MiniOrm.dbName)) && MiniOrm.version != 0&&StringUtils.isNull(MiniOrm.password)){
+                throw new RuntimeException("当前使用的是加密数据库必须传入数据库密码，请调用 MiniOrmUtils.getInstance().init()方法时.设置秘密");
+            }
             if (StringUtils.isNull(MiniOrm.dbName) || MiniOrm.version == 0||StringUtils.isNull(MiniOrm.password) ) {
                 MiniOrm.dbName = dataConfig.get("DBNAME");
                 MiniOrm.version = dataConfig.getInt("DBVersion");

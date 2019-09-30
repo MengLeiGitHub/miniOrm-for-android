@@ -6,6 +6,7 @@ import com.miniorm.annotation.ManyToMany;
 import com.miniorm.annotation.ManyToOne;
 import com.miniorm.annotation.OneToMany;
 import com.miniorm.annotation.OneToOne;
+import com.miniorm.annotation.Sqlcipher;
 import com.miniorm.annotation.Table;
 import com.miniorm.compiler.utils.CollectionUtils;
 import com.miniorm.compiler.utils.Content;
@@ -134,7 +135,8 @@ public class EntityDaoCreaterClass extends AbstractProcessor {
             String className = parentSimpleName + Content.NEW_DAO_NAME;
             ClassName       parentClassName=      ClassName.get(Package_name,parentSimpleName);
             ClassName typeName;
-            if (table.encryption()){
+            Sqlcipher sqlcipher=tableElemnt.getAnnotation(Sqlcipher.class);
+            if (sqlcipher!=null){
                 typeName = ClassName.get(Content.ENCRYPTION_PACKAGE_NAME,Content.ENCRYPTION_DAO_NAME);
             }else {
                 typeName = ClassName.get(Content.UNENCRYPTION_PACKAGE_NAME,Content.UNENCRYPTION_DAO_NAME);
