@@ -74,7 +74,7 @@ public class QueryBuilder<T> {
  		public  T      excute(){
 			String sqls=sql.toString().replaceAll(Placeholder, "")+";";
 			sql.delete(0,sqls.length()-1);
-			return 	baseDao.executeQuery(sqls,reflexEntity);
+			return 	baseDao.executeQuery(sqls,false);
 		}
 		
 		public  List<T>      executeQueryList(){

@@ -55,6 +55,7 @@ public abstract class BaseDao<T> {
     private QueryBuilder<T> queryBuilder;
     ReflexEntity reflexEntity;
 
+
     public BaseDao() {
         try {
             tEntityClass = getTableEntitys();
@@ -499,14 +500,18 @@ public abstract class BaseDao<T> {
 
     }
 
+    /**
+     *
+     * @param sql
+     * @param isUseAlias 别名是为了多表连接查询的时候启用
+     * @return
+     */
 
-    public T executeQuery(String sql) {
+    public T executeQuery(String sql,boolean isUseAlias) {
         DebugLog.e(sql);
         try {
-            if (baseQuery == null) {
-                baseQuery = new QueryALL<>(reflexEntity, tEntityClass);
-                baseQuery.getResultParse().useAlias(false);
-            }
+            QueryALL<T>      baseQuery = new QueryALL<>(reflexEntity, tEntityClass);
+            baseQuery.getResultParse().useAlias(isUseAlias);
             return baseQuery.getResultParse().parse(databaseexcute.excuteQuery(sql, reflexEntity), tEntityClass, reflexEntity);
         } catch (Exception e) {
             e.printStackTrace();
