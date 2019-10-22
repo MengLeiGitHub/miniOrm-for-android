@@ -85,13 +85,6 @@ public class MiniOrm {
         }
     }
 
-
-
-
-    public static TableDaoMapping getTableDaoMapping() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        return TableDaoSingle.tableDaoMapping;
-    }
-
     /**
      * 在版本升级的时候，调用传入需要升级的表的 dao文件  class类型
      *
@@ -99,8 +92,15 @@ public class MiniOrm {
      */
 
     public static void addUpdateTable(Class<? extends BaseDao> dao) {
-        TableDaoSingle.daos.add(dao);
+        MiniOrm.TableDaoSingle.daos.add(dao);
     }
+
+
+    public static TableDaoMapping getTableDaoMapping() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        return TableDaoSingle.tableDaoMapping;
+    }
+
+
 
 
     public static List<Class<? extends BaseDao>> getUpdateTables() {

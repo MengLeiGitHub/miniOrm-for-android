@@ -7,14 +7,15 @@ buildscript {
         }
         google()
         jcenter()
-
-
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven{ url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
+        maven{ url 'https://dl.bintray.com/mengleigithub/MyMaven'}
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.5'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-       // classpath 'com.miniorm.plugin:TracePlugin:0.0.1-beta'
+        // classpath 'com.miniorm.plugin:TracePlugin:0.0.1-beta'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -25,11 +26,13 @@ allprojects {
     repositories {
         google()
         jcenter()
-
-            flatDir {
-              //  dirs ['../miniorm-sqlcipher/libs','../app/libs']
-                dirs '../app/libs'
-            }
+        maven{ url 'https://dl.bintray.com/mengleigithub/MyMaven'}
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        flatDir {
+            //  dirs ['../miniorm-sqlcipher/libs','../app/libs']
+            dirs '../app/libs'
+        }
         maven {
             url uri('../repo')
         }
@@ -37,7 +40,7 @@ allprojects {
 
     tasks.withType(JavaCompile) {
 
-        options.encoding ="UTF-8"
+        options.encoding = "UTF-8"
 
     }
     tasks.withType(Javadoc) {

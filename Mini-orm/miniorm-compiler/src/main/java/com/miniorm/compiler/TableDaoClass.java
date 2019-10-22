@@ -194,7 +194,7 @@ public class TableDaoClass extends AbstractProcessor {
             methods.append( "\n$T." + Content.INITPROXYMAPCLASS + "(proxyMap)");
             methoentityMappingBuilder.addStatement(methods.toString(), LinkedHashMap.class,LinkedHashMap.class, QueryAgentBeanUtilsClassName,QueryAgentBeanUtilsClassName);
         }else {
-            methoentityMappingBuilder.addStatement(methods.toString(), LinkedHashMap.class);
+            methoentityMappingBuilder.addStatement(methods.toString(), LinkedHashMap.class,LinkedHashMap.class);
         }
 
 
@@ -345,7 +345,6 @@ public class TableDaoClass extends AbstractProcessor {
             for (Set<? extends Element> elements : list) {
                 for (Element element : elements) {
                     TypeMirror mirror = element.getEnclosingElement().asType();
-
                     includeDataRelation.add(mirror);
                 }
             }

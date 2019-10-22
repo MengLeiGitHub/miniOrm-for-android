@@ -32,13 +32,13 @@ public class Teacher {
     List<SchoolClass>  schoolClassList;
 
 
-    @ManyToMany(bridgingTable = SchoolClassTeacher.class)
+  //  @ManyToMany(bridgingTable = SchoolClassTeacher.class)
     public List<SchoolClass> getSchoolClassList() {
         return schoolClassList;
     }
 
 
-    @OneToOne
+ //   @OneToOne
     public Course getCourse() {
         return course;
     }

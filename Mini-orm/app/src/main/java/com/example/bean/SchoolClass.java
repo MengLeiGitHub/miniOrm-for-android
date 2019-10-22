@@ -45,7 +45,7 @@ public class SchoolClass {
         this.sClassName = sClassName;
     }
 
-    @ManyToMany(bridgingTable = SchoolClassTeacher.class)
+    //@ManyToMany(bridgingTable = SchoolClassTeacher.class)
     public List<Teacher> getTeachers() {
         return teachers;
     }
@@ -54,7 +54,7 @@ public class SchoolClass {
         this.teachers = teachers;
     }
 
-    @OneToMany
+    //@OneToMany
     public List<Student> getStudentList() {
         return studentList;
     }
