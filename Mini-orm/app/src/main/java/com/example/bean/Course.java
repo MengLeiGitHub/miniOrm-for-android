@@ -40,7 +40,7 @@ public class Course {
     public void setcName(String cName) {
         this.cName = cName;
     }
-  //  @OneToMany
+    @OneToMany
     public List<Teacher> getTeachers() {
         return teachers;
     }

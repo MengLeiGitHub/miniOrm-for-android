@@ -42,7 +42,7 @@ public class Student {
         this.name = name;
     }
 
-   // @ManyToOne
+    @ManyToOne
     public SchoolClass getSchoolClass() {
         return schoolClass;
     }

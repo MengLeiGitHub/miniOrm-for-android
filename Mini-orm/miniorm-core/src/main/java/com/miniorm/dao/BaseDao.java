@@ -232,13 +232,11 @@ public abstract class BaseDao<T> {
 
     public int saveOrUpdate(List<T> t) {
 
-        int result = 0;
+        int result = 1;
         if (t == null || t.size() == 0) {
-
             return ResultType.FAIL;
         }
         try {
-
             databaseexcute.beginTransaction();
             for (T tt : t) {
                 MySqliteStatement saveString = saveInterface.saveOrUpdate(tt, reflexEntity);

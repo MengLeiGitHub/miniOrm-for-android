@@ -4,3 +4,4 @@ include ':app',':miniorm-compiler',':miniorm-annotation',/*':main-library',*/
 ':miorm',*/
 ':miniorm-core',
         ':miniorm-sqlcipher'
+include ':ijkplayersdk'

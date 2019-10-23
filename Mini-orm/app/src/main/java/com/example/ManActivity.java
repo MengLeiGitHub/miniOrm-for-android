@@ -18,6 +18,7 @@ import com.example.adapter.SchoolClassAdpter;
 import com.example.adapter.StudentAdpter;
 import com.example.adapter.TecherAdpter;
 import com.example.bean.Course;
+import com.example.bean.NeiBuLeiTest;
 import com.example.bean.SchoolClass;
 import com.example.bean.SchoolClassTeacher;
 import com.example.bean.Student;
@@ -79,7 +80,7 @@ public class ManActivity extends Activity {
                     MiniOrmUtils.getInstance().getDao(TestBean.class).saveOrUpdate(testBeans);
                     Log.e("time","使用时间："+Long.toString(System.currentTimeMillis()-time));
                 }
-            }).start();
+            })/*.start()*/;
 
         }
         LinkedList linkedList=new LinkedList();
@@ -96,12 +97,17 @@ public class ManActivity extends Activity {
         MiniOrmUtils.getInstance().init(getApplication(),"test.db",1,"caosimafdlj");
 /*        MiniOrm.init(ManActivity.this.getApplication(),1,"test.db");
         MiniOrm.useSDCard(true,"miniorm");*/
+        MiniOrmUtils.getInstance().createTables();
         init();
         Log.e("tag  CreateTable",(time1-System.currentTimeMillis())+"");
         time1=System.currentTimeMillis();
         initTableData();
         Log.e("tag  initTableData",(time1-System.currentTimeMillis())+"");
         initWidget();
+        NeiBuLeiTest.HAHA haha=new NeiBuLeiTest.HAHA();
+        haha.setcName("卧槽");
+        haha.setId(123);
+        MiniOrmUtils.getInstance().getDao(NeiBuLeiTest.HAHA.class).save(haha);
     }
 
     @Override

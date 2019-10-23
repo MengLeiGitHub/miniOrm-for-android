@@ -16,6 +16,7 @@ import com.miniorm.query.sql.SQLCreater;
  */
 public abstract class BaseQuery<T,N> {
 	protected ReflexEntity reflexEntity;
+	BaseResultParse<N> baseResultParse;
 	protected Class<T>  t;
 	public BaseQuery(	ReflexEntity reflexEntity,Class<T> t){
 			this.reflexEntity=reflexEntity;
@@ -26,8 +27,10 @@ public abstract class BaseQuery<T,N> {
 
 	@SuppressWarnings("unchecked")
 	public    BaseResultParse<N>   getResultParse(){
-
-		return   (BaseResultParse) new QueryResultParse();
+			if (baseResultParse!=null){
+				return baseResultParse;
+			}
+		return   baseResultParse=(BaseResultParse) new QueryResultParse();
 	}
 	
 }

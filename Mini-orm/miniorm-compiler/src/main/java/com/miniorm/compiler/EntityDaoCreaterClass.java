@@ -21,6 +21,7 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -129,10 +130,17 @@ public class EntityDaoCreaterClass extends AbstractProcessor {
             TypeElement typeElement = (TypeElement) tableElemnt;
             String Package_name = elementUtills.getPackageOf(typeElement).toString();
             String parentSimpleName = typeElement.getSimpleName().toString();
-            /*if(parentSimpleName.endsWith(NEW_CLASS_NAME)){
+           // System.err.println("parentSimpleName="+parentSimpleName +"   getEnclosingElement ="+((TypeElement) tableElemnt).getQualifiedName().toString());
+            String fullName=ClassName.get(Package_name,parentSimpleName).toString();
+            String classDaoName = parentSimpleName + Content.NEW_DAO_NAME;//代表普通的类dao名称
+            if (tableElemnt.getSimpleName().toString().endsWith(NEW_CLASS_NAME)){//防止代理类生成dao实体
                 continue;
-            }*/
-            String className = parentSimpleName + Content.NEW_DAO_NAME;
+            }
+            //判断当前是否为内部类
+            if (!((TypeElement) tableElemnt).getQualifiedName().toString().equals(fullName)){//是内部类
+                    parentSimpleName=((TypeElement) tableElemnt).getQualifiedName().toString().substring(Package_name.length()+1);
+            }
+
             ClassName       parentClassName=      ClassName.get(Package_name,parentSimpleName);
             ClassName typeName;
             Sqlcipher sqlcipher=tableElemnt.getAnnotation(Sqlcipher.class);
@@ -143,7 +151,7 @@ public class EntityDaoCreaterClass extends AbstractProcessor {
             }
             TypeName parentTypeName= ParameterizedTypeName.get(typeName,parentClassName);
 
-            TypeSpec.Builder builder = TypeSpec.classBuilder(className)
+            TypeSpec.Builder builder = TypeSpec.classBuilder(classDaoName)
                     .superclass(parentTypeName)
                     .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
             //  builder.addMethod(getTableEntityMethodSpec(typeElement,parentClassName));

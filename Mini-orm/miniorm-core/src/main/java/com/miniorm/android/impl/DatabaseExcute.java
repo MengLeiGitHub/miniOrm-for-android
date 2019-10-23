@@ -106,6 +106,10 @@ public class DatabaseExcute implements DatabaseExeInterface<Cursor> {
 			else {
 				stringBuilder.append(kv.getColumnName() + ": null");
 			}
+			stringBuilder.append(",");
+		}
+		if (stringBuilder.length()>1){
+			stringBuilder.deleteCharAt(stringBuilder.length()-1);
 		}
 		stringBuilder.append("}");
 		DebugLog.e(stringBuilder.toString());

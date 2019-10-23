@@ -30,12 +30,13 @@ dependencies {
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
+/*
 ext {
     bintrayName = 'miniorm-core'
     artifact = bintrayName
     libraryName = 'miniorm core'
     libraryDescription = 'A lightweight Android database persistence tool class library'
-    libraryVersion = miniorm_core_version +"-beta-1"
+    libraryVersion = miniorm_core_version +"-beta-2"
     user =  project.properties["bintray.user"]
     key = project.properties["bintray.apikey"]
 }
@@ -43,3 +44,4 @@ ext {
 
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+*/

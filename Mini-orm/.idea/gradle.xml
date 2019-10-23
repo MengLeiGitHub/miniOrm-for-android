@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/ijkplayersdk" />
             <option value="$PROJECT_DIR$/miniorm-annotation" />
             <option value="$PROJECT_DIR$/miniorm-compiler" />
             <option value="$PROJECT_DIR$/miniorm-core" />

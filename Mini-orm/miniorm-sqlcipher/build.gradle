@@ -1,18 +1,18 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 22
+  /*  compileSdkVersion 22
     buildToolsVersion "25.0.3"
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 22
- /*   compileSdkVersion Integer.parseInt(COMPILE_SDK_VERSION)
+        targetSdkVersion 22*/
+    compileSdkVersion Integer.parseInt(COMPILE_SDK_VERSION)
     buildToolsVersion BUILDTOOLS_VERSION
 
     defaultConfig {
         minSdkVersion Integer.parseInt(MIN_SDK_VERSION)
-        targetSdkVersion Integer.parseInt(TARGET_SDK_VERSION)*/
+        targetSdkVersion Integer.parseInt(TARGET_SDK_VERSION)
         versionCode 1
         versionName "1.0"
 
@@ -46,9 +46,10 @@ repositories {
     options.encoding = "UTF-8"
 }*/
 dependencies {
-    compile project(':miniorm-core')
+    //compile project(':miniorm-core')
     // compile 'com.github.mengleigithub:miniorm-core:2.0.7'
-    compile 'net.zetetic:android-database-sqlcipher:4.2.0@aar'
+    api 'net.zetetic:android-database-sqlcipher:4.2.0@aar'
+    api 'com.github.mengleigithub:miniorm-core:2.0.8-beta-2'
     // implementation files('libs/sqlcipher.jar')
    // implementation(name:'android-database-sqlcipher-4.2.0', ext:'aar')
 
@@ -57,7 +58,6 @@ dependencies {
 
 
 
-/*
 
 
 ext {
@@ -73,4 +73,3 @@ ext {
 
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
-*/
