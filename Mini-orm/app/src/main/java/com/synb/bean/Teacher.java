@@ -1,4 +1,4 @@
-package com.example.bean;
+package com.synb.bean;
 
 import com.miniorm.android.ColumnType;
 import com.miniorm.annotation.ManyToMany;
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by admin on 2017-04-05.
  */
-@Sqlcipher
+//@Sqlcipher
 @Table(name = "teacher")
 public class Teacher {
 

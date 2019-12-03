@@ -1,7 +1,6 @@
-package com.example.bean;
+package com.synb.bean;
 
 import com.miniorm.android.ColumnType;
-import com.miniorm.annotation.ManyToMany;
 import com.miniorm.annotation.OneToMany;
 import com.miniorm.annotation.Sqlcipher;
 import com.miniorm.annotation.Table;
@@ -15,7 +14,7 @@ import java.util.List;
  * 课程
  * Created by admin on 2017-04-06.
  */
-@Sqlcipher
+//@Sqlcipher
 @Table(name = "course")
 public class Course {
 

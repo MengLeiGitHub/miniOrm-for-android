@@ -1,21 +1,25 @@
-package com.example.bean;
-
+package com.synb.bean;
 
 import com.miniorm.android.ColumnType;
+import com.miniorm.annotation.ManyToOne;
 import com.miniorm.annotation.Sqlcipher;
 import com.miniorm.annotation.Table;
 import com.miniorm.annotation.TableColumn;
 import com.miniorm.annotation.TableID;
 import com.miniorm.enumtype.Parmary;
 
+
+/**
+ * Created by admin on 2017-04-05.
+ */
 //@Sqlcipher
-@Table(name = "testbeam")
-public class TestBean {
-    @TableID(name = "sid",columnType = ColumnType.INTEGER,type = Parmary.AutoIncrement)
-    private long  sid;
+@Table(name = "student")
+public class Student {
+    @TableID(name = "sid",columnType = ColumnType.INTEGER,type = Parmary.AutoIncrement,defaultVal = -1)
+     private long  sid;
 
     @TableColumn(name = "name",columnType = ColumnType.VARCHAR)
-    private String  name;
+     private String  name;
 
     @TableColumn(name = "scid",isForeignkey = true,columnType = ColumnType.VARCHAR)
     private SchoolClass schoolClass;
@@ -37,4 +41,12 @@ public class TestBean {
         this.name = name;
     }
 
+    @ManyToOne
+    public SchoolClass getSchoolClass() {
+        return schoolClass;
+    }
+
+    public void setSchoolClass(SchoolClass schoolClass) {
+        this.schoolClass = schoolClass;
+    }
 }

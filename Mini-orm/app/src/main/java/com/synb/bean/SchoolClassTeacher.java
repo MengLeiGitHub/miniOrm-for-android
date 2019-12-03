@@ -1,4 +1,4 @@
-package com.example.bean;
+package com.synb.bean;
 
 import com.miniorm.android.ColumnType;
 import com.miniorm.annotation.Table;
@@ -10,7 +10,7 @@ import com.miniorm.annotation.Sqlcipher;
 /**
  * Created by admin on 2017-04-07.
  */
-@Sqlcipher
+//@Sqlcipher
 @Table(name = "SchoolClassTeacher")
 public class SchoolClassTeacher {
 

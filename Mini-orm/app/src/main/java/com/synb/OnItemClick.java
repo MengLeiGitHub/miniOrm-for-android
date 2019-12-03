@@ -1,4 +1,4 @@
-package com.example;
+package com.synb;
 
 /**
  * Created by admin on 2017-04-08.

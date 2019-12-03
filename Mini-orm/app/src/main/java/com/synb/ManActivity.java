@@ -1,35 +1,37 @@
-package com.example;
+package com.synb;
 
 import android.Manifest;
 import android.app.Activity;
-import android.database.Cursor;
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Spinner;
 
-import com.example.adapter.LessionAdpter;
-import com.example.adapter.SchoolClassAdpter;
-import com.example.adapter.StudentAdpter;
-import com.example.adapter.TecherAdpter;
-import com.example.bean.Course;
-import com.example.bean.NeiBuLeiTest;
-import com.example.bean.SchoolClass;
-import com.example.bean.SchoolClassTeacher;
-import com.example.bean.Student;
-import com.example.bean.Teacher;
-import com.example.bean.TestBean;
+import com.synb.adapter.LessionAdpter;
+import com.synb.adapter.SchoolClassAdpter;
+import com.synb.adapter.StudentAdpter;
+import com.synb.adapter.TecherAdpter;
+import com.synb.bean.Course;
+import com.synb.bean.NeiBuLeiTest;
+import com.synb.bean.SchoolClass;
+import com.synb.bean.SchoolClassTeacher;
+import com.synb.bean.Student;
+import com.synb.bean.Teacher;
+import com.synb.bean.TestBean;
 import com.miniorm.MiniOrm;
 import com.miniorm.MiniOrmUtils;
 import com.miniorm.dao.BaseDao;
 import com.miniorm.dao.utils.ResultType;
+import com.synb.phonecall.IPermissionPhoneCallStrategy;
 import com.test.R;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -42,69 +44,87 @@ import java.util.List;
 public class ManActivity extends Activity {
 
     BaseDao<Course> courseDao;//课程
-    BaseDao< SchoolClass> schoolClassDao;//班级
-    BaseDao< SchoolClassTeacher> schoolClassTeacherDao;//班级老师表
-    BaseDao< Student> studentDao;//学生
-    BaseDao< Teacher> teacherDao;//老师
+    BaseDao<SchoolClass> schoolClassDao;//班级
+    BaseDao<SchoolClassTeacher> schoolClassTeacherDao;//班级老师表
+    BaseDao<Student> studentDao;//学生
+    BaseDao<Teacher> teacherDao;//老师
 
-    Spinner courseSp,classSp;
-    GridView teacherlistgridview,TeachingGridview,StudentGridview,teacherlessionview;
+    Spinner courseSp, classSp;
+    GridView teacherlistgridview, TeachingGridview, StudentGridview, teacherlessionview;
 
     SchoolClass currentClass;//当前选择的班级
     QueryUtils queryUtils;
-    TecherAdpter  teachingadapter;
+    TecherAdpter teachingadapter;
     StudentAdpter studentAdpter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ScreenAdapter.match(this,375);
+        ScreenAdapter.match(this, 375);
         setContentView(R.layout.activity_main);
+        File file=getBaseContext().getDatabasePath("nihao");
+        if (file.exists()){
+
+        }else {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        System.err.println("数据库文件-"+file.getPath());
         queryUtils = new QueryUtils();
-        String[] permis= new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-        boolean isp=PermissionUtil.hasPermissons(this,permis);
+        String[] permis = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+        boolean isp = PermissionUtil.hasPermissons(this, permis);
         if (!isp)
-        PermissionUtil.requestPerssions(this,123,permis);
+            PermissionUtil.requestPerssions(this, 123, permis);
         else {
             initOrm();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    long time=System.currentTimeMillis();
-                    List<TestBean> testBeans=new ArrayList<>();
-                    for (int i=0;i<1000000;i++){
-                        TestBean testBean=new TestBean();
-                        testBean.setName("name="+i);
-                        testBean.setSid(i+1);
+                    long time = System.currentTimeMillis();
+                    List<TestBean> testBeans = new ArrayList<>();
+                    for (int i = 0; i < 1000000; i++) {
+                        TestBean testBean = new TestBean();
+                        testBean.setName("name=" + i);
+                        testBean.setSid(i + 1);
                         testBeans.add(testBean);
                     }
                     MiniOrmUtils.getInstance().getDao(TestBean.class).saveOrUpdate(testBeans);
-                    Log.e("time","使用时间："+Long.toString(System.currentTimeMillis()-time));
+                    Log.e("time", "使用时间：" + Long.toString(System.currentTimeMillis() - time));
                 }
             })/*.start()*/;
 
         }
-        LinkedList linkedList=new LinkedList();
-        Iterator iterator= linkedList.iterator();
-        while (iterator.hasNext()){
+        LinkedList linkedList = new LinkedList();
+        Iterator iterator = linkedList.iterator();
+        while (iterator.hasNext()) {
             iterator.next();
         }
-
+        IPermissionPhoneCallStrategy strategy= IPermissionPhoneCallStrategy.getInstance(getApplication());
+        Log.e(getClass().getSimpleName(),"------------------->>>>>>"+((!(strategy.isDefaultPhoneApp())) && (strategy.isChangeDefaultAppEnable())));
+        if ((!(strategy.isDefaultPhoneApp())) && (strategy.isChangeDefaultAppEnable())){
+            strategy.setDefaultPhoneApp(true);
+        }
 
     }
 
     private void initOrm() {
-        long time1=System.currentTimeMillis();
-        MiniOrmUtils.getInstance().init(getApplication(),"test.db",1,"caosimafdlj");
-/*        MiniOrm.init(ManActivity.this.getApplication(),1,"test.db");
-        MiniOrm.useSDCard(true,"miniorm");*/
+        long time1 = System.currentTimeMillis();
+        MiniOrmUtils.getInstance().init(getApplication(),"test.db",1,true,"myData/");
+        String path = Environment.getExternalStorageDirectory().getPath() + File.separator + "";
+        //   MiniOrmUtils.getInstance().init(getApplication(),"test.db",1,"zhengniubi");
+       //  MiniOrm.init(getApplication(),1,"test.db");
+     //   MiniOrm.useSDCard(true, "miniorm");
         MiniOrmUtils.getInstance().createTables();
         init();
-        Log.e("tag  CreateTable",(time1-System.currentTimeMillis())+"");
-        time1=System.currentTimeMillis();
+        Log.e("tag  CreateTable", (time1 - System.currentTimeMillis()) + "");
+        time1 = System.currentTimeMillis();
         initTableData();
-        Log.e("tag  initTableData",(time1-System.currentTimeMillis())+"");
+        Log.e("tag  initTableData", (time1 - System.currentTimeMillis()) + "");
         initWidget();
-        NeiBuLeiTest.HAHA haha=new NeiBuLeiTest.HAHA();
+        NeiBuLeiTest.HAHA haha = new NeiBuLeiTest.HAHA();
         haha.setcName("卧槽");
         haha.setId(123);
         MiniOrmUtils.getInstance().getDao(NeiBuLeiTest.HAHA.class).save(haha);
@@ -117,7 +137,7 @@ public class ManActivity extends Activity {
             @Override
             public void onPermissionsGranted(int requestCode, List<String> perms, boolean isAllGranted) {
                 if (isAllGranted)
-                initOrm();
+                    initOrm();
             }
 
             @Override
@@ -127,21 +147,20 @@ public class ManActivity extends Activity {
         });
 
 
-
     }
 
     private void initWidget() {
 
 
-           /*查询所有的班级*/
-        final List  classList=queryUtils.queryAllClass(schoolClassDao);
-        SchoolClassAdpter schoolClassAdpter=new SchoolClassAdpter(this, classList);
-        classSp=findViewByIds(R.id.classSp);
+        /*查询所有的班级*/
+        final List classList = queryUtils.queryAllClass(schoolClassDao);
+        SchoolClassAdpter schoolClassAdpter = new SchoolClassAdpter(this, classList);
+        classSp = findViewByIds(R.id.classSp);
         classSp.setAdapter(schoolClassAdpter);
         classSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                currentClass= (SchoolClass) classList.get(position);
+                currentClass = (SchoolClass) classList.get(position);
                 updateView();
             }
 
@@ -152,12 +171,9 @@ public class ManActivity extends Activity {
         });
 
 
-
-
-
         teacherlistgridview = findViewByIds(R.id.techerlist);
 
-        StudentGridview=findViewByIds(R.id.StudentGridview);
+        StudentGridview = findViewByIds(R.id.StudentGridview);
 
         /*查询所有的老师*/
         List list = queryUtils.queryAllTeacher(teacherDao);
@@ -165,43 +181,41 @@ public class ManActivity extends Activity {
         techerAdpter.setOnItemClick(new OnItemClick<Teacher>() {
             @Override
             public void ItemClick(final Teacher teacher) {
-               boolean  isExist= queryUtils.queryTeacherInClass(teacher,currentClass,schoolClassTeacherDao);
+                boolean isExist = queryUtils.queryTeacherInClass(teacher, currentClass, schoolClassTeacherDao);
 
-                if(!isExist){
+                if (!isExist) {
                     SchoolClassTeacher schoolClassTeacher = new SchoolClassTeacher();
                     schoolClassTeacher.setSchoolClass(currentClass);
                     schoolClassTeacher.setTeacher(teacher);
-                    int result=schoolClassTeacherDao.saveOrUpdate(schoolClassTeacher);
-                    if(result== ResultType.SUCCESS){
+                    int result = schoolClassTeacherDao.saveOrUpdate(schoolClassTeacher);
+                    if (result == ResultType.SUCCESS) {
 
                     }
-                }
-                else {
-                    SchoolClassTeacher schoolClassTeacher=new SchoolClassTeacher();
+                } else {
+                    SchoolClassTeacher schoolClassTeacher = new SchoolClassTeacher();
                     schoolClassTeacher.setTeacher(teacher);
                     schoolClassTeacher.setSchoolClass(currentClass);
-                    int result= schoolClassTeacherDao.delete(schoolClassTeacher);
-                    if(result== ResultType.SUCCESS){
+                    int result = schoolClassTeacherDao.delete(schoolClassTeacher);
+                    if (result == ResultType.SUCCESS) {
 
                     }
                 }
-                List<Teacher>  teacherList=queryUtils.queryTeachersInClass(currentClass,schoolClassTeacherDao);
+                List<Teacher> teacherList = queryUtils.queryTeachersInClass(currentClass, schoolClassTeacherDao);
                 teachingadapter.setList(teacherList);
             }
         });
         teacherlistgridview.setAdapter(techerAdpter);
 
 
-
         courseSp = findViewByIds(R.id.courseSp);
-        final List<Course> cursorList=courseDao.queryAll();
-        courseSp.setAdapter(new LessionAdpter(this,cursorList));
-        final TecherAdpter lession=new TecherAdpter(this,new ArrayList<Teacher>());
+        final List<Course> cursorList = courseDao.queryAll();
+        courseSp.setAdapter(new LessionAdpter(this, cursorList));
+        final TecherAdpter lession = new TecherAdpter(this, new ArrayList<Teacher>());
         courseSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                   Course course=cursorList.get(position);
-                    lession.setList(course.getTeachers());
+                Course course = cursorList.get(position);
+                lession.setList(course.getTeachers());
 
             }
 
@@ -210,7 +224,7 @@ public class ManActivity extends Activity {
 
             }
         });
-        teacherlessionview=findViewByIds(R.id.teacherlessionview);
+        teacherlessionview = findViewByIds(R.id.teacherlessionview);
 
         teacherlessionview.setAdapter(lession);
 
@@ -218,24 +232,24 @@ public class ManActivity extends Activity {
     }
 
 
-    private void   updateView(){
+    private void updateView() {
 
         /*查询某班级下的所有教学的老师*/
-        TeachingGridview=findViewByIds(R.id.TeachingGridview);
-        List<Teacher>  teacherList=queryUtils.queryTeachersInClass(currentClass,schoolClassTeacherDao);
-        TeachingGridview.setAdapter(teachingadapter=new TecherAdpter(this,teacherList));
+        TeachingGridview = findViewByIds(R.id.TeachingGridview);
+        List<Teacher> teacherList = queryUtils.queryTeachersInClass(currentClass, schoolClassTeacherDao);
+        TeachingGridview.setAdapter(teachingadapter = new TecherAdpter(this, teacherList));
         teachingadapter.setOnItemClick(new OnItemClick<Teacher>() {
             @Override
             public void ItemClick(Teacher teacher) {
-                String teachingName=teacher.getCourse().getcName();
-                ToolUtils.showToast(ManActivity.this,teacher.getName()+" :" +teachingName);
+                String teachingName = teacher.getCourse().getcName();
+                ToolUtils.showToast(ManActivity.this, teacher.getName() + " :" + teachingName);
             }
         });
 
         /*查询某班级的所有学生*/
 
-        List<Student>  studentList=currentClass.getStudentList();
-        studentAdpter=new StudentAdpter(this,studentList);
+        List<Student> studentList = currentClass.getStudentList();
+        studentAdpter = new StudentAdpter(this, studentList);
         StudentGridview.setAdapter(studentAdpter);
         studentAdpter.setOnItemClick(new OnItemClick<Student>() {
             @Override
@@ -246,19 +260,13 @@ public class ManActivity extends Activity {
     }
 
 
-
-
-
-
-
-
-
-
     void init() {
         courseDao = MiniOrmUtils.getInstance().getDao(Course.class);
         schoolClassDao = MiniOrmUtils.getInstance().getDao(SchoolClass.class);//班级
-        schoolClassTeacherDao = MiniOrmUtils.getInstance().getDao(SchoolClassTeacher.class);;//班级老师表
-        studentDao = MiniOrmUtils.getInstance().getDao(Student.class);;//学生
+        schoolClassTeacherDao = MiniOrmUtils.getInstance().getDao(SchoolClassTeacher.class);
+        ;//班级老师表
+        studentDao = MiniOrmUtils.getInstance().getDao(Student.class);
+        ;//学生
         teacherDao = MiniOrmUtils.getInstance().getDao(Teacher.class);//老师
     }
 
@@ -280,9 +288,10 @@ public class ManActivity extends Activity {
             int resouresid = (schoolClass.getSid() - 1);
             String[] names = getResources().getStringArray(class_students[resouresid]);
             for (int i = 1; i < names.length; i++) {
-                 Student student = new Student();
+                Student student = new Student();
                 student.setSchoolClass(schoolClass);
                 student.setName(names[i - 1]);
+                student.setSid(i);
                 students.add(student);
             }
         }
@@ -306,7 +315,7 @@ public class ManActivity extends Activity {
             Teacher teacher = new Teacher();
             teacher.setName(teachers[i]);
             teacher.setTid(i + 1);
-            teacher.setCourse(courses.get(i%courses.size()));
+            teacher.setCourse(courses.get(i % courses.size()));
             teacherList.add(teacher);
         }
         teacherDao.saveOrUpdate(teacherList);

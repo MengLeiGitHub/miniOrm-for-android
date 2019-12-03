@@ -1,4 +1,4 @@
-package com.example.adapter;
+package com.synb.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,9 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.OnItemClick;
-import com.example.bean.Course;
-import com.example.bean.Teacher;
+import com.synb.OnItemClick;
+import com.synb.bean.Teacher;
 import com.test.R;
 
 import java.util.List;
@@ -18,16 +17,16 @@ import java.util.List;
  * Created by admin on 2017-04-08.
  */
 
-public class LessionAdpter extends BaseAdapter {
-    List<Course> arrayList;
+public class TecherAdpter extends BaseAdapter {
+    List<Teacher> arrayList;
     private Context context;
-    OnItemClick<Course> onItemClick;
+    OnItemClick<Teacher> onItemClick;
 
-    public void setOnItemClick(OnItemClick<Course> onItemClick) {
+    public void setOnItemClick(OnItemClick<Teacher> onItemClick) {
         this.onItemClick = onItemClick;
     }
 
-    public LessionAdpter(Context context, List<Course> arrayList){
+    public TecherAdpter(Context context, List<Teacher> arrayList){
         this.arrayList=arrayList;
         this.context = context;
 
@@ -50,15 +49,21 @@ public class LessionAdpter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final Course course= (Course) getItem(position);
+        final Teacher teacher= (Teacher) getItem(position);
         View  view= LayoutInflater.from(context).inflate(R.layout.text_item,null);
         TextView textView= (TextView) view.findViewById(R.id.name);
-        textView.setText(course.getcName());
+        textView.setText(teacher.getName());
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClick.ItemClick(teacher);
+            }
+        });
         return view;
     }
 
 
-    public void setList(List<Course> list) {
+    public void setList(List<Teacher> list) {
         this.arrayList = list;
         notifyDataSetChanged();
     }

@@ -1,7 +1,8 @@
-package com.example.bean;
+package com.synb.bean;
 
 import com.miniorm.android.ColumnType;
 import com.miniorm.annotation.OneToMany;
+import com.miniorm.annotation.Sqlcipher;
 import com.miniorm.annotation.Table;
 import com.miniorm.annotation.TableColumn;
 import com.miniorm.annotation.TableID;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class NeiBuLeiTest {
 
+   // @Sqlcipher
     @Table(name = "haha")
     public static class HAHA{
         @TableID(name = "cid",type = Parmary.CUSTOM,columnType = ColumnType.INTEGER)

@@ -1,11 +1,11 @@
-package com.example;
+package com.synb;
 
 
-import com.example.bean.SchoolClass;
+import com.synb.bean.SchoolClass;
 
-import com.example.bean.SchoolClassTeacher;
+import com.synb.bean.SchoolClassTeacher;
 
-import com.example.bean.Teacher;
+import com.synb.bean.Teacher;
 
 import com.miniorm.dao.BaseDao;
 

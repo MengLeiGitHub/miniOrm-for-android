@@ -1,4 +1,4 @@
-package com.example.adapter;
+package com.synb.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,9 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.OnItemClick;
-import com.example.bean.Student;
-import com.example.bean.Teacher;
+import com.synb.OnItemClick;
+import com.synb.bean.Student;
 import com.test.R;
 
 import java.util.List;

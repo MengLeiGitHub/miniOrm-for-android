@@ -1,4 +1,4 @@
-package com.example;
+package com.synb;
 
 import android.content.Context;
 import android.widget.Toast;

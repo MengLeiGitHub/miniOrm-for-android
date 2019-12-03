@@ -1,4 +1,4 @@
-package com.example;
+package com.synb;
 
 import android.Manifest;
 import android.app.Activity;
