@@ -1,4 +1,4 @@
-include ':app',':miniorm-compiler',':miniorm-annotation',/*':main-library',*/
+include ':app',':miniorm-compiler',':miniorm-annotation', ':phonecall',/*':main-library',*/
 /*,
 /*,
 ':miorm',*/

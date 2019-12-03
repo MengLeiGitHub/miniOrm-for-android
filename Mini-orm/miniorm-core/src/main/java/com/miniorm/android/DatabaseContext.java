@@ -78,8 +78,10 @@ public class DatabaseContext extends ContextWrapper {
             //返回数据库文件对象
             if(isFileCreateSuccess)
                 return dbFile;
-            else
+            else{//创建不成功用 系统自己的
                 return null;
+            }
+
         }
     }
 
@@ -93,7 +95,18 @@ public class DatabaseContext extends ContextWrapper {
     @Override
     public SQLiteDatabase openOrCreateDatabase(String name, int mode,
                                                SQLiteDatabase.CursorFactory factory) {
-        SQLiteDatabase result = SQLiteDatabase.openOrCreateDatabase(getDatabasePath(name), null);
+        File file=getDatabasePath(name);
+        if (file==null){
+            file= getBaseContext().getDatabasePath(name);
+            if (!file.exists()){
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        SQLiteDatabase result = SQLiteDatabase.openOrCreateDatabase(file, null);
         return result;
     }
 
@@ -111,7 +124,18 @@ public class DatabaseContext extends ContextWrapper {
     @Override
     public SQLiteDatabase openOrCreateDatabase(String name, int mode, CursorFactory factory,
                                                DatabaseErrorHandler errorHandler) {
-        SQLiteDatabase result = SQLiteDatabase.openOrCreateDatabase(getDatabasePath(name), null);
+        File file=getDatabasePath(name);
+        if (file==null){
+           file= getBaseContext().getDatabasePath(name);
+           if (!file.exists()){
+               try {
+                   file.createNewFile();
+               } catch (IOException e) {
+                   e.printStackTrace();
+               }
+           }
+        }
+        SQLiteDatabase result = SQLiteDatabase.openOrCreateDatabase(file, null);
         return result;
     }
 }

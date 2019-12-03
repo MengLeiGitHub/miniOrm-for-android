@@ -46,10 +46,12 @@ repositories {
     options.encoding = "UTF-8"
 }*/
 dependencies {
-    //compile project(':miniorm-core')
+    compile project(':miniorm-core')
     // compile 'com.github.mengleigithub:miniorm-core:2.0.7'
-    api 'net.zetetic:android-database-sqlcipher:4.2.0@aar'
-    api 'com.github.mengleigithub:miniorm-core:2.0.8-beta-2'
+    compile 'net.zetetic:android-database-sqlcipher:4.2.0@aar'
+
+    /* api 'net.zetetic:android-database-sqlcipher:4.2.0@aar'
+     api 'com.github.mengleigithub:miniorm-core:2.0.8-beta-2'*/
     // implementation files('libs/sqlcipher.jar')
    // implementation(name:'android-database-sqlcipher-4.2.0', ext:'aar')
 
@@ -58,6 +60,7 @@ dependencies {
 
 
 
+/*
 
 
 ext {
@@ -73,3 +76,4 @@ ext {
 
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+*/

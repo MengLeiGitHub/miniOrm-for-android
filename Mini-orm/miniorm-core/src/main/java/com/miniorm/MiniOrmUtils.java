@@ -52,7 +52,7 @@ public final class MiniOrmUtils {
             return (BaseDao<T>) baseDao;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("重新编译，缺少文件生成");
+            throw new RuntimeException( e);
         }
     }
 
